@@ -1,0 +1,39 @@
+8:41PM Tue Jun 16
+1 - 81%
+258a6f20
+- cmauze - EDT Last sync: Just now
+‹ Back
+Leg
+Q Report Manifest Bug
+HAA Risk (rev 10.3.2024)
+Warn: 16 | Fail: 21
+Leg 1 of 2
+Manifest: 3664365
+N850BU
+This risk form has no flight request linked.
+20- VFR Flight Plan- Temp/Dew Point within 2 degrees C & Less Than 5 Knots Wind
+(Departure/Enroute/Destination)
+Select...
+21- VFR Flight Plan- Ceilings (Enroute/Destination) "SELECTION REQUIRED"
+Select...
+22- VFR Flight Plan- Visibility (Enroute/Destination) "SELECTION REQUIRED"
+Select...
+V
+^
+23- VFR Flight Plan- Forecasted IFR Conditions (Enroute/Destination- FM/
+3 pts
+TEMPO)
+24- IFR Flight Plan- Ceilings (Departure and Destination) "SELECTION REQUIRED"
+Select...
+25- IFR Flight Plan- Visibility (Departure and Destination) "SELECTION REQUIRED"
+Select...
+V
+26- Fog, Snow, or Ground Ice Reported or Forecasted Along Route
+A
+27 - Convective Activity within 20 NM of Route
+4 pts
+3 pts
+OBSTACLE ELEVATION
+759
+Manifest
+

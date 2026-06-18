@@ -1,0 +1,50 @@
+8:41PM Tue Jun 16
+1 - 81%
+258a6f20
+- cmauze - EDT
+Last sync: Just now
+‹ Back
+Leg
+Q Report Manifest Bug
+HAA Risk (rev 10.3.2024)
+Warn: 16 | Fail: 21
+This risk form has no flight request linked.
+10- In differently equipped or different model aircraft
+Leg 1 of 2
+Manifest: 3664365
+N850BU
+3 pts
+11- Instruments or Equipment MEL "Restrictive to this Flight"
+3 pts
+DYNAMIC SCORE
+12- More than four (4) hours of flight time during a duty period
+13- Flight ending greater than twelve (12) hours of duty time but less than
+fourteen (14) hours of duty time
+3 pts
+2 pts
+^
+C
+14- Flight ending greater than fourteen (14) hours of duty time (Added by
+OCC after consultation with Pilot)
+2 pts
+15- Flight occurring between official sunset and sunrise (Use caution Dusk
+to Dawn)
+16- NVG use not available or permitted for flight (Operations Management
+Approval Required)
+1 pts
+3 pts
+17 - First flight after maintenance has been completed on aircraft
+18- Scene Flight
+18a- First Responder at Night (H114)
+3 pts
+2 pts
+2 pts
+19- Previous WX Turndown/Abort; Applicable to route and flight type (VFR/
+IFR)
+OBSTACLE ELEVATION
+759
+3 pts
+Manifest
+Library
+Chat
+

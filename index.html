@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ops Suite - Manifest Prototype</title>
+    <script>
+        function scaleDevice() {
+            const frame = document.querySelector('.device-frame');
+            if(frame) {
+                // Total width = 744 + 40 padding = 784. Total height = 1133 + 40 padding = 1173
+                const scale = Math.min(1, (window.innerWidth * 0.95) / 784, (window.innerHeight * 0.95) / 1173);
+                frame.style.transform = `scale(${scale})`;
+            }
+        }
+        window.addEventListener('resize', scaleDevice);
+        window.addEventListener('DOMContentLoaded', scaleDevice);
+    </script>
     <style>
         :root {
             --bg-color: #000000;
@@ -50,8 +62,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
 
         .device-frame {

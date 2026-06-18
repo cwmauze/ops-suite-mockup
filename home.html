@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- PWA / iOS Native App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ops Suite">
+    
+    <title>Ops Suite - Home</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        :root {
+            /* Colors */
+            --bg-body: #f1f2f5;
+            --bg-card: #ffffff;
+            --text-main: #181c20;
+            --text-muted: #5e646e;
+            --border-color: #e4e6eb;
+            --accent-blue: #1b68e3;
+            --accent-blue-hover: #1557bf;
+            --accent-red: #ea4335;
+            --accent-green: #34a853;
+            --accent-yellow: #fbbc04;
+            --accent-orange: #f9ab00;
+            
+            /* UI Elements */
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            
+            /* Safe Area Insets for iOS PWA */
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #333; /* Dark background for desktop wrapper */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* --- IPAD SIMULATION WRAPPER --- */
+        .device-frame {
+            width: 768px; /* iPad mini width */
+            height: 1024px; /* iPad mini height */
+            background-color: var(--bg-body);
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            overflow: hidden;
+            transform-origin: center center;
+        }
+
+        .device-screen {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            padding-bottom: 80px; /* Space for bottom nav */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Hide scrollbar for device screen */
+        .device-screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Global Header (Sync bar) */
+        .global-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .global-header .app-icon {
+            width: 28px;
+            height: 28px;
+            background-color: var(--accent-blue);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .global-header .app-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        }
+
+        .sync-info {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            gap: 12px;
+        }
+
+        .version-badge {
+            background-color: #f1f2f5;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--text-main);
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sync-indicator {
+            width: 16px;
+            height: 16px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sync-indicator::after {
+            content: '';
+            width: 5px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            margin-bottom: 2px;
+        }
+
+        /* Main Content Container */
+        .content-container {
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        /* Greeting Section */
+        .greeting-section {
+            margin-bottom: 20px;
+        }
+        .greeting-date {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .greeting-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .btn-action {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: var(--box-shadow);
+        }
+        .btn-action.blue { background-color: var(--accent-blue); }
+        .btn-action.orange { background-color: var(--accent-orange); }
+        .btn-action.red { background-color: var(--accent-red); }
+
+        .btn-action svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Generic Card Styles */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Flight Request Card Layout */
+        .flight-card-layout {
+            display: flex;
+            flex-direction: row;
+        }
+        .flight-details {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .flight-map {
+            flex: 1;
+            background-color: #e0e0e0;
+            min-height: 250px;
+            position: relative;
+        }
+        #leaflet-map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Map controls inside map */
+        .map-layer-control {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 4px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            display: flex;
+            gap: 4px;
+        }
+        .map-layer-btn {
+            border: none;
+            background: #f1f2f5;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+        .map-layer-btn.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        /* Flight Details Elements */
+        .flight-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .tag-yellow {
+            background-color: #ffff00;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+            align-self: flex-start;
+        }
+        .tag-green {
+            background-color: var(--accent-green);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .tag-green svg { width: 14px; height: 14px; fill: white; }
+
+        .flight-info-text {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .flight-info-text strong {
+            color: var(--text-main);
+        }
+        .btn-green-outline {
+            background-color: transparent;
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            align-self: flex-start;
+            margin-top: 8px;
+        }
+        .btn-green-outline svg { fill: currentColor; width: 16px; height: 16px; }
+
+        .btn-blue {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            align-self: flex-start;
+            margin-top: 8px;
+        }
+
+        /* Duty Period & Currency specific styling */
+        .duty-stats {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+        .duty-stats strong {
+            color: var(--text-main);
+        }
+
+        .alert-box {
+            background-color: #feeceb;
+            border: 1px solid #f9ccc8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .alert-icon {
+            width: 24px;
+            height: 24px;
+            background-color: var(--accent-red);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .alert-text {
+            color: var(--accent-red);
+        }
+        .alert-title {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+        .alert-subtitle {
+            font-size: 14px;
+        }
+
+        .pill-group {
+            display: flex;
+            gap: 8px;
+        }
+        .pill {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pill::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .pill.red { background-color: #feeceb; color: var(--accent-red); }
+        .pill.red::before { background-color: var(--accent-red); }
+        .pill.yellow { background-color: #fef7e0; color: var(--accent-orange); }
+        .pill.yellow::before { background-color: var(--accent-orange); }
+
+        .link-right {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 24px 0 12px 0;
+            color: var(--text-main);
+        }
+
+        /* Search Input */
+        .search-container {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .search-container svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            fill: var(--text-muted);
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 12px 12px 36px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+        .search-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        /* Base Card Inner Styling */
+        .base-header-row {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        .base-status { color: var(--text-muted); }
+        .base-weather { color: var(--accent-red); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        
+        .base-alerts {
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .base-alerts strong { display: block; margin-bottom: 4px; }
+
+        /* Inner card for Aircraft */
+        .inner-card {
+            background-color: #f9f9f9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .inner-card-title {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .tag-red-text {
+            color: var(--accent-red);
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .inner-card-info {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        .inner-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* List Items */
+        .list-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+            color: var(--text-main);
+            background-color: var(--bg-card);
+        }
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        .list-item svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-muted);
+        }
+        .list-card {
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px; /* Reduced from 80px to pull icons lower */
+            background-color: #5c5d61;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start; /* Align closer to bottom */
+            padding-top: 10px; /* Adjust padding to center icons vertically in new height */
+            z-index: 100;
+            padding-bottom: var(--safe-bottom);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #b0b3b8;
+            text-decoration: none;
+            font-size: 11px;
+            gap: 4px;
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .nav-item.active {
+            color: var(--accent-blue);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="device-frame" id="deviceFrame">
+        <div class="device-screen">
+            
+            <!-- Sync Bar -->
+            <div class="global-header">
+                <div class="app-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M15,10.5V13.5A1.5,1.5 0 0,1 13.5,15H10.5A1.5,1.5 0 0,1 9,13.5V10.5A1.5,1.5 0 0,1 10.5,9H13.5A1.5,1.5 0 0,1 15,10.5Z"/></svg>
+                </div>
+                <div class="sync-info">
+                    <span class="version-badge">258a6f20</span>
+                    <span>- cmauze - EDT</span>
+                    <div class="sync-status">
+                        <span>Last sync: Just now</span>
+                        <div class="sync-indicator"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-container">
+                
+                <div class="greeting-section">
+                    <div class="greeting-date">June 18</div>
+                    <div class="greeting-title">Good Evening Charles</div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-action blue" onclick="window.location.href='manifest.html'">
+                        <svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/></svg> New Manifest
+                    </button>
+                    <button class="btn-action blue">
+                        <svg viewBox="0 0 24 24"><path d="M6.5,17.5A3.5,3.5 0 0,1 3,14A3.5,3.5 0 0,1 6.5,10.5C6.8,10.5 7.1,10.5 7.4,10.6C8.2,7.7 10.8,5.5 14,5.5A6.5,6.5 0 0,1 20.5,12C21.9,12.2 23,13.5 23,15A3,3 0 0,1 20,18H6.5V17.5Z"/></svg> Weather
+                    </button>
+                    <button class="btn-action orange">
+                        <svg viewBox="0 0 24 24"><path d="M10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6H12L10,4Z"/></svg> Library
+                    </button>
+                    <button class="btn-action red" onclick="window.location.href='index.html'">
+                        <svg viewBox="0 0 24 24"><path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"/></svg> Log Out
+                    </button>
+                </div>
+
+                <!-- Flight Request Card -->
+                <div class="card">
+                    <div class="flight-card-layout">
+                        <div class="flight-details">
+                            <div class="flight-title">Flight Request #1029992</div>
+                            <div class="tag-yellow">Inter-Facility Transfer</div>
+                            
+                            <div class="flight-info-text">
+                                06/18/2026, 10:26 AM EDT<br>
+                                Pilot: <strong>Mauze, Charles</strong><br>
+                                Aircraft: <strong>N850BU</strong><br>
+                                KRWI &rarr; KRWI (2 stops)
+                            </div>
+                            
+                            <button class="btn-green-outline">
+                                <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
+                                Edit Flight
+                            </button>
+                        </div>
+                        <div class="flight-map">
+                            <div id="leaflet-map"></div>
+                            <div class="map-layer-control">
+                                <button class="map-layer-btn active" onclick="setBaseView('street')" id="b-street">Street</button>
+                                <button class="map-layer-btn" onclick="setBaseView('sat')" id="b-sat">Sat</button>
+                                <button class="map-layer-btn" onclick="setBaseView('vfr')" id="b-vfr">VFR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duty Period Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <span style="display:flex;align-items:center;gap:8px;">
+                            <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M19,4H18V2H16V4H8V2H6V4H5C3.89,4 3,4.9 3,6V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V6A2,2 0 0,0 19,4M19,20H5V10H19V20M19,8H5V6H19V8Z"/></svg>
+                            DUTY PERIOD
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="tag-green">
+                            <svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>
+                            ON DUTY
+                        </div>
+                        <div class="duty-stats">
+                            <div>Current Duty Time: <strong>9h 33m</strong></div>
+                            <div>Dutied In: <strong>06/18/2026 09:23</strong></div>
+                            <div>Previous Rest: <strong>&gt;10h</strong></div>
+                        </div>
+                        <button class="btn-blue">
+                            <svg viewBox="0 0 24 24"><path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"/></svg>
+                            Duty Options
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Currency Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <span style="display:flex;align-items:center;gap:8px;color:var(--accent-blue);">
+                            <svg style="width:20px;height:20px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/></svg>
+                            <span style="color:var(--text-main);">CHARLES CURRENCY</span>
+                        </span>
+                        <a href="#" class="link-right">View Details &rsaquo;</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert-box">
+                            <div class="alert-icon">x</div>
+                            <div>
+                                <div class="alert-title">Expired</div>
+                                <div class="alert-subtitle">3 items expired</div>
+                            </div>
+                        </div>
+                        <div class="pill-group">
+                            <div class="pill red">3 Expired</div>
+                            <div class="pill yellow">4 Warning</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bases Section -->
+                <div class="section-title">BASES (1)</div>
+                <div class="search-container">
+                    <svg viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L19.71,19L18.3,20.41L13.03,15.14C11.89,16.11 10.41,16.7 8.8,16.7A6.5,6.5 0 0,1 2.3,10.2A6.5,6.5 0 0,1 8.8,3M8.8,5A4.5,4.5 0 0,0 4.3,9.5A4.5,4.5 0 0,0 8.8,14A4.5,4.5 0 0,0 13.3,9.5A4.5,4.5 0 0,0 8.8,5Z"/></svg>
+                    <input type="text" class="search-input" placeholder="Search bases...">
+                </div>
+
+                <div class="card">
+                    <div class="card-header" style="font-size:18px;">
+                        <span style="display:flex;align-items:center;gap:8px;">
+                            <svg style="width:24px;height:24px;fill:currentColor;" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/></svg>
+                            RWI BASE
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="base-header-row">
+                            <div class="base-status">Status: In Service</div>
+                            <div class="base-weather">
+                                <svg style="width:16px;height:16px;fill:currentColor;" viewBox="0 0 24 24"><path d="M6.5,17.5A3.5,3.5 0 0,1 3,14A3.5,3.5 0 0,1 6.5,10.5C6.8,10.5 7.1,10.5 7.4,10.6C8.2,7.7 10.8,5.5 14,5.5A6.5,6.5 0 0,1 20.5,12C21.9,12.2 23,13.5 23,15A3,3 0 0,1 20,18H6.5V17.5Z"/></svg>
+                                Weather: Red
+                            </div>
+                        </div>
+                        
+                        <div class="base-alerts">
+                            <strong>Base Alerts:</strong>
+                            200' unlit towels at Carteret. <span style="color:var(--text-muted); margin-left:8px;">Charles Mauze 6/16/2026</span>
+                        </div>
+                        
+                        <button class="btn-blue" style="margin-top:0;">EDIT</button>
+
+                        <div class="inner-card">
+                            <div class="inner-card-title">
+                                N850BU
+                                <span class="tag-red-text">
+                                    <svg style="width:16px;height:16px;fill:currentColor;" viewBox="0 0 24 24"><path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg>
+                                    OOS: UNSCHD MX &gt; 2 Hours
+                                </span>
+                            </div>
+                            <div class="inner-card-info">MEL Items: None</div>
+                            <a href="#" class="inner-link">Aircraft Maintenance Status &rsaquo;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Open Manifests -->
+                <div class="section-title">Open Manifests</div>
+                <div class="list-card">
+                    <div class="list-item">
+                        <span>3664374 : 06/18/2026 : N850BU : Mauze</span>
+                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
+                    </div>
+                    <div class="list-item">
+                        <span>3664375 : 06/18/2026 : N850BU : Mauze</span>
+                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
+                    </div>
+                    <div class="list-item">
+                        <span>3664365 : 06/16/2026 : N850BU : Mauze</span>
+                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
+                    </div>
+                </div>
+
+                <!-- Recent Flights -->
+                <div class="section-title">Recent Flights</div>
+                <div class="list-card">
+                    <div class="list-item">
+                        <span>3664234 : 03/12/2026 : N850BU : Leake</span>
+                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
+                    </div>
+                </div>
+
+            </div> <!-- End Content Container -->
+
+        </div> <!-- End Device Screen -->
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                Home
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                Map
+            </a>
+            <a href="manifest.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                Manifest
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>
+                Library
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                Chat
+            </a>
+        </nav>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Scaling Logic for Desktop Wrapper
+        function scaleDevice() {
+            const frame = document.getElementById('deviceFrame');
+            const windowHeight = window.innerHeight;
+            const windowWidth = window.innerWidth;
+            
+            // If on a mobile device, disable scaling and just fill screen
+            if (windowWidth <= 768) {
+                frame.style.transform = `scale(1)`;
+                frame.style.width = '100vw';
+                frame.style.height = '100vh';
+                frame.style.borderRadius = '0';
+                return;
+            }
+
+            // Target dimensions of the iPad mini
+            const targetHeight = 1024;
+            
+            // Leave a little margin top and bottom
+            const availableHeight = windowHeight - 40; 
+            
+            // Calculate scale
+            let scale = availableHeight / targetHeight;
+            
+            // Don't scale up past 1.0 (actual size)
+            if (scale > 1) scale = 1;
+            
+            frame.style.transform = `scale(${scale})`;
+            frame.style.borderRadius = '32px'; // add rounded corners to device
+        }
+
+        window.addEventListener('resize', scaleDevice);
+
+        // Map Implementation
+        let leafletMap = null;
+        let layers = {};
+        let activeBase = 'street';
+
+        async function initMap() {
+            // Initialize map with padding disabled on zoom controls to fit the card well
+            leafletMap = L.map('leaflet-map', { 
+                zoomControl: false, 
+                attributionControl: false 
+            });
+
+            layers = {
+                street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(leafletMap),
+                sat: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
+                vfr: L.tileLayer('https://tiles.arcgis.com/tiles/ssFJjBXIUyZDrSYZ/arcgis/rest/services/VFR_Sectional/MapServer/tile/{z}/{y}/{x}', {maxZoom: 12})
+            };
+
+            try {
+                // Fetch FAA Database from assets
+                const response = await fetch('assets/airports.json');
+                const airportsDB = await response.json();
+
+                // Define our mock route: KRWI -> PGV -> MCZ -> KRWI
+                const routeCodes = ["RWI", "PGV", "MCZ"];
+                const waypoints = [];
+                const markers = [];
+
+                routeCodes.forEach((code, index) => {
+                    const apt = airportsDB[code];
+                    if (apt) {
+                        const latLng = [apt.lat, apt.lon];
+                        waypoints.push(latLng);
+                        
+                        // Add marker with number
+                        const markerHtml = `<div style="background-color: var(--accent-orange); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${index + 1}</div>`;
+                        const customIcon = L.divIcon({
+                            html: markerHtml,
+                            className: 'custom-div-icon',
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                        });
+                        
+                        const m = L.marker(latLng, {icon: customIcon}).addTo(leafletMap);
+                        markers.push(m);
+                    }
+                });
+
+                if (waypoints.length > 0) {
+                    // Close the loop
+                    waypoints.push(waypoints[0]);
+
+                    // Draw polyline
+                    const routeLine = L.polyline(waypoints, {
+                        color: '#181c20',
+                        weight: 3,
+                        opacity: 0.8,
+                        dashArray: '5, 10'
+                    }).addTo(leafletMap);
+
+                    // Fit bounds to show the whole route
+                    leafletMap.fitBounds(routeLine.getBounds(), {padding: [30, 30]});
+                } else {
+                    // Fallback to center US if db lookup fails
+                    leafletMap.setView([39.8, -98.5], 4);
+                }
+
+            } catch (err) {
+                console.error("Error loading map or airports DB:", err);
+                leafletMap.setView([35.85, -77.89], 9); // Fallback to NC
+            }
+        }
+
+        function setBaseView(type) {
+            if (layers[activeBase]) leafletMap.removeLayer(layers[activeBase]);
+            layers[type].addTo(leafletMap);
+            activeBase = type;
+
+            document.querySelectorAll('.map-layer-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('b-' + type).classList.add('active');
+        }
+
+        // Initialize everything
+        window.onload = () => {
+            scaleDevice();
+            initMap();
+        };
+
+    </script>
+</body>
+</html>

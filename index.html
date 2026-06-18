@@ -430,7 +430,7 @@
 </head>
 <body>
 
-    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.11</div>
+    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.12</div>
     
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative;">
         <div class="device-frame">
@@ -523,33 +523,33 @@
                     <div class="spatial-grid">
                         <div class="seat-card">
                             <div class="seat-title">Copilot (Left)</div>
-                            <div class="seat-occupant" style="color:var(--text-secondary)">Search personnel...</div>
-                            <div class="seat-weight"><input type="number" value="0"> KG</div>
+                            <div class="seat-occupant" id="occ-1" onclick="openPersonnelModal(1)" style="color:var(--text-secondary); cursor:pointer;">Search personnel...</div>
+                            <div class="seat-weight"><input type="number" id="wt-1" value="0"> KG</div>
                         </div>
                         <div class="seat-card active">
                             <div class="seat-title">Pilot (Right)</div>
-                            <div class="seat-occupant">Mauze, Charles</div>
-                            <div class="seat-weight"><input type="number" value="110"> KG</div>
+                            <div class="seat-occupant" id="occ-2" onclick="openPersonnelModal(2)" style="cursor:pointer;">Mauze, Charles</div>
+                            <div class="seat-weight"><input type="number" id="wt-2" value="110"> KG</div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-title">Aft Facing (LH)</div>
-                            <div class="seat-occupant">Petty, Shannon</div>
-                            <div class="seat-weight"><input type="number" value="63"> KG</div>
+                            <div class="seat-occupant" id="occ-3" onclick="openPersonnelModal(3)" style="cursor:pointer;">Petty, Shannon</div>
+                            <div class="seat-weight"><input type="number" id="wt-3" value="63"> KG</div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-title">Aft Facing (RH)</div>
-                            <div class="seat-occupant" style="color:var(--text-secondary)">Empty</div>
-                            <div class="seat-weight"><input type="number" value="0"> KG</div>
+                            <div class="seat-occupant" id="occ-4" onclick="openPersonnelModal(4)" style="color:var(--text-secondary); cursor:pointer;">Empty</div>
+                            <div class="seat-weight"><input type="number" id="wt-4" value="0"> KG</div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-title">LH Litter (Patient)</div>
-                            <div class="seat-occupant" style="color:var(--accent-red)">Jane Doe</div>
-                            <div class="seat-weight"><input type="number" value="75"> KG</div>
+                            <div class="seat-occupant" id="occ-5" onclick="openPersonnelModal(5)" style="color:var(--accent-red); cursor:pointer;">Jane Doe</div>
+                            <div class="seat-weight"><input type="number" id="wt-5" value="75"> KG</div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-title">Fwd Facing Aft Seat (RH)</div>
-                            <div class="seat-occupant">Dail, Joshua</div>
-                            <div class="seat-weight"><input type="number" value="90"> KG</div>
+                            <div class="seat-occupant" id="occ-6" onclick="openPersonnelModal(6)" style="cursor:pointer;">Dail, Joshua</div>
+                            <div class="seat-weight"><input type="number" id="wt-6" value="90"> KG</div>
                         </div>
                         <div class="seat-card full-width" onclick="openModal('equip-modal')">
                             <div class="seat-title">Medical Equipment</div>
@@ -898,6 +898,24 @@
             </div>
         </div>
 
+        <!-- Personnel Selection Modal -->
+        <div class="modal-overlay" id="personnel-modal" style="z-index: 1050;">
+            <div class="modal-content modal-full">
+                <div class="modal-header">
+                    <div class="modal-title">Select Personnel</div>
+                    <div class="modal-close" onclick="closeModal('personnel-modal')">×</div>
+                </div>
+                <div class="modal-body">
+                    <div class="alert-banner" style="margin: 0; border-radius: 0;">
+                        Select a crew member to assign to this station.
+                    </div>
+                    <div id="personnel-list" class="risk-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div> <!-- /device-frame -->
 
     <script>
@@ -907,6 +925,67 @@
                 { id: 2, origin: 'NC91', dest: 'RWI', active: false }
             ]
         };
+
+        const DummyPersonnel = [
+            { name: "Empty", weight: 0 },
+            { name: "Arnold Schwarzenegger", weight: 105 },
+            { name: "Sylvester Stallone", weight: 85 },
+            { name: "Chuck Norris", weight: 77 },
+            { name: "Dwayne Johnson", weight: 118 },
+            { name: "Jason Statham", weight: 84 },
+            { name: "Bruce Willis", weight: 82 },
+            { name: "Tom Cruise", weight: 68 },
+            { name: "Keanu Reeves", weight: 79 },
+            { name: "Jean-Claude Van Damme", weight: 82 },
+            { name: "Harrison Ford", weight: 80 },
+            { name: "Marilyn Monroe", weight: 54 },
+            { name: "Scarlett Johansson", weight: 57 },
+            { name: "Margot Robbie", weight: 57 },
+            { name: "Charlize Theron", weight: 61 },
+            { name: "Angelina Jolie", weight: 54 },
+            { name: "Megan Fox", weight: 52 },
+            { name: "Salma Hayek", weight: 54 },
+            { name: "Sofia Vergara", weight: 64 },
+            { name: "Raquel Welch", weight: 55 },
+            { name: "Pamela Anderson", weight: 60 }
+        ];
+
+        let currentSeatId = null;
+
+        function openPersonnelModal(seatId) {
+            currentSeatId = seatId;
+            const listContainer = document.getElementById('personnel-list');
+            listContainer.innerHTML = '';
+            
+            DummyPersonnel.forEach(p => {
+                const item = document.createElement('div');
+                item.className = 'risk-item';
+                item.style.cursor = 'pointer';
+                item.innerHTML = `
+                    <div class="risk-text" style="font-weight:bold; color:var(--text-primary);">${p.name}</div>
+                    <div class="risk-pts">${p.weight} KG</div>
+                `;
+                item.onclick = () => selectPersonnel(p.name, p.weight);
+                listContainer.appendChild(item);
+            });
+            openModal('personnel-modal');
+        }
+
+        function selectPersonnel(name, weight) {
+            if (currentSeatId !== null) {
+                const occElem = document.getElementById(`occ-${currentSeatId}`);
+                const wtElem = document.getElementById(`wt-${currentSeatId}`);
+                
+                if (occElem) {
+                    occElem.innerText = name;
+                    occElem.style.color = (name === 'Empty' || name === 'Search personnel...') ? 'var(--text-secondary)' : (currentSeatId === 5 ? 'var(--accent-red)' : 'var(--text-primary)');
+                }
+                if (wtElem) {
+                    wtElem.value = weight;
+                }
+            }
+            closeModal('personnel-modal');
+        }
 
         function toggleTheme() {
             const html = document.documentElement;
@@ -1042,7 +1121,11 @@
             <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
         </div>
         <div style="padding:20px; line-height:1.5; font-size: 0.95rem;">
-            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.11] - 2026-06-18</h4>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.12] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added interactive personnel selection modal with action stars and bombshell actresses to dynamically populate seat occupant and weight data.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.11] - 2026-06-18</h4>
             <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
                 <li>Moved the leg tabs below the stoplight action buttons.</li>
             </ul>

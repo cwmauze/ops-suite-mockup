@@ -358,11 +358,49 @@
         }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: #888; font-size: 0.75rem; font-weight: bold; width: 20%;
-            cursor: pointer; gap: 4px;
-        }
         .nav-item:active { opacity: 0.6; }
         .nav-item.active { color: var(--accent-blue); }
+        
+        /* --- SIMULATED KEYBOARD --- */
+        .simulated-keyboard {
+            position: absolute;
+            bottom: -360px; /* Hidden */
+            left: 0; right: 0;
+            height: 350px;
+            background: rgba(209, 213, 219, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: bottom 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 15px 10px;
+            box-sizing: border-box;
+            gap: 12px;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        }
+        .simulated-keyboard.visible { bottom: 0; }
+        [data-theme='dark'] .simulated-keyboard { background: rgba(44, 44, 46, 0.95); }
+        .kb-row { display: flex; justify-content: center; gap: 8px; width: 100%; }
+        .kb-key {
+            background: #ffffff; border-radius: 8px; box-shadow: 0 1px 1px rgba(0,0,0,0.3);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 22px; font-weight: 400; color: #000; cursor: pointer;
+            user-select: none; flex: 1; max-width: 65px; height: 55px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            transition: background 0.1s;
+        }
+        .kb-key:active { background: #e5e5ea; }
+        [data-theme='dark'] .kb-key { background: #636366; color: #fff; box-shadow: 0 1px 1px rgba(0,0,0,0.6); }
+        [data-theme='dark'] .kb-key:active { background: #48484a; }
+        .kb-key.special { background: #aeb3ba; max-width: 90px; font-size: 18px; font-weight: 500; }
+        [data-theme='dark'] .kb-key.special { background: #3a3a3c; }
+        .kb-key.spacebar { max-width: 350px; flex: 4; }
+
+        /* ================= MEDIA QUERIES ================= */
         .nav-icon { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 2px; }
 
 
@@ -714,8 +752,30 @@
                 <span>Chat</span>
             </div>
         </div>
-        </div> <!-- Close device-screen -->
+
+        <!-- Simulated iPad Keyboard -->
+        <div id="simulated-keyboard" class="simulated-keyboard" onmousedown="event.preventDefault()">
+            <div class="kb-row">
+                <div class="kb-key">Q</div><div class="kb-key">W</div><div class="kb-key">E</div><div class="kb-key">R</div><div class="kb-key">T</div><div class="kb-key">Y</div><div class="kb-key">U</div><div class="kb-key">I</div><div class="kb-key">O</div><div class="kb-key">P</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key" style="margin-left: 20px;">A</div><div class="kb-key">S</div><div class="kb-key">D</div><div class="kb-key">F</div><div class="kb-key">G</div><div class="kb-key">H</div><div class="kb-key">J</div><div class="kb-key">K</div><div class="kb-key">L</div><div class="kb-key" style="margin-right: 20px;">'</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key special">Shift</div>
+                <div class="kb-key">Z</div><div class="kb-key">X</div><div class="kb-key">C</div><div class="kb-key">V</div><div class="kb-key">B</div><div class="kb-key">N</div><div class="kb-key">M</div>
+                <div class="kb-key special">⌫</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key special" style="max-width: 70px;">.?123</div>
+                <div class="kb-key spacebar"></div>
+                <div class="kb-key special" style="max-width: 80px;" onclick="document.activeElement.blur()">Return</div>
+                <div class="kb-key special dismiss-btn" style="max-width: 60px;" onclick="document.activeElement.blur()">⌨️</div>
+            </div>
+        </div>
         
+        </div> <!-- Close device-screen -->
+
         <!-- ================= MODALS ================= -->
 
         <!-- Risk Modal -->
@@ -1045,6 +1105,45 @@
             { name: "Raquel Welch", weight: 55 },
             { name: "Pamela Anderson", weight: 60 }
         ];
+
+        // Simulated Keyboard Logic
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        
+        document.addEventListener('focusin', (e) => {
+            if (isTouchDevice || document.body.classList.contains('native-mode')) return;
+            
+            const target = e.target;
+            if ((target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') && 
+                !target.readOnly && 
+                target.type !== 'checkbox' && 
+                target.type !== 'radio' &&
+                target.type !== 'range') {
+                
+                document.getElementById('simulated-keyboard').classList.add('visible');
+                const mainContent = document.getElementById('main-content');
+                if (mainContent) {
+                    mainContent.style.paddingBottom = '350px';
+                    setTimeout(() => {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                }
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            if (isTouchDevice || document.body.classList.contains('native-mode')) return;
+            
+            setTimeout(() => {
+                const active = document.activeElement;
+                if (!active || (active.tagName !== 'INPUT' && active.tagName !== 'TEXTAREA') || active.readOnly) {
+                    document.getElementById('simulated-keyboard').classList.remove('visible');
+                    const mainContent = document.getElementById('main-content');
+                    if (mainContent) {
+                        mainContent.style.paddingBottom = '20px';
+                    }
+                }
+            }, 50);
+        });
 
         function calculateFuelTime() {
             const supply = parseFloat(document.getElementById('supply-tank').value) || 0;

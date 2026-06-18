@@ -1025,7 +1025,7 @@
         </div>
     </div>
 
-    <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative;">
+    <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
         <div class="device-frame" id="deviceFrame">
         <div class="device-screen">
             
@@ -1251,7 +1251,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        function scaleDevice() {
+                function scaleDevice() {
             const frame = document.querySelector('.device-frame');
             const container = document.getElementById('main-view') || document.body;
             if(frame) {
@@ -1259,8 +1259,18 @@
                     frame.style.transform = 'none';
                     return;
                 }
-                // Total width = 744 + 40 padding = 784. Total height = 1133 + 40 padding = 1173
-                const scale = Math.min((container.clientWidth * 0.95) / 784, (container.clientHeight * 0.95) / 1173);
+                // Calculate available width and height for the container
+                // #main-view takes up window.innerWidth - instructions panel width (350px when visible)
+                const isDesktop = window.innerWidth > 1100;
+                const instructionsWidth = isDesktop ? 350 : 0;
+                const availableWidth = window.innerWidth - instructionsWidth;
+                const availableHeight = window.innerHeight;
+                
+                // iPad dimensions + padding
+                const targetWidth = 784;
+                const targetHeight = 1173;
+
+                const scale = Math.min((availableWidth * 0.95) / targetWidth, (availableHeight * 0.95) / targetHeight);
                 frame.style.transform = `scale(${scale})`;
             }
         }

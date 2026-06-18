@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the "Stations" section header to reclaim additional vertical space.
 - Refactored Spatial Station cards to position the weight input inline with the station title (e.g., `PILOT (RIGHT) [0 KG]`), eliminating an entire line to drastically save vertical scrolling.
 - Comprehensively reduced padding, margins, gaps, and component heights (like the bottom navigation bar and form inputs) throughout the entire layout to practically eliminate unnecessary vertical "dead space" and prevent scrolling.
+- Spelled out all Spatial Station titles explicitly in full (e.g., "COPILOT SEAT", "AFT FACING LEFT HAND").
 
 ## [0.0.16] - 2026-06-18
 ### Changed

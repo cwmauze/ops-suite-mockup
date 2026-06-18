@@ -364,12 +364,11 @@
         .nav-item:active { opacity: 0.6; }
         .nav-item.active { color: var(--accent-blue); }
         
-        /* --- SIMULATED KEYBOARD --- */
-        .simulated-keyboard {
+        /* --- SIMULATED KEYBOARDS --- */
+        .simulated-keyboard, .simulated-numpad {
             position: absolute;
-            bottom: -360px; /* Hidden */
+            bottom: -420px; /* Hidden */
             left: 0; right: 0;
-            height: 350px;
             background: rgba(209, 213, 219, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -385,8 +384,10 @@
             border-bottom-right-radius: 24px;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
         }
-        .simulated-keyboard.visible { bottom: 0; }
-        [data-theme='dark'] .simulated-keyboard { background: rgba(44, 44, 46, 0.95); }
+        .simulated-keyboard { height: 410px; }
+        .simulated-numpad { height: 350px; bottom: -360px; }
+        .simulated-keyboard.visible, .simulated-numpad.visible { bottom: 0; }
+        [data-theme='dark'] .simulated-keyboard, [data-theme='dark'] .simulated-numpad { background: rgba(44, 44, 46, 0.95); }
         .kb-row { display: flex; justify-content: center; gap: 8px; width: 100%; }
         .kb-key {
             background: #ffffff; border-radius: 8px; box-shadow: 0 1px 1px rgba(0,0,0,0.3);
@@ -756,8 +757,35 @@
             </div>
         </div>
 
+        <!-- Simulated iPad Numpad -->
+        <div id="simulated-numpad" class="simulated-numpad" onmousedown="event.preventDefault()">
+            <div class="kb-row">
+                <div class="kb-key" style="max-width:100px; height:60px;">1</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">2</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">3</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key" style="max-width:100px; height:60px;">4</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">5</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">6</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key" style="max-width:100px; height:60px;">7</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">8</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">9</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key special" style="max-width:100px; height:60px; font-size:26px;">.</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">0</div>
+                <div class="kb-key special dismiss-btn" style="max-width:100px; height:60px; font-size:24px;" onclick="document.activeElement.blur()">⌨️</div>
+            </div>
+        </div>
+
         <!-- Simulated iPad Keyboard -->
         <div id="simulated-keyboard" class="simulated-keyboard" onmousedown="event.preventDefault()">
+            <div class="kb-row">
+                <div class="kb-key">1</div><div class="kb-key">2</div><div class="kb-key">3</div><div class="kb-key">4</div><div class="kb-key">5</div><div class="kb-key">6</div><div class="kb-key">7</div><div class="kb-key">8</div><div class="kb-key">9</div><div class="kb-key">0</div>
+            </div>
             <div class="kb-row">
                 <div class="kb-key">Q</div><div class="kb-key">W</div><div class="kb-key">E</div><div class="kb-key">R</div><div class="kb-key">T</div><div class="kb-key">Y</div><div class="kb-key">U</div><div class="kb-key">I</div><div class="kb-key">O</div><div class="kb-key">P</div>
             </div>
@@ -1116,16 +1144,29 @@
             if (isTouchDevice || document.body.classList.contains('native-mode')) return;
             
             const target = e.target;
+            const kb = document.getElementById('simulated-keyboard');
+            const numpad = document.getElementById('simulated-numpad');
+
             if ((target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') && 
                 !target.readOnly && 
                 target.type !== 'checkbox' && 
                 target.type !== 'radio' &&
                 target.type !== 'range') {
                 
-                document.getElementById('simulated-keyboard').classList.add('visible');
+                const inputMode = target.getAttribute('inputmode');
+                const isNumeric = target.type === 'number' || inputMode === 'decimal' || inputMode === 'numeric';
+                
+                if (isNumeric) {
+                    kb.classList.remove('visible');
+                    numpad.classList.add('visible');
+                } else {
+                    numpad.classList.remove('visible');
+                    kb.classList.add('visible');
+                }
+                
                 const mainContent = document.getElementById('main-content');
                 if (mainContent) {
-                    mainContent.style.paddingBottom = '350px';
+                    mainContent.style.paddingBottom = isNumeric ? '350px' : '410px';
                     setTimeout(() => {
                         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }, 300);
@@ -1139,7 +1180,12 @@
             setTimeout(() => {
                 const active = document.activeElement;
                 if (!active || (active.tagName !== 'INPUT' && active.tagName !== 'TEXTAREA') || active.readOnly) {
-                    document.getElementById('simulated-keyboard').classList.remove('visible');
+                    if (isTouchDevice) return;
+                    const kb = document.getElementById('simulated-keyboard');
+                    const numpad = document.getElementById('simulated-numpad');
+                    kb.classList.remove('visible');
+                    numpad.classList.remove('visible');
+                    
                     const mainContent = document.getElementById('main-content');
                     if (mainContent) {
                         mainContent.style.paddingBottom = '20px';

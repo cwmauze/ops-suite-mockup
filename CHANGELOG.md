@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.22] - 2026-06-18
+### Added
+- Upgraded the "Departed" and "Arrived" inputs to full datetime fields, supporting the YYYY-MM-DD format plus time.
+- Wired up the "NOW" buttons to automatically inject the current UTC (Zulu) date and time into their respective fields.
+- Enhanced touch-friendly interactions: weight inputs now trigger the native numeric keypad on mobile/tablet devices (`inputmode="decimal"`).
+
 ## [0.0.21] - 2026-06-18
 ### Added
 - Added a visual CSS mockup of an iOS keyboard that automatically slides up from the bottom when clicking into any text/number input. This adds realism to desktop demonstrations. The keyboard is automatically disabled on actual touch devices (like a real iPad) to prevent duplicate keyboards.

@@ -592,8 +592,8 @@
                         <div class="form-group" style="flex: 1.5;">
                             <label>Departed (Z)</label>
                             <div style="display: flex; gap: 5px;">
-                                <input type="time" value="19:12" style="padding: 6px; flex: 1;">
-                                <button style="background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 0 10px; font-weight: bold; cursor: pointer;">NOW</button>
+                                <input type="datetime-local" id="depart-time" value="2026-06-18T19:12" style="padding: 6px; flex: 1;">
+                                <button onclick="setNow('depart-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 0 10px; font-weight: bold; cursor: pointer;">NOW</button>
                             </div>
                         </div>
                     </div>
@@ -605,8 +605,8 @@
                         <div class="form-group" style="flex: 1.5;">
                             <label>Arrived (Z)</label>
                             <div style="display: flex; gap: 5px;">
-                                <input type="time" value="" style="padding: 6px; flex: 1;">
-                                <button style="background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 0 10px; font-weight: bold; cursor: pointer;">NOW</button>
+                                <input type="datetime-local" id="arrive-time" value="" style="padding: 6px; flex: 1;">
+                                <button onclick="setNow('arrive-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 0 10px; font-weight: bold; cursor: pointer;">NOW</button>
                             </div>
                         </div>
                     </div>
@@ -618,7 +618,7 @@
                         <div class="seat-card">
                             <div class="seat-header">
                                 <div class="seat-title">Copilot Seat</div>
-                                <div class="seat-weight">[<input type="number" id="wt-1" value="0"> KG]</div>
+                                <div class="seat-weight">[<input type="number" id="wt-1" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
                             </div>
                             <div style="position: relative;">
                                 <input type="text" class="seat-occupant-input" id="occ-1" placeholder="Search personnel..." oninput="filterPersonnel(1)" onfocus="showPersonnel(1)">
@@ -629,7 +629,7 @@
                         <div class="seat-card active">
                             <div class="seat-header">
                                 <div class="seat-title">Pilot Seat</div>
-                                <div class="seat-weight">[<input type="number" id="wt-2" value="0"> KG]</div>
+                                <div class="seat-weight">[<input type="number" id="wt-2" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
                             </div>
                             <div style="position: relative;">
                                 <input type="text" class="seat-occupant-input" id="occ-2" value="" placeholder="Search personnel..." oninput="filterPersonnel(2)" onfocus="showPersonnel(2)">
@@ -640,7 +640,7 @@
                         <div class="seat-card">
                             <div class="seat-header">
                                 <div class="seat-title">Aft Facing Left Hand</div>
-                                <div class="seat-weight">[<input type="number" id="wt-3" value="0"> KG]</div>
+                                <div class="seat-weight">[<input type="number" id="wt-3" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
                             </div>
                             <div style="position: relative;">
                                 <input type="text" class="seat-occupant-input" id="occ-3" value="" placeholder="Search personnel..." oninput="filterPersonnel(3)" onfocus="showPersonnel(3)">
@@ -651,7 +651,7 @@
                         <div class="seat-card">
                             <div class="seat-header">
                                 <div class="seat-title">Aft Facing Right Hand</div>
-                                <div class="seat-weight">[<input type="number" id="wt-4" value="0"> KG]</div>
+                                <div class="seat-weight">[<input type="number" id="wt-4" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
                             </div>
                             <div style="position: relative;">
                                 <input type="text" class="seat-occupant-input" id="occ-4" value="" placeholder="Search personnel..." oninput="filterPersonnel(4)" onfocus="showPersonnel(4)">
@@ -662,13 +662,13 @@
                         <div class="seat-card">
                             <div class="seat-header">
                                 <div class="seat-title">Left Hand Litter</div>
-                                <div class="seat-weight">[<input type="number" id="wt-5" value="0"> KG]</div>
+                                <div class="seat-weight">[<input type="number" id="wt-5" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
                             </div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-header">
                                 <div class="seat-title">Fwd Facing Aft Seat Right Hand</div>
-                                <div class="seat-weight">[<input type="number" id="wt-6" value="0"> KG]</div>
+                                <div class="seat-weight">[<input type="number" id="wt-6" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
                             </div>
                             <input type="text" class="seat-occupant-input" id="occ-6" value="" placeholder="Search personnel..." oninput="filterPersonnel(6)" onfocus="showPersonnel(6)">
                             <div class="autocomplete-dropdown" id="dropdown-6"></div>
@@ -690,13 +690,13 @@
                         <div class="form-group">
                             <label>Supply Tank</label>
                             <div style="display:flex; align-items:center; gap:10px;">
-                                <input type="number" id="supply-tank" value="33" style="text-align:right;" oninput="calculateFuelTime()"> <span style="font-weight:bold; color:var(--text-secondary)">GAL</span>
+                                <input type="number" id="supply-tank" value="33" inputmode="decimal" pattern="[0-9]*" style="text-align:right;" oninput="calculateFuelTime()"> <span style="font-weight:bold; color:var(--text-secondary)">GAL</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Main Tank</label>
                             <div style="display:flex; align-items:center; gap:10px;">
-                                <input type="number" id="main-tank" value="160" style="text-align:right;" oninput="calculateFuelTime()"> <span style="font-weight:bold; color:var(--text-secondary)">GAL</span>
+                                <input type="number" id="main-tank" value="160" inputmode="decimal" pattern="[0-9]*" style="text-align:right;" oninput="calculateFuelTime()"> <span style="font-weight:bold; color:var(--text-secondary)">GAL</span>
                             </div>
                         </div>
                     </div>
@@ -1169,6 +1169,18 @@
         
         // Initialize fuel time on load
         setTimeout(calculateFuelTime, 100);
+
+        function setNow(inputId) {
+            const now = new Date();
+            const year = now.getUTCFullYear();
+            const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(now.getUTCDate()).padStart(2, '0');
+            const hours = String(now.getUTCHours()).padStart(2, '0');
+            const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+            const formatted = `${year}-${month}-${day}T${hours}:${minutes}`;
+            const input = document.getElementById(inputId);
+            if(input) input.value = formatted;
+        }
 
         function showPersonnel(seatId) {
             filterPersonnel(seatId);

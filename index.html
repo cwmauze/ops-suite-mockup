@@ -1194,6 +1194,71 @@
             }, 50);
         });
 
+        // Make simulated keys functional
+        document.addEventListener('click', (e) => {
+            if (isTouchDevice) return;
+            
+            const key = e.target.closest('.kb-key');
+            if (!key) return;
+            
+            const active = document.activeElement;
+            if (!active || (active.tagName !== 'INPUT' && active.tagName !== 'TEXTAREA') || active.readOnly) return;
+            
+            if (key.classList.contains('dismiss-btn')) {
+                active.blur();
+                return;
+            }
+            
+            // Handle Backspace
+            if (key.innerText === '⌫') {
+                if (active.type === 'number' || active.type === 'time' || active.type === 'datetime-local') {
+                    active.value = active.value.slice(0, -1);
+                } else if (active.selectionStart !== undefined) {
+                    const start = active.selectionStart;
+                    const end = active.selectionEnd;
+                    if (start === end && start > 0) {
+                        active.value = active.value.slice(0, start - 1) + active.value.slice(start);
+                        active.setSelectionRange(start - 1, start - 1);
+                    } else if (start !== end) {
+                        active.value = active.value.slice(0, start) + active.value.slice(end);
+                        active.setSelectionRange(start, start);
+                    }
+                } else {
+                    active.value = active.value.slice(0, -1);
+                }
+                active.dispatchEvent(new Event('input', { bubbles: true }));
+                return;
+            }
+            
+            // Ignore other special keys (Shift, Return, .?123)
+            if (key.classList.contains('special') && key.innerText !== '.') {
+                if (key.innerText.includes('Return')) active.blur();
+                return; 
+            }
+            
+            // Handle regular keys
+            let char = key.classList.contains('spacebar') ? ' ' : key.innerText;
+            
+            // Handle input
+            if (active.type === 'number' || active.type === 'time' || active.type === 'datetime-local') {
+                // If it's a number and they hit '.', and it already has one, ignore
+                if (active.type === 'number' && char === '.' && active.value.includes('.')) return;
+                
+                // Read current as string to handle appending properly
+                let curVal = active.value.toString();
+                active.value = curVal + char;
+            } else if (active.selectionStart !== undefined) {
+                const start = active.selectionStart;
+                const end = active.selectionEnd;
+                active.value = active.value.slice(0, start) + char + active.value.slice(end);
+                active.setSelectionRange(start + char.length, start + char.length);
+            } else {
+                active.value += char;
+            }
+            
+            active.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+
         function calculateFuelTime() {
             const supply = parseFloat(document.getElementById('supply-tank').value) || 0;
             const main = parseFloat(document.getElementById('main-tank').value) || 0;

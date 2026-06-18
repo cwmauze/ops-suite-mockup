@@ -38,58 +38,7 @@
             const panel = document.getElementById('changelog-panel');
             if (panel.style.display === 'none' || panel.style.display === '') {
                 panel.style.display = 'flex';
-            } else {
-                panel.style.display = 'none';
             }
-            setTimeout(scaleDevice, 10);
-        }
-    
-
-        let currentRiskScore = 0;
-        let isRiskSigned = false;
-
-        function calculateRisk() {
-            let total = 0;
-            document.querySelectorAll('.risk-checkbox').forEach(cb => {
-                if (cb.checked) {
-                    total += parseInt(cb.getAttribute('data-pts') || 0, 10);
-                }
-            });
-            currentRiskScore = total;
-            document.getElementById('risk-pill').innerText = total;
-            updateRiskTile();
-        }
-
-        function toggleRiskSignature(checked) {
-            isRiskSigned = checked;
-            updateRiskTile();
-        }
-
-        function updateRiskTile() {
-            const btn = document.getElementById('risk-btn');
-            btn.style.flexDirection = "column";
-            btn.style.padding = "6px";
-            
-            let label = `<span style="font-size:0.6rem; text-transform:uppercase;">Risk Assmt</span>`;
-            
-            if (isRiskSigned) {
-                btn.className = "tile green";
-                btn.innerHTML = `${label}<span style="font-size:1rem; font-weight:bold; margin-top:2px;">${currentRiskScore} ✓</span>`;
-                return;
-            }
-            
-            btn.innerHTML = `${label}<span style="font-size:1rem; font-weight:bold; margin-top:2px;">${currentRiskScore} pts</span>`;
-            
-            if (currentRiskScore <= 15) {
-                btn.className = "tile green";
-            } else if (currentRiskScore <= 20) {
-                btn.className = "tile orange";
-            } else {
-                btn.className = "tile red";
-            }
-        }
-
-        
     </script>
     <style>
         :root {
@@ -1231,7 +1180,55 @@
                             <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="-1" onchange="calculateRisk()">
                         </div>
 
-                    </div>
+                    
+                        <div class="risk-item">
+                            <div class="risk-text">38- Use of a pre-designated LZ at a scene</div>
+                            <div class="risk-pts">-1 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="-1" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">39- Add extra fuel stop</div>
+                            <div class="risk-pts">-1 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="-1" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">40- Change route to avoid hazardous terrain or weather</div>
+                            <div class="risk-pts">-1 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="-1" onchange="calculateRisk()">
+                        </div>
+                        
+                        <div style="background-color: var(--border-color); padding: 4px 12px; font-size:0.8rem; font-weight:bold; color:var(--text-secondary); text-transform:uppercase; margin-top: 15px;">TURNDOWN</div>
+                        <div class="risk-item">
+                            <div class="risk-text">41- Weather Conditions are Unacceptable</div>
+                            <div class="risk-pts">35 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="35" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">42- Medical Crew Declined Flight Request</div>
+                            <div class="risk-pts">35 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="35" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">43- Insufficient Duty Time available</div>
+                            <div class="risk-pts">35 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="35" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">44- Aircraft Range Inadequate</div>
+                            <div class="risk-pts">35 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="35" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">45- Aircraft Performance or Equipment Inadequate</div>
+                            <div class="risk-pts">35 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="35" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">46- Other (explain briefly in comments)</div>
+                            <div class="risk-pts">35 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="35" onchange="calculateRisk()">
+                        </div>
+</div>
                     <div style="background-color: var(--surface-color); padding: 15px; margin-top: 15px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
                         <span style="font-weight:bold; font-size:1.1rem;">Sign to Approve</span>
                         <label class="switch">
@@ -1953,6 +1950,7 @@
 
         // Initialize
         renderTabs();
+        calculateRisk();
 
         // --- SYNC INTERACTION ---
         function triggerManualSync(el) {

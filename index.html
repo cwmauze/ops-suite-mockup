@@ -67,14 +67,18 @@
 
         function updateRiskTile() {
             const btn = document.getElementById('risk-btn');
+            btn.style.flexDirection = "column";
+            btn.style.padding = "6px";
+            
+            let label = `<span style="font-size:0.6rem; text-transform:uppercase;">Risk Assmt</span>`;
             
             if (isRiskSigned) {
                 btn.className = "tile green";
-                btn.innerHTML = `Risk: ${currentRiskScore} ✓`;
+                btn.innerHTML = `${label}<span style="font-size:1rem; font-weight:bold; margin-top:2px;">${currentRiskScore} ✓</span>`;
                 return;
             }
             
-            btn.innerHTML = `Risk: ${currentRiskScore}`;
+            btn.innerHTML = `${label}<span style="font-size:1rem; font-weight:bold; margin-top:2px;">${currentRiskScore} pts</span>`;
             
             if (currentRiskScore <= 15) {
                 btn.className = "tile green";
@@ -717,7 +721,7 @@
                     </div>
                     <div class="action-tiles" style="flex: 1; padding: 0; margin: 0; background: none; border: none;">
                         <button class="tile blue" onclick="openModal('edit-modal')">Edit Flt</button>
-                        <button id="risk-btn" class="tile orange" onclick="openModal('risk-modal')">Risk Form</button>
+                        <button id="risk-btn" class="tile orange" onclick="openModal('risk-modal')">Risk Assessment</button>
                         <button id="dispatch-btn" class="tile red" onclick="promptDispatch()">Dispatch #</button>
                     </div>
                 </div>
@@ -1032,6 +1036,8 @@
                 <div class="modal-body">
                     <div style="padding: 15px 20px; font-weight:bold; color:var(--text-secondary); letter-spacing:1px; font-size:0.9rem;">STATIC SCORE</div>
                     <div class="risk-list">
+
+                        <div style="background-color: var(--border-color); padding: 4px 12px; font-size:0.8rem; font-weight:bold; color:var(--text-secondary); text-transform:uppercase;">STATIC SCORE</div>
                         <div class="risk-item">
                             <div class="risk-text">1- Consecutive shifts > 7</div>
                             <div class="risk-pts">2 pts</div>
@@ -1053,6 +1059,31 @@
                             <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
+                            <div class="risk-text">5- PIC < 100 hours in type</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">6- Last flight > 30 days</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">7- Last Night and/or HNVGO flight > 30 days (Only applicable when conducting Night Flight)</div>
+                            <div class="risk-pts">4 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="4" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">8- Last instrument approach > 30 days</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">9- Relief Pilot new to local area and operating with an approved LBO Waiver</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+<div class="risk-item">
                             <div class="risk-text">10- In differently equipped or different model aircraft</div>
                             <div class="risk-pts">3 pts</div>
                             <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
@@ -1969,14 +2000,18 @@
 
         function updateRiskTile() {
             const btn = document.getElementById('risk-btn');
+            btn.style.flexDirection = "column";
+            btn.style.padding = "6px";
+            
+            let label = `<span style="font-size:0.6rem; text-transform:uppercase;">Risk Assmt</span>`;
             
             if (isRiskSigned) {
                 btn.className = "tile green";
-                btn.innerHTML = `Risk: ${currentRiskScore} ✓`;
+                btn.innerHTML = `${label}<span style="font-size:1rem; font-weight:bold; margin-top:2px;">${currentRiskScore} ✓</span>`;
                 return;
             }
             
-            btn.innerHTML = `Risk: ${currentRiskScore}`;
+            btn.innerHTML = `${label}<span style="font-size:1rem; font-weight:bold; margin-top:2px;">${currentRiskScore} pts</span>`;
             
             if (currentRiskScore <= 15) {
                 btn.className = "tile green";

@@ -7,14 +7,25 @@
     <script>
         function scaleDevice() {
             const frame = document.querySelector('.device-frame');
+            const container = document.getElementById('main-view') || document.body;
             if(frame) {
                 // Total width = 744 + 40 padding = 784. Total height = 1133 + 40 padding = 1173
-                const scale = Math.min(1, (window.innerWidth * 0.95) / 784, (window.innerHeight * 0.95) / 1173);
+                const scale = Math.min(1, (container.clientWidth * 0.95) / 784, (container.clientHeight * 0.95) / 1173);
                 frame.style.transform = `scale(${scale})`;
             }
         }
         window.addEventListener('resize', scaleDevice);
         window.addEventListener('DOMContentLoaded', scaleDevice);
+
+        function toggleChangelog() {
+            const panel = document.getElementById('changelog-panel');
+            if (panel.style.display === 'none' || panel.style.display === '') {
+                panel.style.display = 'flex';
+            } else {
+                panel.style.display = 'none';
+            }
+            setTimeout(scaleDevice, 10);
+        }
     </script>
     <style>
         :root {
@@ -60,11 +71,10 @@
         body {
             background-color: #333;
             display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            width: 100vw;
         }
 
         .device-frame {
@@ -372,43 +382,10 @@
 </head>
 <body>
 
-    <div class="mockup-version" onclick="document.getElementById('changelog-modal-wrapper').style.display='flex'">Mockup v0.0.5</div>
+    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.6</div>
     
-    <!-- Changelog Modal (Outside device frame) -->
-    <div id="changelog-modal-wrapper" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; justify-content:center; align-items:center;">
-        <div style="background:#222; color:#fff; width:600px; max-width:90%; max-height:80%; border-radius:12px; display:flex; flex-direction:column; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-            <div style="padding:15px 20px; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">
-                <h3 style="margin:0;">Changelog</h3>
-                <button onclick="document.getElementById('changelog-modal-wrapper').style.display='none'" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
-            </div>
-            <div style="padding:20px; overflow-y:auto; line-height:1.5; font-size: 0.95rem;">
-                <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.5] - 2026-06-18</h4>
-                <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
-                    <li>Added interactive changelog modal to the mockup version tag.</li>
-                </ul>
-                <h4 style="color:var(--accent-blue);">[0.0.4] - 2026-06-18</h4>
-                <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
-                    <li>Added responsive scaling script so the iPad device frame always zooms to fit entirely within the user's browser vertically and horizontally.</li>
-                </ul>
-                <h4 style="color:var(--accent-blue);">[0.0.3] - 2026-06-18</h4>
-                <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
-                    <li>Moved the mockup version number outside of the iPad screen depiction so it's clear it tracks the mockup itself, not the UI.</li>
-                </ul>
-                <h4 style="color:var(--accent-blue);">[0.0.2] - 2026-06-18</h4>
-                <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
-                    <li>Hotfix: Changed the default UI theme back to light mode.</li>
-                </ul>
-                <h4 style="color:var(--accent-blue);">[0.0.1] - 2026-06-18</h4>
-                <ul style="padding-left:20px; margin-bottom:0; color:#ddd;">
-                    <li>Created initial CHANGELOG.md.</li>
-                    <li>Refactored prototype/index.html to a compressed, zero-vertical-scroll layout.</li>
-                    <li>Consolidated global header to embed metrics into "Stop-Light" validation buttons.</li>
-                    <li>Added a rigid "Close Flight" modal with strict hard-stop JavaScript validations for Night/NVG/IFR limits (BUG-005).</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="device-frame">
+    <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative;">
+        <div class="device-frame">
         <div class="device-screen">
             
             <div class="sync-bar">
@@ -1002,5 +979,43 @@
         // Initialize
         renderTabs();
     </script>
+    </div> <!-- Close main-view -->
+
+    <!-- Changelog Side Panel -->
+    <div id="changelog-panel" style="display:none; width: 400px; height: 100%; background:#222; color:#fff; flex-direction:column; font-family:-apple-system, BlinkMacSystemFont, sans-serif; border-left: 2px solid #444; overflow-y:auto; box-shadow: -5px 0 15px rgba(0,0,0,0.5); z-index: 10000; flex-shrink: 0;">
+        <div style="padding:15px 20px; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:#222;">
+            <h3 style="margin:0;">Changelog</h3>
+            <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <div style="padding:20px; line-height:1.5; font-size: 0.95rem;">
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.6] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Changed changelog modal to a right-aligned side panel that doesn't block the simulated iPad display.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.5] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added interactive changelog modal to the mockup version tag.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.4] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added responsive scaling script so the iPad device frame always zooms to fit entirely within the user's browser vertically and horizontally.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.3] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Moved the mockup version number outside of the iPad screen depiction so it's clear it tracks the mockup itself, not the UI.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.2] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Hotfix: Changed the default UI theme back to light mode.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.1] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:0; color:#ddd;">
+                <li>Created initial CHANGELOG.md.</li>
+                <li>Refactored prototype/index.html to a compressed, zero-vertical-scroll layout.</li>
+                <li>Consolidated global header to embed metrics into "Stop-Light" validation buttons.</li>
+                <li>Added a rigid "Close Flight" modal with strict hard-stop JavaScript validations for Night/NVG/IFR limits (BUG-005).</li>
+            </ul>
+        </div>
+    </div>
 </body>
 </html>

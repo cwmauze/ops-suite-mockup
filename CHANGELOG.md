@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.6] - 2026-06-18
+### Changed
+- Changed changelog modal to a right-aligned side panel that doesn't block the simulated iPad display.
+
 ## [0.0.5] - 2026-06-18
 ### Added
 - Made the external version number a clickable button that displays a pop-up changelog modal over the screen.

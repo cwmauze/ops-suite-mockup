@@ -153,12 +153,12 @@
         /* --- SYNC BAR --- */
         .sync-bar {
             background-color: var(--surface-color-light);
-            padding: 8px 20px;
-            font-size: 0.85rem;
+            padding: 4px 12px;
+            font-size: 0.8rem;
             font-weight: bold;
             color: var(--text-secondary);
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
             gap: 6px;
             border-bottom: 1px solid var(--border-color);
@@ -168,7 +168,7 @@
         /* --- GLOBAL FLIGHT HEADER --- */
         .global-header {
             background-color: var(--surface-color);
-            padding: 15px 20px;
+            padding: 10px 12px;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -210,7 +210,7 @@
         .leg-tabs {
             display: flex;
             gap: 8px;
-            padding: 10px 20px;
+            padding: 6px 12px;
             background-color: var(--surface-color);
             border-bottom: 1px solid var(--border-color);
             overflow-x: auto;
@@ -218,13 +218,13 @@
         .leg-tabs::-webkit-scrollbar { display: none; }
 
         .leg-tab {
-            padding: 8px 16px;
+            padding: 6px 12px;
             background-color: var(--surface-color-light);
             border: 2px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 16px;
             color: var(--text-primary);
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             white-space: nowrap;
             display: flex;
@@ -244,14 +244,19 @@
             font-size: 0.8rem;
         }
 
-        /* --- STICKY ACTION BAR --- */
-        .sticky-action-bar {
-            position: sticky;
-            top: 0;
+        /* --- ACTION SECTIONS --- */
+        .action-section {
+            padding: 15px 20px;
             background-color: var(--surface-color);
             border-bottom: 2px solid var(--border-color);
-            z-index: 10;
-            padding: 10px 20px;
+        }
+        .action-section.leg-level {
+            background-color: var(--surface-color-light);
+        }
+        .action-header {
+            font-size: 0.8rem; font-weight: bold; color: var(--text-secondary); text-transform: uppercase;
+            margin-bottom: 10px; letter-spacing: 1px;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
         .action-tiles {
@@ -271,24 +276,29 @@
             color: white;
             border: none;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .tile:active { opacity: 0.8; }
         .tile.blue { background-color: var(--accent-blue); }
         .tile.orange { background-color: var(--accent-orange); }
         .tile.green { background-color: var(--accent-green); }
         .tile.red { background-color: var(--accent-red); }
+        .tile.dark { background-color: #333; border: 1px solid #555; }
+
 
         /* --- MAIN CONTENT --- */
-        .container { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-        .section { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; }
-        .section-title { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; font-weight: bold; }
+        .container { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+        .section { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; }
+        .section-title { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; font-weight: bold; }
 
-        .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
-        .form-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-        label { font-size: 0.9rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; }
+        .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .form-group { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        label { font-size: 0.85rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; }
         input[type="text"], input[type="number"], input[type="time"], select {
             background-color: var(--input-bg); border: 2px solid var(--border-color);
-            color: var(--text-primary); padding: 12px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; width: 100%;
+            color: var(--text-primary); padding: 8px 10px; border-radius: 6px; font-size: 1rem; font-weight: bold; width: 100%;
         }
         input:focus, select:focus { outline: none; border-color: var(--accent-blue); }
         
@@ -301,36 +311,52 @@
         input:checked + .slider { background-color: var(--toggle-on); border-color: var(--toggle-on); }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background-color: var(--surface-color-light); padding: 15px; border-radius: 12px; border: 2px dashed var(--border-color); }
-        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; position: relative; }
+        .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background-color: var(--surface-color-light); padding: 12px; border-radius: 8px; border: 2px dashed var(--border-color); }
+        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; position: relative; }
         .seat-card.active { border-color: var(--accent-blue); }
-        .seat-title { font-size: 0.8rem; color: var(--text-secondary); text-align: center; text-transform: uppercase; font-weight: bold; }
-        .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 1rem; min-height: 44px; display: flex; align-items: center; justify-content: center; }
-        .seat-occupant-input { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 1rem; width: 100%; box-sizing: border-box; color: var(--text-primary); outline: none; }
+        .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .seat-title { font-size: 0.8rem; color: var(--text-secondary); text-align: left; text-transform: uppercase; font-weight: bold; margin: 0; }
+        .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 8px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 0.95rem; min-height: 38px; display: flex; align-items: center; justify-content: center; }
+        .seat-occupant-input { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 8px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 0.95rem; width: 100%; box-sizing: border-box; color: var(--text-primary); outline: none; margin: 0; }
         .seat-occupant-input::placeholder { color: var(--text-secondary); font-weight: normal; }
         .seat-occupant-input:focus { border-color: var(--accent-blue); }
-        .autocomplete-dropdown { position: absolute; top: calc(100% - 45px); left: 12px; right: 12px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; max-height: 150px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
+        .autocomplete-dropdown { position: absolute; top: calc(100% - 10px); left: 12px; right: 12px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; max-height: 150px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
         .autocomplete-item { padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; display: flex; justify-content: space-between; cursor: pointer; color: var(--text-primary); }
         .autocomplete-item:last-child { border-bottom: none; }
         .autocomplete-item:hover { background-color: var(--input-bg); }
-        .seat-weight { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 1rem; font-weight: bold; }
-        .seat-weight input { width: 70px; padding: 8px; text-align: center; }
+        .seat-weight { display: flex; align-items: center; gap: 2px; font-size: 0.85rem; font-weight: bold; color: var(--accent-blue); margin: 0; }
+        .seat-weight input { width: 40px; padding: 0; text-align: right; background: transparent; border: none; color: var(--accent-blue); font-weight: bold; font-size: 0.85rem; }
+        .seat-weight input:focus { outline: none; border-bottom: 1px solid var(--accent-blue); }
         .full-width { grid-column: 1 / -1; }
-
-        /* --- STICKY BOTTOM BAR --- */
-        .sticky-bottom-bar {
-            position: absolute; bottom: 20px; left: 20px; right: 20px;
-            background-color: var(--surface-color); border-top: 2px solid var(--border-color);
-            padding: 15px 20px; display: flex; align-items: center; gap: 10px; z-index: 50;
-            border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
-        }
+        
+        /* --- ACTION BUTTONS --- */
         .btn { flex: 1; padding: 15px; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; text-align: center; }
         .btn-primary { background-color: var(--accent-blue); }
         .btn-danger { background-color: var(--accent-red); }
         .btn-outline { background-color: transparent; border: 2px solid var(--border-color); color: var(--text-primary); }
-        
-        .verify-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 10px; min-width: 70px; }
+        .verify-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 70px; }
         .verify-wrapper label { font-size: 0.85rem; margin-bottom: 4px; font-weight: bold; color: var(--text-secondary); }
+
+        /* --- BOTTOM NAV BAR --- */
+        .bottom-nav {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background-color: #1a1a1a; border-top: 1px solid var(--border-color);
+            display: flex; justify-content: space-around; align-items: center;
+            height: 60px; z-index: 50;
+            border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
+        }
+        [data-theme="light"] .bottom-nav {
+            background-color: #ffffff;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #888; font-size: 0.75rem; font-weight: bold; width: 20%;
+            cursor: pointer; gap: 4px;
+        }
+        .nav-item:active { opacity: 0.6; }
+        .nav-item.active { color: var(--accent-blue); }
+        .nav-icon { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 2px; }
+
 
         /* --- MODALS --- */
         .modal-overlay {
@@ -444,57 +470,61 @@
         <div class="device-screen">
             
             <div class="sync-bar">
-                <span class="sync-icon">✔</span> Last sync: Just now
+                <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 2px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem;">🌓 Theme</button>
+                <div><span class="sync-icon">✔</span> Last sync: Just now</div>
             </div>
 
             <div class="global-header">
-                <div class="header-top-row">
-                    <div class="aircraft-title">Aircraft: N850BU</div>
-                    <div class="manifest-number">Manifest: 3664365</div>
-                    <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 2px solid var(--border-color); color: var(--text-primary); padding: 5px 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">🌓 Theme</button>
-                </div>
-                <div style="margin-top: 15px;">
-                    <button id="dispatch-btn" onclick="promptDispatch()" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--accent-red); background: var(--surface-color); color: var(--accent-red); font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        ⚠️ Dispatch Number Required
-                    </button>
+                <div class="header-top-row" style="align-items: stretch; gap: 15px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px; justify-content: center; min-width: 120px;">
+                        <div class="aircraft-title">Aircraft: N850BU</div>
+                        <div class="manifest-number">Manifest: 3664365</div>
+                        <div class="team-badge" style="font-size: 0.85rem; color: var(--accent-blue); font-weight: bold; cursor: pointer; text-transform: uppercase;">👥 RWI Medical Team</div>
+                    </div>
+                    <div class="action-tiles" style="flex: 1; padding: 0; margin: 0; background: none; border: none;">
+                        <button class="tile blue" onclick="openModal('edit-modal')">Edit Flt</button>
+                        <button class="tile orange" onclick="openModal('risk-modal')">Risk Form</button>
+                        <button id="dispatch-btn" class="tile red" onclick="promptDispatch()">Dispatch #</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="sticky-action-bar">
-                <div class="action-row" style="display:flex; gap:8px; margin-bottom: 8px;">
-                    <button class="tile blue" style="flex:0.5; padding:8px; font-size:0.85rem;" onclick="openModal('edit-modal')">Edit Flt</button>
-                    <button class="tile orange" style="flex:0.5; padding:8px; font-size:0.85rem;" onclick="openModal('risk-modal')">Risk Form</button>
-                </div>
-                <div class="action-row" style="display:flex; gap:8px;">
-                    <button class="tile green" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:6px;" onclick="openModal('weight-modal')">
-                        <span style="font-size:0.75rem; text-transform:uppercase;">Weight Pass</span>
-                        <span style="font-size:1.1rem;">3323 kg</span>
-                    </button>
-                    <button class="tile green" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:6px;" onclick="openModal('cg-modal')">
-                        <span style="font-size:0.75rem; text-transform:uppercase;">CG Pass</span>
-                        <span style="font-size:1.1rem;">4509 mm</span>
-                    </button>
-                </div>
-            </div>
+
 
             <div class="leg-tabs" id="leg-tabs-container">
                 <!-- Populated by JS -->
             </div>
 
+            <!-- LEG ACTIONS -->
+            <div class="action-section leg-level">
+                <div class="action-tiles">
+                    <button class="tile dark" style="flex-direction:column; padding:6px;" onclick="openModal('edit-modal')">
+                        <span style="font-size:0.7rem; text-transform:uppercase;">Config</span>
+                        <span style="font-size:0.85rem; color: var(--accent-blue); margin-top:2px;">VCF #1</span>
+                    </button>
+                    <button class="tile green" style="flex-direction:column; padding:6px;" onclick="openModal('weight-modal')">
+                        <span style="font-size:0.7rem; text-transform:uppercase;">Weight Pass</span>
+                        <span style="font-size:1rem;">3323 kg</span>
+                    </button>
+                    <button class="tile green" style="flex-direction:column; padding:6px;" onclick="openModal('cg-modal')">
+                        <span style="font-size:0.7rem; text-transform:uppercase;">CG Pass</span>
+                        <span style="font-size:1rem;">4509 mm</span>
+                    </button>
+                </div>
+            </div>
+
             <div class="container" id="main-content">
                 <!-- Route & Times -->
-                <div class="section">
-                    <h2 class="section-title">Route & Times <span id="current-leg-title" style="color:var(--accent-blue); font-size:1rem;">Leg 1</span></h2>
-                    
+                <div class="section" style="padding-top: 20px;">
                     <div class="form-row" style="margin-bottom: 15px;">
                         <div class="form-group" style="flex: 1;">
                             <label>Obst. Height</label>
                             <input type="number" value="759">
                         </div>
                         <div class="form-group" style="flex: 1;">
-                            <label>IFR Flight</label>
-                            <div class="toggle-row" style="padding: 10px;">
-                                <span style="font-weight:bold; font-size:1rem;">IFR</span>
+                            <label>&nbsp;</label>
+                            <div class="toggle-row" style="padding: 10px; margin-top: -5px;">
+                                <span style="font-weight:bold; font-size:1rem;">IFR leg</span>
                                 <label class="switch">
                                     <input type="checkbox" id="ifr-toggle">
                                     <span class="slider"></span>
@@ -503,68 +533,92 @@
                         </div>
                     </div>
 
-                    <div class="form-row" style="gap: 5px; margin-bottom: 15px;">
+                    <div class="form-row" style="gap: 5px; margin-bottom: 8px;">
                         <div class="form-group" style="flex: 1;">
-                            <label>Orig</label>
-                            <input type="text" id="leg-origin" value="RWI" oninput="updateCurrentLeg()" style="padding: 10px;">
-                        </div>
-                        <div class="form-group" style="flex: 1;">
-                            <label>Dest</label>
-                            <input type="text" id="leg-dest" value="NC91" oninput="updateCurrentLeg()" style="padding: 10px;">
+                            <label>Origin</label>
+                            <input type="text" id="leg-origin" value="RWI" oninput="updateCurrentLeg()" style="padding: 6px; font-weight: bold;">
                         </div>
                         <div class="form-group" style="flex: 1.5;">
-                            <label>Dep (Z)</label>
-                            <input type="time" value="19:12" style="padding: 10px;">
+                            <label>Departed (Z)</label>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="time" value="19:12" style="padding: 6px; flex: 1;">
+                                <button style="background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 0 10px; font-weight: bold; cursor: pointer;">NOW</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row" style="gap: 5px; margin-bottom: 8px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Destination</label>
+                            <input type="text" id="leg-dest" value="NC91" oninput="updateCurrentLeg()" style="padding: 6px; font-weight: bold;">
                         </div>
                         <div class="form-group" style="flex: 1.5;">
-                            <label>Arr (Z)</label>
-                            <input type="time" value="" style="padding: 10px;">
+                            <label>Arrived (Z)</label>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="time" value="" style="padding: 6px; flex: 1;">
+                                <button style="background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 0 10px; font-weight: bold; cursor: pointer;">NOW</button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Spatial Stations -->
-                <div class="section">
-                    <h2 class="section-title">Stations</h2>
+                <div class="section" style="padding-top: 20px;">
                     <div class="spatial-grid">
                         <div class="seat-card">
-                            <div class="seat-title">Copilot (Left)</div>
+                            <div class="seat-header">
+                                <div class="seat-title">Copilot (Left)</div>
+                                <div class="seat-weight">[<input type="number" id="wt-1" value="0"> KG]</div>
+                            </div>
                             <input type="text" class="seat-occupant-input" id="occ-1" placeholder="Search personnel..." oninput="filterPersonnel(1)" onfocus="showPersonnel(1)">
                             <div class="autocomplete-dropdown" id="dropdown-1"></div>
-                            <div class="seat-weight"><input type="number" id="wt-1" value="0"> KG</div>
                         </div>
                         <div class="seat-card active">
-                            <div class="seat-title">Pilot (Right)</div>
+                            <div class="seat-header">
+                                <div class="seat-title">Pilot (Right)</div>
+                                <div class="seat-weight">[<input type="number" id="wt-2" value="0"> KG]</div>
+                            </div>
                             <input type="text" class="seat-occupant-input" id="occ-2" value="" placeholder="Search personnel..." oninput="filterPersonnel(2)" onfocus="showPersonnel(2)">
                             <div class="autocomplete-dropdown" id="dropdown-2"></div>
-                            <div class="seat-weight"><input type="number" id="wt-2" value="0"> KG</div>
                         </div>
                         <div class="seat-card">
-                            <div class="seat-title">Aft Facing (LH)</div>
+                            <div class="seat-header">
+                                <div class="seat-title">Aft Facing (LH)</div>
+                                <div class="seat-weight">[<input type="number" id="wt-3" value="0"> KG]</div>
+                            </div>
                             <input type="text" class="seat-occupant-input" id="occ-3" value="" placeholder="Search personnel..." oninput="filterPersonnel(3)" onfocus="showPersonnel(3)">
                             <div class="autocomplete-dropdown" id="dropdown-3"></div>
-                            <div class="seat-weight"><input type="number" id="wt-3" value="0"> KG</div>
                         </div>
                         <div class="seat-card">
-                            <div class="seat-title">Aft Facing (RH)</div>
+                            <div class="seat-header">
+                                <div class="seat-title">Aft Facing (RH)</div>
+                                <div class="seat-weight">[<input type="number" id="wt-4" value="0"> KG]</div>
+                            </div>
                             <input type="text" class="seat-occupant-input" id="occ-4" value="Empty" placeholder="Search personnel..." oninput="filterPersonnel(4)" onfocus="showPersonnel(4)">
                             <div class="autocomplete-dropdown" id="dropdown-4"></div>
-                            <div class="seat-weight"><input type="number" id="wt-4" value="0"> KG</div>
-                        </div>
-                        <div class="seat-card" style="justify-content: center;">
-                            <div class="seat-title">LH Litter (Patient)</div>
-                            <div class="seat-weight" style="margin-top: 10px;"><input type="number" id="wt-5" value="0" placeholder="0"> KG</div>
                         </div>
                         <div class="seat-card">
-                            <div class="seat-title">Fwd Facing Aft Seat (RH)</div>
+                            <div class="seat-header" style="justify-content: center;">
+                                <div class="seat-title">LH Litter (Patient)</div>
+                            </div>
+                            <input type="text" class="seat-occupant-input" placeholder="Patient Name (Optional)" style="text-align: center;">
+                            <div class="seat-weight" style="justify-content: center; font-size: 1rem; color: var(--text-primary); margin-top: 4px;">
+                                <input type="number" id="wt-5" value="0" placeholder="0" style="width: 50px; font-size: 1rem; text-align: center; color: var(--text-primary); border-bottom: 2px solid var(--border-color);"> KG
+                            </div>
+                        </div>
+                        <div class="seat-card">
+                            <div class="seat-header">
+                                <div class="seat-title">Fwd Aft Seat (RH)</div>
+                                <div class="seat-weight">[<input type="number" id="wt-6" value="0"> KG]</div>
+                            </div>
                             <input type="text" class="seat-occupant-input" id="occ-6" value="" placeholder="Search personnel..." oninput="filterPersonnel(6)" onfocus="showPersonnel(6)">
                             <div class="autocomplete-dropdown" id="dropdown-6"></div>
-                            <div class="seat-weight"><input type="number" id="wt-6" value="0"> KG</div>
                         </div>
                         <div class="seat-card full-width" onclick="openModal('equip-modal')">
-                            <div class="seat-title">Medical Equipment</div>
-                            <div class="seat-occupant" style="color:var(--text-secondary)">Standard Kit ➔</div>
-                            <div class="seat-weight"><input type="number" value="143" readonly> KG</div>
+                            <div class="seat-header">
+                                <div class="seat-title">Medical Equipment</div>
+                                <div class="seat-weight">[<input type="number" value="143" readonly> KG]</div>
+                            </div>
+                            <div class="seat-occupant" style="color:var(--text-secondary); cursor: pointer;">Standard Kit ➔</div>
                         </div>
                     </div>
                 </div>
@@ -597,20 +651,46 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Action Buttons Footer -->
+                <div class="section" style="background-color: transparent; border: none; padding: 0; padding-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button class="btn btn-primary">Save</button>
+                        <button class="btn btn-primary" onclick="handleSaveAddLeg()">Save/Add Leg</button>
+                        <button class="btn btn-danger" onclick="openModal('close-modal')">Close Flt</button>
+                        <div class="verify-wrapper" style="margin-left: 10px;">
+                            <label>Verified</label>
+                            <label class="switch">
+                                <input type="checkbox" id="manifest-verified-toggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
 
-        <div class="sticky-bottom-bar">
-            <button class="btn btn-primary">Save</button>
-            <button class="btn btn-primary" onclick="handleSaveAddLeg()">Save/Add Leg</button>
-            <button class="btn btn-danger" onclick="openModal('close-modal')">Close Flt</button>
-            <div class="verify-wrapper" style="margin-right: 0; margin-left: 10px;">
-                <label>Verified</label>
-                <label class="switch">
-                    <input type="checkbox" id="manifest-verified-toggle">
-                    <span class="slider"></span>
-                </label>
+        <div class="bottom-nav">
+            <div class="nav-item">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                <span>Home</span>
+            </div>
+            <div class="nav-item">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                <span>Map</span>
+            </div>
+            <div class="nav-item active">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span>Manifest</span>
+            </div>
+            <div class="nav-item">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                <span>Library</span>
+            </div>
+            <div class="nav-item">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                <span>Chat</span>
             </div>
         </div>
         
@@ -1073,11 +1153,11 @@
         function updateFormFromState() {
             const activeLeg = AppState.legs.find(l => l.active);
             if(activeLeg) {
-                document.getElementById('current-leg-title').innerText = `Leg ${activeLeg.id}`;
+                // document.getElementById('current-leg-title').innerText = `Leg ${activeLeg.id}`;
                 document.getElementById('leg-origin').value = activeLeg.origin;
                 document.getElementById('leg-dest').value = activeLeg.dest;
             } else {
-                document.getElementById('current-leg-title').innerText = ``;
+                // document.getElementById('current-leg-title').innerText = ``;
                 document.getElementById('leg-origin').value = '';
                 document.getElementById('leg-dest').value = '';
             }

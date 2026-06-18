@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.17] - 2026-06-18
+### Changed
+- Reorganized Action Buttons into distinct "Flight Actions" (Dispatch, Edit, Risk) and "Leg Actions" (Config, Weight, CG) for better visual hierarchy.
+- Removed the text headers for "Flight Actions" and "Leg Actions" to ruthlessly compress vertical space, moving the current VCF label directly into the "Config" button.
+- Replaced the floating save/close bar with a standard 5-tab App Bottom Navigation Bar (`Home`, `Map`, `Manifest`, `Library`, `Chat`), using clean SVG icons instead of emojis.
+- Restored the "Save", "Save/Add Leg", "Close Flt" buttons and the "Manifest Verified" toggle, placing them logically at the very bottom of the scrollable manifest page (just above the new navigation bar).
+- Refactored the "Route & Times" Origin and Destination inputs into separate rows with dedicated "Departed (Z)" and "Arrived (Z)" fields alongside quick-action "NOW" buttons.
+- Added a "Team" badge ("RWI Medical Team") to the global header under the manifest details.
+- Cleaned up the IFR toggle by removing the redundant "IFR FLIGHT" label and renaming the toggle to "IFR leg".
+- Moved the Theme toggle button into the top `.sync-bar` to free up real estate in the global header.
+- Moved the Dispatch, Edit Flt, and Risk Form action tiles into the global header to save vertical space, placing the fully red Dispatch button on the far right to clearly indicate it needs attention.
+- Removed the redundant "Route & Times" section header to further compress vertical layout space, as the Leg indicators are now handled via the tabs.
+- Removed the "Stations" section header to reclaim additional vertical space.
+- Refactored Spatial Station cards to position the weight input inline with the station title (e.g., `PILOT (RIGHT) [0 KG]`), eliminating an entire line to drastically save vertical scrolling.
+- Comprehensively reduced padding, margins, gaps, and component heights (like the bottom navigation bar and form inputs) throughout the entire layout to practically eliminate unnecessary vertical "dead space" and prevent scrolling.
+
 ## [0.0.16] - 2026-06-18
 ### Changed
 - Refactored the Dispatch Number area, moving it from the "Route & Times" section up into a prominent, interactive button at the top of the screen (in the `.global-header`).

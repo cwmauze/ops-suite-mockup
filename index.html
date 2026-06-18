@@ -44,16 +44,47 @@
             setTimeout(scaleDevice, 10);
         }
     
+
+        let currentRiskScore = 0;
+        let isRiskSigned = false;
+
+        function calculateRisk() {
+            let total = 0;
+            document.querySelectorAll('.risk-checkbox').forEach(cb => {
+                if (cb.checked) {
+                    total += parseInt(cb.getAttribute('data-pts') || 0, 10);
+                }
+            });
+            currentRiskScore = total;
+            document.getElementById('risk-pill').innerText = total;
+            updateRiskTile();
+        }
+
         function toggleRiskSignature(checked) {
+            isRiskSigned = checked;
+            updateRiskTile();
+        }
+
+        function updateRiskTile() {
             const btn = document.getElementById('risk-btn');
-            if (checked) {
+            
+            if (isRiskSigned) {
                 btn.className = "tile green";
-                btn.innerHTML = "Risk Pass";
-            } else {
+                btn.innerHTML = `Risk: ${currentRiskScore} ✓`;
+                return;
+            }
+            
+            btn.innerHTML = `Risk: ${currentRiskScore}`;
+            
+            if (currentRiskScore <= 15) {
+                btn.className = "tile green";
+            } else if (currentRiskScore <= 20) {
                 btn.className = "tile orange";
-                btn.innerHTML = "Risk Form";
+            } else {
+                btn.className = "tile red";
             }
         }
+
         
     </script>
     <style>
@@ -991,7 +1022,7 @@
                 <div class="modal-header">
                     <div class="modal-title">HAA Risk (rev 10.3.2024)<br><span style="font-size:0.8rem; color:var(--text-secondary); font-weight:normal;">Warn: 16 | Fail: 21</span></div>
                     <div style="display:flex; align-items:center; gap:15px;">
-                        <div class="risk-pill">0</div>
+                        <div class="risk-pill" id="risk-pill">0</div>
                         <div class="modal-close" onclick="closeModal('risk-modal')">×</div>
                     </div>
                 </div>
@@ -1004,136 +1035,169 @@
                         <div class="risk-item">
                             <div class="risk-text">1- Consecutive shifts > 7</div>
                             <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">2- Consecutive night shifts > 4</div>
                             <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">3- PIC < 1 YR or 100 flights at program</div>
                             <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">4- Scene Flight w/ Medcrew Member(s) <6 mos @ Program</div>
                             <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">10- In differently equipped or different model aircraft</div>
                             <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">11- Instruments or Equipment MEL "Restrictive to this Flight"</div>
                             <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div style="background-color: var(--border-color); padding: 4px 12px; font-size:0.8rem; font-weight:bold; color:var(--text-secondary); text-transform:uppercase;">DYNAMIC SCORE</div>
                         <div class="risk-item">
                             <div class="risk-text">12- More than four (4) hours of flight time during a duty period</div>
                             <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">13- Flight ending greater than twelve (12) hours of duty time but less than fourteen (14) hours of duty time</div>
                             <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">14- Flight ending greater than fourteen (14) hours of duty time (Added by OCC after consultation with Pilot)</div>
                             <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">15- Flight occurring between official sunset and sunrise (Use caution Dusk to Dawn)</div>
                             <div class="risk-pts">1 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="1" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">16- NVG use not available or permitted for flight (Operations Management Approval Required)</div>
                             <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">17- First flight after maintenance has been completed on aircraft</div>
                             <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">18- Scene Flight</div>
                             <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">18a- First Responder at Night (H114)</div>
                             <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">19- Previous WX Turndown/Abort; Applicable to route and flight type (VFR/IFR)</div>
                             <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">20- VFR Flight Plan- Temp/Dew Point within 2 degrees C & Less Than 5 Knots Wind (Departure/Enroute/Destination)</div>
                             <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="0" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">21- VFR Flight Plan- Ceilings (Enroute/Destination) "SELECTION REQUIRED"</div>
                             <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="0" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">22- VFR Flight Plan- Visibility (Enroute/Destination) "SELECTION REQUIRED"</div>
                             <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="0" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">23- VFR Flight Plan- Forecasted IFR Conditions (Enroute/Destination- FM/TEMPO)</div>
                             <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">24- IFR Flight Plan- Ceilings (Departure and Destination) "SELECTION REQUIRED"</div>
                             <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="0" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">25- IFR Flight Plan- Visibility (Departure and Destination) "SELECTION REQUIRED"</div>
                             <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="0" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">26- Fog, Snow, or Ground Ice Reported or Forecasted Along Route</div>
                             <div class="risk-pts">4 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="4" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">27- Convective Activity within 20 NM of Route</div>
                             <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">28- Lightning Reported within 20 NM of Route</div>
                             <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">29- Surface Winds > 30 KTS or Gust Spread > 10 KTS</div>
                             <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">30- Mountainous, Offshore or Hazardous Terrain Along Route</div>
                             <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">31- Moderate or Greater Turbulence Below 030' AGL Reported or Forecasted Along Route</div>
                             <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">32- Less Than 10 Minutes of Fuel Above Required Minimums</div>
                             <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">33- Off Airport Operations within 5% of MGTOW or HOGE not assured</div>
                             <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">34- Flight Operations when OAT > 85*F (29*C) or <32*F (0*C)</div>
                             <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">35- Passengers / Ride- Along</div>
                             <div class="risk-pts">0 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="0" onchange="calculateRisk()">
                         </div>
                         <div style="background-color: var(--border-color); padding: 4px 12px; font-size:0.8rem; font-weight:bold; color:var(--text-secondary); text-transform:uppercase;">CONTROL MEASURES</div>
                         <div class="risk-item">
                             <div class="risk-text">36- Aircraft equipped with functioning AFCS</div>
                             <div class="risk-pts">-1 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="-1" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">37- IFR Qualified Pilot in an IFR Capable Aircraft</div>
                             <div class="risk-pts">-1 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="-1" onchange="calculateRisk()">
                         </div>
 
                     </div>
@@ -1882,16 +1946,47 @@
             }, 10000);
         }
     
+
+        let currentRiskScore = 0;
+        let isRiskSigned = false;
+
+        function calculateRisk() {
+            let total = 0;
+            document.querySelectorAll('.risk-checkbox').forEach(cb => {
+                if (cb.checked) {
+                    total += parseInt(cb.getAttribute('data-pts') || 0, 10);
+                }
+            });
+            currentRiskScore = total;
+            document.getElementById('risk-pill').innerText = total;
+            updateRiskTile();
+        }
+
         function toggleRiskSignature(checked) {
+            isRiskSigned = checked;
+            updateRiskTile();
+        }
+
+        function updateRiskTile() {
             const btn = document.getElementById('risk-btn');
-            if (checked) {
+            
+            if (isRiskSigned) {
                 btn.className = "tile green";
-                btn.innerHTML = "Risk Pass";
-            } else {
+                btn.innerHTML = `Risk: ${currentRiskScore} ✓`;
+                return;
+            }
+            
+            btn.innerHTML = `Risk: ${currentRiskScore}`;
+            
+            if (currentRiskScore <= 15) {
+                btn.className = "tile green";
+            } else if (currentRiskScore <= 20) {
                 btn.className = "tile orange";
-                btn.innerHTML = "Risk Form";
+            } else {
+                btn.className = "tile red";
             }
         }
+
         
     </script>
     </div> <!-- Close main-view -->

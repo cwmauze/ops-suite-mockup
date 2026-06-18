@@ -12,6 +12,7 @@ This roadmap tracks feature requests, outstanding bugs, and architectural change
 - [ ] Add true routing so the Bottom Navigation Bar properly switches between distinct views (Map, Library, Chat).
 - [ ] Complete personnel selection auto-suggest with a live search against a realistic dummy database.
 - [ ] Lock down exact styling parameters for high-contrast accessibility modes based on web accessibility guidelines.
+- [ ] **Souls on Board (SOB) auto-calculation**: Automate the SOB field to dynamically calculate based on the entries in the personnel stations area.
 
 ---
 *Note: This document is a living artifact and will be updated as new requirements are discovered.*

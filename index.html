@@ -338,10 +338,20 @@
         }
         .table-row:last-child { border-bottom: none; }
         
+        .mockup-version {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: #888;
+            font-family: monospace;
+            font-size: 1rem;
+            z-index: 9999;
+        }
     </style>
 </head>
 <body>
 
+    <div class="mockup-version">Mockup v0.0.3</div>
     <div class="device-frame">
         <div class="device-screen">
             
@@ -351,7 +361,7 @@
 
             <div class="global-header">
                 <div class="header-top-row">
-                    <div class="aircraft-title">Aircraft: N850BU <span style="font-size:0.5em; color:var(--text-secondary); font-weight:normal; margin-left: 10px;">v0.0.2</span></div>
+                    <div class="aircraft-title">Aircraft: N850BU</div>
                     <div class="manifest-number">Manifest: 3664365</div>
                     <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 2px solid var(--border-color); color: var(--text-primary); padding: 5px 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">🌓 Theme</button>
                 </div>

@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.18] - 2026-06-18
+### Added
+- Added an interactive manual sync animation to the "Last sync" status in the global header. When tapped, the checkmark changes to a blue spinning arrow and the text updates to "Syncing..." for 10 seconds before resetting.
+
 ## [0.0.17] - 2026-06-18
 ### Changed
 - Reorganized Action Buttons into distinct "Flight Actions" (Dispatch, Edit, Risk) and "Leg Actions" (Config, Weight, CG) for better visual hierarchy.
@@ -19,8 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the redundant "Route & Times" section header to further compress vertical layout space, as the Leg indicators are now handled via the tabs.
 - Removed the "Stations" section header to reclaim additional vertical space.
 - Refactored Spatial Station cards to position the weight input inline with the station title (e.g., `PILOT (RIGHT) [0 KG]`), eliminating an entire line to drastically save vertical scrolling.
-- Comprehensively reduced padding, margins, gaps, and component heights (like the bottom navigation bar and form inputs) throughout the entire layout to practically eliminate unnecessary vertical "dead space" and prevent scrolling.
+- Comprehensively reduced padding, margins, gaps, and component heights (like the bottom navigation bar and form inputs) throughout the entire layout by 75% to practically eliminate unnecessary vertical "dead space" and prevent scrolling.
 - Spelled out all Spatial Station titles explicitly in full (e.g., "COPILOT SEAT", "AFT FACING LEFT HAND").
+- Removed the "Optional Patient Name" input field entirely from the Left Hand Litter station to save vertical space.
+- Removed the default "Empty" text from the Aft Facing Right Hand seat.
 
 ## [0.0.16] - 2026-06-18
 ### Changed

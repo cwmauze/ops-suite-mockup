@@ -163,7 +163,11 @@
             gap: 6px;
             border-bottom: 1px solid var(--border-color);
         }
-        .sync-icon { color: var(--accent-green); }
+        .sync-icon { color: var(--accent-green); display: inline-block; }
+        
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
 
         /* --- GLOBAL FLIGHT HEADER --- */
         .global-header {
@@ -463,7 +467,7 @@
 </head>
 <body>
 
-    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.16</div>
+    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.18</div>
     
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative;">
         <div class="device-frame">
@@ -471,7 +475,9 @@
             
             <div class="sync-bar">
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 2px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem;">🌓 Theme</button>
-                <div><span class="sync-icon">✔</span> Last sync: Just now</div>
+                <div style="cursor: pointer; display: flex; align-items: center; gap: 4px;" onclick="triggerManualSync(this)">
+                    <span class="sync-icon">✔</span> <span class="sync-text">Last sync: Just now</span>
+                </div>
             </div>
 
             <div class="global-header">
@@ -1215,6 +1221,29 @@
 
         // Initialize
         renderTabs();
+
+        // --- SYNC INTERACTION ---
+        function triggerManualSync(el) {
+            if (el.classList.contains('syncing')) return;
+            el.classList.add('syncing');
+            
+            const icon = el.querySelector('.sync-icon');
+            const text = el.querySelector('.sync-text');
+            
+            // Change icon to a spinner
+            icon.innerHTML = '↻';
+            icon.style.animation = 'spin 1s linear infinite';
+            icon.style.color = 'var(--accent-blue)';
+            text.innerHTML = 'Syncing...';
+            
+            setTimeout(() => {
+                icon.style.animation = 'none';
+                icon.innerHTML = '✔';
+                icon.style.color = 'var(--accent-green)';
+                text.innerHTML = 'Last sync: Just now';
+                el.classList.remove('syncing');
+            }, 10000);
+        }
     </script>
     </div> <!-- Close main-view -->
 

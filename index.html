@@ -512,7 +512,7 @@
 </head>
 <body>
 
-    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.18</div>
+    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.22</div>
     
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative;">
         <div class="device-frame">
@@ -1420,7 +1420,37 @@
             <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
         </div>
         <div style="padding:20px; line-height:1.5; font-size: 0.95rem;">
-            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.16] - 2026-06-18</h4>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.22] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Upgraded the "Departed" and "Arrived" inputs to full datetime fields, supporting the YYYY-MM-DD format plus time.</li>
+                <li>Wired up the "NOW" buttons to automatically inject the current UTC (Zulu) date and time into their respective fields.</li>
+                <li>Enhanced touch-friendly interactions: weight inputs now trigger the native numeric keypad on mobile/tablet devices (inputmode="decimal").</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.21] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added a visual CSS mockup of an iOS keyboard that automatically slides up from the bottom when clicking into any text/number input.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.20] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Refactored Fuel Stations section with live-calculated Fuel Time field `(Supply + Main) / Burn Rate`, and added new Burn Rate input.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.19] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added quick "x" clear buttons inside personnel selection fields to rapidly remove occupants.</li>
+                <li>Fixed architectural layout bug that caused bottom navigation bar to spill outside of the iPad frame.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.18] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added interactive manual sync animation to "Last sync" status.</li>
+                <li>Moved Save/Close buttons out of scrolling container and fixed them absolutely to the bottom.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.17] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Reorganized Action Buttons into distinct "Flight Actions" and "Leg Actions" for better visual hierarchy.</li>
+                <li>Removed text headers to ruthlessly compress vertical space.</li>
+                <li>Replaced floating save/close bar with a standard 5-tab App Bottom Navigation Bar with SVG icons.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.16] - 2026-06-18</h4>
             <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
                 <li>Moved Dispatch Number from Route section to a prominent interactive button at the top of the screen.</li>
             </ul>

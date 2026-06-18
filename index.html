@@ -302,10 +302,17 @@
         input:checked + .slider:before { transform: translateX(22px); }
 
         .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background-color: var(--surface-color-light); padding: 15px; border-radius: 12px; border: 2px dashed var(--border-color); }
-        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; }
+        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; position: relative; }
         .seat-card.active { border-color: var(--accent-blue); }
         .seat-title { font-size: 0.8rem; color: var(--text-secondary); text-align: center; text-transform: uppercase; font-weight: bold; }
         .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 1rem; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+        .seat-occupant-input { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 1rem; width: 100%; box-sizing: border-box; color: var(--text-primary); outline: none; }
+        .seat-occupant-input::placeholder { color: var(--text-secondary); font-weight: normal; }
+        .seat-occupant-input:focus { border-color: var(--accent-blue); }
+        .autocomplete-dropdown { position: absolute; top: calc(100% - 45px); left: 12px; right: 12px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; max-height: 150px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
+        .autocomplete-item { padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; display: flex; justify-content: space-between; cursor: pointer; color: var(--text-primary); }
+        .autocomplete-item:last-child { border-bottom: none; }
+        .autocomplete-item:hover { background-color: var(--input-bg); }
         .seat-weight { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 1rem; font-weight: bold; }
         .seat-weight input { width: 70px; padding: 8px; text-align: center; }
         .full-width { grid-column: 1 / -1; }
@@ -430,7 +437,7 @@
 </head>
 <body>
 
-    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.12</div>
+    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.13</div>
     
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative;">
         <div class="device-frame">
@@ -523,32 +530,38 @@
                     <div class="spatial-grid">
                         <div class="seat-card">
                             <div class="seat-title">Copilot (Left)</div>
-                            <div class="seat-occupant" id="occ-1" onclick="openPersonnelModal(1)" style="color:var(--text-secondary); cursor:pointer;">Search personnel...</div>
+                            <input type="text" class="seat-occupant-input" id="occ-1" placeholder="Search personnel..." oninput="filterPersonnel(1)" onfocus="showPersonnel(1)">
+                            <div class="autocomplete-dropdown" id="dropdown-1"></div>
                             <div class="seat-weight"><input type="number" id="wt-1" value="0"> KG</div>
                         </div>
                         <div class="seat-card active">
                             <div class="seat-title">Pilot (Right)</div>
-                            <div class="seat-occupant" id="occ-2" onclick="openPersonnelModal(2)" style="cursor:pointer;">Mauze, Charles</div>
+                            <input type="text" class="seat-occupant-input" id="occ-2" value="Mauze, Charles" placeholder="Search personnel..." oninput="filterPersonnel(2)" onfocus="showPersonnel(2)">
+                            <div class="autocomplete-dropdown" id="dropdown-2"></div>
                             <div class="seat-weight"><input type="number" id="wt-2" value="110"> KG</div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-title">Aft Facing (LH)</div>
-                            <div class="seat-occupant" id="occ-3" onclick="openPersonnelModal(3)" style="cursor:pointer;">Petty, Shannon</div>
+                            <input type="text" class="seat-occupant-input" id="occ-3" value="Petty, Shannon" placeholder="Search personnel..." oninput="filterPersonnel(3)" onfocus="showPersonnel(3)">
+                            <div class="autocomplete-dropdown" id="dropdown-3"></div>
                             <div class="seat-weight"><input type="number" id="wt-3" value="63"> KG</div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-title">Aft Facing (RH)</div>
-                            <div class="seat-occupant" id="occ-4" onclick="openPersonnelModal(4)" style="color:var(--text-secondary); cursor:pointer;">Empty</div>
+                            <input type="text" class="seat-occupant-input" id="occ-4" value="Empty" placeholder="Search personnel..." oninput="filterPersonnel(4)" onfocus="showPersonnel(4)">
+                            <div class="autocomplete-dropdown" id="dropdown-4"></div>
                             <div class="seat-weight"><input type="number" id="wt-4" value="0"> KG</div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-title">LH Litter (Patient)</div>
-                            <div class="seat-occupant" id="occ-5" onclick="openPersonnelModal(5)" style="color:var(--accent-red); cursor:pointer;">Jane Doe</div>
+                            <input type="text" class="seat-occupant-input" id="occ-5" value="Jane Doe" placeholder="Search personnel..." oninput="filterPersonnel(5)" onfocus="showPersonnel(5)" style="color:var(--accent-red);">
+                            <div class="autocomplete-dropdown" id="dropdown-5"></div>
                             <div class="seat-weight"><input type="number" id="wt-5" value="75"> KG</div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-title">Fwd Facing Aft Seat (RH)</div>
-                            <div class="seat-occupant" id="occ-6" onclick="openPersonnelModal(6)" style="cursor:pointer;">Dail, Joshua</div>
+                            <input type="text" class="seat-occupant-input" id="occ-6" value="Dail, Joshua" placeholder="Search personnel..." oninput="filterPersonnel(6)" onfocus="showPersonnel(6)">
+                            <div class="autocomplete-dropdown" id="dropdown-6"></div>
                             <div class="seat-weight"><input type="number" id="wt-6" value="90"> KG</div>
                         </div>
                         <div class="seat-card full-width" onclick="openModal('equip-modal')">
@@ -898,23 +911,7 @@
             </div>
         </div>
 
-        <!-- Personnel Selection Modal -->
-        <div class="modal-overlay" id="personnel-modal" style="z-index: 1050;">
-            <div class="modal-content modal-full">
-                <div class="modal-header">
-                    <div class="modal-title">Select Personnel</div>
-                    <div class="modal-close" onclick="closeModal('personnel-modal')">×</div>
-                </div>
-                <div class="modal-body">
-                    <div class="alert-banner" style="margin: 0; border-radius: 0;">
-                        Select a crew member to assign to this station.
-                    </div>
-                    <div id="personnel-list" class="risk-list">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
     </div> <!-- /device-frame -->
 
@@ -950,42 +947,57 @@
             { name: "Pamela Anderson", weight: 60 }
         ];
 
-        let currentSeatId = null;
-
-        function openPersonnelModal(seatId) {
-            currentSeatId = seatId;
-            const listContainer = document.getElementById('personnel-list');
-            listContainer.innerHTML = '';
-            
-            DummyPersonnel.forEach(p => {
-                const item = document.createElement('div');
-                item.className = 'risk-item';
-                item.style.cursor = 'pointer';
-                item.innerHTML = `
-                    <div class="risk-text" style="font-weight:bold; color:var(--text-primary);">${p.name}</div>
-                    <div class="risk-pts">${p.weight} KG</div>
-                `;
-                item.onclick = () => selectPersonnel(p.name, p.weight);
-                listContainer.appendChild(item);
-            });
-            openModal('personnel-modal');
+        function showPersonnel(seatId) {
+            filterPersonnel(seatId);
         }
 
-        function selectPersonnel(name, weight) {
-            if (currentSeatId !== null) {
-                const occElem = document.getElementById(`occ-${currentSeatId}`);
-                const wtElem = document.getElementById(`wt-${currentSeatId}`);
-                
-                if (occElem) {
-                    occElem.innerText = name;
-                    occElem.style.color = (name === 'Empty' || name === 'Search personnel...') ? 'var(--text-secondary)' : (currentSeatId === 5 ? 'var(--accent-red)' : 'var(--text-primary)');
-                }
-                if (wtElem) {
-                    wtElem.value = weight;
+        function filterPersonnel(seatId) {
+            const input = document.getElementById(`occ-${seatId}`);
+            const dropdown = document.getElementById(`dropdown-${seatId}`);
+            if (!input || !dropdown) return;
+            const query = input.value.toLowerCase();
+            
+            for(let i=1; i<=6; i++) {
+                if(i !== seatId) {
+                    const other = document.getElementById(`dropdown-${i}`);
+                    if(other) other.style.display = 'none';
                 }
             }
-            closeModal('personnel-modal');
+            
+            dropdown.innerHTML = '';
+            
+            let matches = DummyPersonnel;
+            if (query.trim() !== '') {
+                matches = DummyPersonnel.filter(p => p.name.toLowerCase().includes(query));
+            }
+
+            if (matches.length > 0) {
+                matches.forEach(p => {
+                    const item = document.createElement('div');
+                    item.className = 'autocomplete-item';
+                    item.innerHTML = `<span>${p.name}</span><span style="color:var(--text-secondary);">${p.weight} KG</span>`;
+                    item.onmousedown = (e) => {
+                        e.preventDefault(); 
+                        input.value = p.name;
+                        const wt = document.getElementById(`wt-${seatId}`);
+                        if (wt) wt.value = p.weight;
+                        dropdown.style.display = 'none';
+                    };
+                    dropdown.appendChild(item);
+                });
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
         }
+
+        document.addEventListener('focusout', (e) => {
+            if (e.target.classList.contains('seat-occupant-input')) {
+                const seatId = parseInt(e.target.id.split('-')[1]);
+                const dropdown = document.getElementById(`dropdown-${seatId}`);
+                setTimeout(() => { if (dropdown) dropdown.style.display = 'none'; }, 150);
+            }
+        });
 
         function toggleTheme() {
             const html = document.documentElement;
@@ -1121,7 +1133,11 @@
             <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
         </div>
         <div style="padding:20px; line-height:1.5; font-size: 0.95rem;">
-            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.12] - 2026-06-18</h4>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.13] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Replaced the personnel selection modal with a smart inline dropdown menu with text search.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.12] - 2026-06-18</h4>
             <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
                 <li>Added interactive personnel selection modal with action stars and bombshell actresses to dynamically populate seat occupant and weight data.</li>
             </ul>

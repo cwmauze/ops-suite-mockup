@@ -111,9 +111,11 @@
             background-color: var(--bg-color);
             color: var(--text-primary);
             border-radius: 24px;
-            overflow-y: auto;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             position: relative;
-            padding-bottom: 130px; 
         }
 
         .device-screen::-webkit-scrollbar { width: 8px; }
@@ -133,7 +135,7 @@
         }
         body.native-mode .device-screen {
             border-radius: 0 !important;
-            padding-bottom: calc(140px + env(safe-area-inset-bottom));
+            padding-bottom: env(safe-area-inset-bottom);
             padding-top: env(safe-area-inset-top);
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
@@ -321,9 +323,11 @@
         .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
         .seat-title { font-size: 0.75rem; color: var(--text-secondary); text-align: left; text-transform: uppercase; font-weight: bold; margin: 0; }
         .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 4px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; min-height: 28px; display: flex; align-items: center; justify-content: center; }
-        .seat-occupant-input { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 4px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; width: 100%; box-sizing: border-box; color: var(--text-primary); outline: none; margin: 0; }
+        .seat-occupant-input { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 4px; padding-right: 24px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; width: 100%; box-sizing: border-box; color: var(--text-primary); outline: none; margin: 0; }
         .seat-occupant-input::placeholder { color: var(--text-secondary); font-weight: normal; }
         .seat-occupant-input:focus { border-color: var(--accent-blue); }
+        .clear-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 1.2rem; font-weight: bold; line-height: 1; }
+        .clear-btn:hover { color: var(--accent-red); }
         .autocomplete-dropdown { position: absolute; top: calc(100% - 10px); left: 12px; right: 12px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; max-height: 150px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
         .autocomplete-item { padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; display: flex; justify-content: space-between; cursor: pointer; color: var(--text-primary); }
         .autocomplete-item:last-child { border-bottom: none; }
@@ -343,7 +347,7 @@
 
         /* --- BOTTOM NAV BAR --- */
         .bottom-nav {
-            position: absolute; bottom: 0; left: 0; right: 0;
+            flex-shrink: 0; width: 100%;
             background-color: #1a1a1a; border-top: 1px solid var(--border-color);
             display: flex; justify-content: space-around; align-items: center;
             height: 48px; z-index: 50;
@@ -519,7 +523,7 @@
                 </div>
             </div>
 
-            <div class="container" id="main-content">
+            <div class="container" id="main-content" style="flex: 1; overflow-y: auto; padding-bottom: 20px; box-sizing: border-box;">
                 <!-- Route & Times -->
                 <div class="section" style="padding-top: 20px;">
                     <div class="form-row" style="margin-bottom: 15px;">
@@ -575,7 +579,10 @@
                                 <div class="seat-title">Copilot Seat</div>
                                 <div class="seat-weight">[<input type="number" id="wt-1" value="0"> KG]</div>
                             </div>
-                            <input type="text" class="seat-occupant-input" id="occ-1" placeholder="Search personnel..." oninput="filterPersonnel(1)" onfocus="showPersonnel(1)">
+                            <div style="position: relative;">
+                                <input type="text" class="seat-occupant-input" id="occ-1" placeholder="Search personnel..." oninput="filterPersonnel(1)" onfocus="showPersonnel(1)">
+                                <span class="clear-btn" onclick="clearSeat(1, event)">&times;</span>
+                            </div>
                             <div class="autocomplete-dropdown" id="dropdown-1"></div>
                         </div>
                         <div class="seat-card active">
@@ -583,7 +590,10 @@
                                 <div class="seat-title">Pilot Seat</div>
                                 <div class="seat-weight">[<input type="number" id="wt-2" value="0"> KG]</div>
                             </div>
-                            <input type="text" class="seat-occupant-input" id="occ-2" value="" placeholder="Search personnel..." oninput="filterPersonnel(2)" onfocus="showPersonnel(2)">
+                            <div style="position: relative;">
+                                <input type="text" class="seat-occupant-input" id="occ-2" value="" placeholder="Search personnel..." oninput="filterPersonnel(2)" onfocus="showPersonnel(2)">
+                                <span class="clear-btn" onclick="clearSeat(2, event)">&times;</span>
+                            </div>
                             <div class="autocomplete-dropdown" id="dropdown-2"></div>
                         </div>
                         <div class="seat-card">
@@ -591,7 +601,10 @@
                                 <div class="seat-title">Aft Facing Left Hand</div>
                                 <div class="seat-weight">[<input type="number" id="wt-3" value="0"> KG]</div>
                             </div>
-                            <input type="text" class="seat-occupant-input" id="occ-3" value="" placeholder="Search personnel..." oninput="filterPersonnel(3)" onfocus="showPersonnel(3)">
+                            <div style="position: relative;">
+                                <input type="text" class="seat-occupant-input" id="occ-3" value="" placeholder="Search personnel..." oninput="filterPersonnel(3)" onfocus="showPersonnel(3)">
+                                <span class="clear-btn" onclick="clearSeat(3, event)">&times;</span>
+                            </div>
                             <div class="autocomplete-dropdown" id="dropdown-3"></div>
                         </div>
                         <div class="seat-card">
@@ -599,7 +612,10 @@
                                 <div class="seat-title">Aft Facing Right Hand</div>
                                 <div class="seat-weight">[<input type="number" id="wt-4" value="0"> KG]</div>
                             </div>
-                            <input type="text" class="seat-occupant-input" id="occ-4" value="" placeholder="Search personnel..." oninput="filterPersonnel(4)" onfocus="showPersonnel(4)">
+                            <div style="position: relative;">
+                                <input type="text" class="seat-occupant-input" id="occ-4" value="" placeholder="Search personnel..." oninput="filterPersonnel(4)" onfocus="showPersonnel(4)">
+                                <span class="clear-btn" onclick="clearSeat(4, event)">&times;</span>
+                            </div>
                             <div class="autocomplete-dropdown" id="dropdown-4"></div>
                         </div>
                         <div class="seat-card">
@@ -654,12 +670,10 @@
                         </div>
                     </div>
                 </div>
-                    </div>
-                </div>
-            </div>
+            </div> <!-- Close main-content -->
 
             <!-- Fixed Action Buttons Footer -->
-            <div style="position: absolute; bottom: 48px; left: 0; right: 0; background-color: var(--surface-color); padding: 8px 12px; border-top: 1px solid var(--border-color); z-index: 40; display: flex; align-items: center; gap: 10px;">
+            <div style="flex-shrink: 0; width: 100%; box-sizing: border-box; background-color: var(--surface-color); padding: 8px 12px; border-top: 1px solid var(--border-color); z-index: 40; display: flex; align-items: center; gap: 10px;">
                 <button class="btn btn-primary">Save</button>
                 <button class="btn btn-primary" onclick="handleSaveAddLeg()">Save/Add Leg</button>
                 <button class="btn btn-danger" onclick="openModal('close-modal')">Close Flt</button>
@@ -672,9 +686,7 @@
                 </div>
             </div>
 
-        </div>
-
-        <div class="bottom-nav">
+            <div class="bottom-nav">
             <div class="nav-item">
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                 <span>Home</span>
@@ -696,6 +708,7 @@
                 <span>Chat</span>
             </div>
         </div>
+        </div> <!-- Close device-screen -->
         
         <!-- ================= MODALS ================= -->
 
@@ -1047,6 +1060,17 @@
                     btn.innerHTML = "✓ Dispatch: " + dispatchNumber;
                 }
             }
+        }
+
+        function clearSeat(num, event) {
+            const input = document.getElementById(`occ-${num}`);
+            if(input) input.value = '';
+            const wt = document.getElementById(`wt-${num}`);
+            if(wt) wt.value = '0';
+            
+            const dropdown = document.getElementById(`dropdown-${num}`);
+            if(dropdown) dropdown.style.display = 'none';
+            if(event) event.stopPropagation();
         }
 
         function filterPersonnel(seatId) {

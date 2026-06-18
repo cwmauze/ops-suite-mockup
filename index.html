@@ -634,7 +634,7 @@
                         <div class="form-group" style="flex: 1.5;">
                             <label>Departed (Z)</label>
                             <div style="display: flex; gap: 5px;">
-                                <input type="datetime-local" id="depart-time" value="2026-06-18T19:12" style="padding: 6px; flex: 1;">
+                                <input type="text" id="depart-time" class="datetime-sim" value="2026-06-18 19:12" inputmode="decimal" style="padding: 6px; flex: 1; text-align:center; font-family:monospace; font-size:0.9rem;">
                                 <button onclick="setNow('depart-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 0 10px; font-weight: bold; cursor: pointer;">NOW</button>
                             </div>
                         </div>
@@ -647,7 +647,7 @@
                         <div class="form-group" style="flex: 1.5;">
                             <label>Arrived (Z)</label>
                             <div style="display: flex; gap: 5px;">
-                                <input type="datetime-local" id="arrive-time" value="" style="padding: 6px; flex: 1;">
+                                <input type="text" id="arrive-time" class="datetime-sim" value="" inputmode="decimal" placeholder="YYYY-MM-DD HH:MM" style="padding: 6px; flex: 1; text-align:center; font-family:monospace; font-size:0.9rem;">
                                 <button onclick="setNow('arrive-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 0 10px; font-weight: bold; cursor: pointer;">NOW</button>
                             </div>
                         </div>
@@ -1179,7 +1179,20 @@
         ];
 
         // Simulated Keyboard Logic
+        // Convert datetime-sim inputs to real datetime-local on touch devices
         const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        
+        if (isTouchDevice || document.body.classList.contains('native-mode')) {
+            document.querySelectorAll('.datetime-sim').forEach(el => {
+                el.type = 'datetime-local';
+                if (el.value) {
+                    el.value = el.value.replace(' ', 'T');
+                }
+                el.style.fontFamily = 'inherit';
+                el.style.fontSize = 'inherit';
+                el.style.textAlign = 'left';
+            });
+        }
         
         document.addEventListener('focusin', (e) => {
             if (isTouchDevice || document.body.classList.contains('native-mode')) return;
@@ -1329,9 +1342,15 @@
             const day = String(now.getUTCDate()).padStart(2, '0');
             const hours = String(now.getUTCHours()).padStart(2, '0');
             const minutes = String(now.getUTCMinutes()).padStart(2, '0');
-            const formatted = `${year}-${month}-${day}T${hours}:${minutes}`;
+            
             const input = document.getElementById(inputId);
-            if(input) input.value = formatted;
+            if(input) {
+                if (input.type === 'datetime-local') {
+                    input.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+                } else {
+                    input.value = `${year}-${month}-${day} ${hours}:${minutes}`;
+                }
+            }
         }
 
         function showPersonnel(seatId) {

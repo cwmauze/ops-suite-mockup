@@ -437,7 +437,7 @@
 </head>
 <body>
 
-    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.15</div>
+    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.16</div>
     
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative;">
         <div class="device-frame">
@@ -452,6 +452,11 @@
                     <div class="aircraft-title">Aircraft: N850BU</div>
                     <div class="manifest-number">Manifest: 3664365</div>
                     <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 2px solid var(--border-color); color: var(--text-primary); padding: 5px 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">🌓 Theme</button>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button id="dispatch-btn" onclick="promptDispatch()" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--accent-red); background: var(--surface-color); color: var(--accent-red); font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        ⚠️ Dispatch Number Required
+                    </button>
                 </div>
             </div>
 
@@ -481,12 +486,6 @@
                 <div class="section">
                     <h2 class="section-title">Route & Times <span id="current-leg-title" style="color:var(--accent-blue); font-size:1rem;">Leg 1</span></h2>
                     
-                    <div class="form-group" style="margin-bottom: 15px;">
-                        <label>Dispatch Number</label>
-                        <input type="text" class="input-error" id="dispatch-input" placeholder="Required for Departure">
-                        <div class="error-msg" id="dispatch-error">Missing Dispatch Number. Required for departure!</div>
-                    </div>
-
                     <div class="form-row" style="margin-bottom: 15px;">
                         <div class="form-group" style="flex: 1;">
                             <label>Obst. Height</label>
@@ -949,6 +948,24 @@
             filterPersonnel(seatId);
         }
 
+        let dispatchNumber = "";
+        function promptDispatch() {
+            const num = prompt("Enter Dispatch Number:", dispatchNumber);
+            if (num !== null) {
+                dispatchNumber = num.trim();
+                const btn = document.getElementById('dispatch-btn');
+                if (dispatchNumber === "") {
+                    btn.style.borderColor = "var(--accent-red)";
+                    btn.style.color = "var(--accent-red)";
+                    btn.innerHTML = "⚠️ Dispatch Number Required";
+                } else {
+                    btn.style.borderColor = "#2ecc71"; // success green
+                    btn.style.color = "var(--text-primary)";
+                    btn.innerHTML = "✓ Dispatch: " + dispatchNumber;
+                }
+            }
+        }
+
         function filterPersonnel(seatId) {
             const input = document.getElementById(`occ-${seatId}`);
             const dropdown = document.getElementById(`dropdown-${seatId}`);
@@ -1131,7 +1148,11 @@
             <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
         </div>
         <div style="padding:20px; line-height:1.5; font-size: 0.95rem;">
-            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.15] - 2026-06-18</h4>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.16] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Moved Dispatch Number from Route section to a prominent interactive button at the top of the screen.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.15] - 2026-06-18</h4>
             <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
                 <li>Removed the name input field entirely from the Patient Litter station. Only weight entry is now allowed.</li>
             </ul>

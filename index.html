@@ -717,7 +717,7 @@
                             <div class="toggle-row" style="padding: 10px; margin-top: -5px;">
                                 <span style="font-weight:bold; font-size:1rem;">IFR leg</span>
                                 <label class="switch">
-                                    <input type="checkbox" id="ifr-toggle">
+                                    <input type="checkbox" id="ifr-toggle" onchange="updateCurrentLeg()">
                                     <span class="slider"></span>
                                 </label>
                             </div>
@@ -1503,8 +1503,8 @@
     <script>
         const AppState = {
             legs: [
-                { id: 1, origin: 'RWI', dest: 'NC91', active: true },
-                { id: 2, origin: 'NC91', dest: 'RWI', active: false }
+                { id: 1, origin: 'RWI', dest: 'NC91', isIfr: false, active: true },
+                { id: 2, origin: 'NC91', dest: 'RWI', isIfr: false, active: false }
             ]
         };
 
@@ -1860,7 +1860,7 @@
         function addLeg() {
             const newId = AppState.legs.length ? Math.max(...AppState.legs.map(l=>l.id)) + 1 : 1;
             const origin = AppState.legs.length ? AppState.legs[AppState.legs.length-1].dest : '???';
-            AppState.legs.push({ id: newId, origin: origin, dest: '???', active: false });
+            AppState.legs.push({ id: newId, origin: origin, dest: '???', isIfr: false, active: false });
             activateLeg(newId);
         }
 
@@ -1881,13 +1881,15 @@
         function updateFormFromState() {
             const activeLeg = AppState.legs.find(l => l.active);
             if(activeLeg) {
-                // document.getElementById('current-leg-title').innerText = `Leg ${activeLeg.id}`;
                 document.getElementById('leg-origin').value = activeLeg.origin;
                 document.getElementById('leg-dest').value = activeLeg.dest;
+                const toggle = document.getElementById('ifr-toggle');
+                if (toggle) toggle.checked = activeLeg.isIfr || false;
             } else {
-                // document.getElementById('current-leg-title').innerText = ``;
                 document.getElementById('leg-origin').value = '';
                 document.getElementById('leg-dest').value = '';
+                const toggle = document.getElementById('ifr-toggle');
+                if (toggle) toggle.checked = false;
             }
         }
         
@@ -1896,6 +1898,8 @@
             if(activeLeg) {
                 activeLeg.origin = document.getElementById('leg-origin').value;
                 activeLeg.dest = document.getElementById('leg-dest').value;
+                const toggle = document.getElementById('ifr-toggle');
+                if (toggle) activeLeg.isIfr = toggle.checked;
                 
                 // re-render just the tabs to show updated text
                 renderTabs();

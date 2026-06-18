@@ -113,7 +113,7 @@
             border-radius: 24px;
             overflow-y: auto;
             position: relative;
-            padding-bottom: 80px; 
+            padding-bottom: 130px; 
         }
 
         .device-screen::-webkit-scrollbar { width: 8px; }
@@ -133,7 +133,7 @@
         }
         body.native-mode .device-screen {
             border-radius: 0 !important;
-            padding-bottom: calc(90px + env(safe-area-inset-bottom));
+            padding-bottom: calc(140px + env(safe-area-inset-bottom));
             padding-top: env(safe-area-inset-top);
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
@@ -654,21 +654,21 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Action Buttons Footer -->
-                <div class="section" style="background-color: transparent; border: none; padding: 0; padding-bottom: 20px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <button class="btn btn-primary">Save</button>
-                        <button class="btn btn-primary" onclick="handleSaveAddLeg()">Save/Add Leg</button>
-                        <button class="btn btn-danger" onclick="openModal('close-modal')">Close Flt</button>
-                        <div class="verify-wrapper" style="margin-left: 10px;">
-                            <label>Verified</label>
-                            <label class="switch">
-                                <input type="checkbox" id="manifest-verified-toggle">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Fixed Action Buttons Footer -->
+            <div style="position: absolute; bottom: 48px; left: 0; right: 0; background-color: var(--surface-color); padding: 8px 12px; border-top: 1px solid var(--border-color); z-index: 40; display: flex; align-items: center; gap: 10px;">
+                <button class="btn btn-primary">Save</button>
+                <button class="btn btn-primary" onclick="handleSaveAddLeg()">Save/Add Leg</button>
+                <button class="btn btn-danger" onclick="openModal('close-modal')">Close Flt</button>
+                <div class="verify-wrapper" style="margin-left: auto;">
+                    <label>Verified</label>
+                    <label class="switch">
+                        <input type="checkbox" id="manifest-verified-toggle">
+                        <span class="slider"></span>
+                    </label>
                 </div>
             </div>
 

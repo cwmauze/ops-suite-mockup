@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.24] - 2026-06-18
+### Added
+- Created a custom 24-hour iOS-style Time Picker with scroll-snapping rollers to streamline minute-by-minute adjustments, bypassing the clunky native iOS `datetime-local` picker.
+- Implemented dynamic Risk Assessment logic containing all 46 risk items. The dashboard tile automatically calculates the score, updates the pill, and changes color (Green/Orange/Red) based on the current threshold.
+- Added a "Sign to Approve" toggle in the Risk Assessment modal. When activated, it forces the dashboard tile to green and appends a "✓" symbol.
+- Refactored the Fuel section to fit Supply Tanks, Main tanks, Burn Rate, Fuel time, and S.O.B. into a single, compact horizontal row.
+- Bound the "IFR leg" toggle to the underlying `AppState` engine so it tracks securely on a per-leg basis, defaulting to OFF for newly created legs.
+- Implemented a tiered UI decluttering system for Leg tabs to automatically compress text length and prevent horizontal scrolling as more legs are added.
+- Added dynamic local timestamps to the "Last sync" status so it reflects the exact time of page load and updates upon manual sync completion.
+
+### Changed
+- Renamed the dashboard "Risk Form" tile to "Risk Assessment".
+- Moved the Leg deletion action from an inline "x" on the tabs to a dedicated, red-outlined `Delete Leg` button at the bottom of the screen with a confirmation prompt to prevent accidental fat-finger deletions.
+
 ## [0.0.23] - 2026-06-18
 ### Added
 - Expanded theme options. Replaced dual light/dark mode with 5 distinct modes: Light, Dark, Neutral, High-Contrast Light, and High-Contrast Dark.

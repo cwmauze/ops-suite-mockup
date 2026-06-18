@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added an interactive manual sync animation to the "Last sync" status in the global header. When tapped, the checkmark changes to a blue spinning arrow and the text updates to "Syncing..." for 10 seconds before resetting.
 
+### Changed
+- Moved the "Save", "Save/Add Leg", "Close Flt" buttons, and the "Verified" toggle out of the scrolling `main-content` container and fixed them absolutely to the bottom of the screen, just above the navigation bar. 
+
 ## [0.0.17] - 2026-06-18
 ### Changed
 - Reorganized Action Buttons into distinct "Flight Actions" (Dispatch, Edit, Risk) and "Leg Actions" (Config, Weight, CG) for better visual hierarchy.

@@ -2,20 +2,37 @@
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <!-- PWA / iOS Native App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ops Suite">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Ops Suite - Manifest Prototype</title>
     <script>
         function scaleDevice() {
             const frame = document.querySelector('.device-frame');
             const container = document.getElementById('main-view') || document.body;
             if(frame) {
+                if (document.body.classList.contains('native-mode')) {
+                    frame.style.transform = 'none';
+                    return;
+                }
                 // Total width = 744 + 40 padding = 784. Total height = 1133 + 40 padding = 1173
                 const scale = Math.min(1, (container.clientWidth * 0.95) / 784, (container.clientHeight * 0.95) / 1173);
                 frame.style.transform = `scale(${scale})`;
             }
         }
         window.addEventListener('resize', scaleDevice);
-        window.addEventListener('DOMContentLoaded', scaleDevice);
+        window.addEventListener('DOMContentLoaded', () => {
+            // Detect mobile/tablet devices, including iPadOS 13+ desktop mode, or PWA standalone mode
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const isMobile = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isStandalone || isMobile) {
+                document.body.classList.add('native-mode');
+            }
+            scaleDevice();
+        });
 
         function toggleChangelog() {
             const panel = document.getElementById('changelog-panel');
@@ -101,6 +118,37 @@
 
         .device-screen::-webkit-scrollbar { width: 8px; }
         .device-screen::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 4px; }
+
+        /* --- NATIVE APP SIMULATION (IPAD) --- */
+        body.native-mode {
+            background-color: var(--bg-color);
+        }
+        body.native-mode .device-frame {
+            width: 100vw !important;
+            height: 100vh !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+        body.native-mode .device-screen {
+            border-radius: 0 !important;
+            padding-bottom: calc(90px + env(safe-area-inset-bottom));
+            padding-top: env(safe-area-inset-top);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+        body.native-mode .sticky-bottom-bar {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
+        }
+        body.native-mode .mockup-version {
+            display: none !important;
+        }
 
         /* --- SYNC BAR --- */
         .sync-bar {
@@ -382,7 +430,7 @@
 </head>
 <body>
 
-    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.6</div>
+    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.10</div>
     
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative;">
         <div class="device-frame">
@@ -544,16 +592,16 @@
         </div>
 
         <div class="sticky-bottom-bar">
-            <div class="verify-wrapper">
+            <button class="btn btn-primary">Save</button>
+            <button class="btn btn-primary" onclick="handleSaveAddLeg()">Save/Add Leg</button>
+            <button class="btn btn-danger" onclick="openModal('close-modal')">Close Flt</button>
+            <div class="verify-wrapper" style="margin-right: 0; margin-left: 10px;">
                 <label>Verified</label>
                 <label class="switch">
-                    <input type="checkbox">
+                    <input type="checkbox" id="manifest-verified-toggle">
                     <span class="slider"></span>
                 </label>
             </div>
-            <button class="btn btn-primary">Save</button>
-            <button class="btn btn-primary" onclick="addLeg()">+ Leg</button>
-            <button class="btn btn-danger" onclick="openModal('close-modal')">Close Flt</button>
         </div>
         
         <!-- ================= MODALS ================= -->
@@ -879,14 +927,20 @@
                 btn.onclick = () => activateLeg(leg.id);
                 tabsContainer.appendChild(btn);
             });
-            const addBtn = document.createElement('button');
-            addBtn.className = 'leg-tab';
-            addBtn.style.borderStyle = 'dashed';
-            addBtn.innerText = '+ Add Leg';
-            addBtn.onclick = addLeg;
-            tabsContainer.appendChild(addBtn);
             
             updateFormFromState();
+        }
+
+        function handleSaveAddLeg() {
+            const verifiedToggle = document.getElementById('manifest-verified-toggle');
+            if (!verifiedToggle || !verifiedToggle.checked) {
+                alert("Warning: You must verify the manifest for the current leg before saving and adding a new leg.");
+                return;
+            }
+            addLeg();
+            if (verifiedToggle) {
+                verifiedToggle.checked = false;
+            }
         }
 
         function addLeg() {
@@ -988,7 +1042,23 @@
             <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
         </div>
         <div style="padding:20px; line-height:1.5; font-size: 0.95rem;">
-            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.6] - 2026-06-18</h4>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.10] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added viewport-fit=cover, explicit standalone mode detection, safe area support, and hid the mockup version banner when in native app mode.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.9] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added PWA / Apple Mobile Web App meta tags so the app runs in full standalone mode when saved to the iOS Home Screen.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.8] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added native mode detection so the mockup scales fully to the viewport with no iPad frame when opened on an actual tablet device.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.7] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Removed "+ Add Leg" from top tabs, renamed bottom button to "Save/Add Leg", moved Verified slider to the right, and added verification warning.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.6] - 2026-06-18</h4>
             <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
                 <li>Changed changelog modal to a right-aligned side panel that doesn't block the simulated iPad display.</li>
             </ul>

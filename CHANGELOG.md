@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.10] - 2026-06-18
+### Fixed
+- Fixed black borders in PWA mode by applying `viewport-fit=cover` and iOS safe area environment variables.
+- Added explicit PWA standalone detection logic.
+- Hid the mockup version overlay when in native PWA mode.
+
+## [0.0.9] - 2026-06-18
+### Added
+- Added `apple-mobile-web-app-capable` and related meta tags to enable full-screen, standalone PWA behavior without the Safari URL bar when users tap "Add to Home Screen" on iOS.
+
+## [0.0.8] - 2026-06-18
+### Added
+- Native mode detection: When opened on an actual iPad or mobile device, the simulated device frame is removed and the UI scales dynamically to fill 100% of the viewport seamlessly.
+
+## [0.0.7] - 2026-06-18
+### Added
+- Warning message when attempting to add a leg without verifying the manifest.
+
+### Changed
+- Removed the "+ Add Leg" button from the top tabs.
+- Renamed the bottom add leg button to "Save/Add Leg".
+- Moved the "Manifest Verified" slider to the right side of the action buttons.
+
 ## [0.0.6] - 2026-06-18
 ### Changed
 - Changed changelog modal to a right-aligned side panel that doesn't block the simulated iPad display.

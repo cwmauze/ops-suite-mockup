@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.20] - 2026-06-18
 ### Added
-- Refactored the Fuel Stations section. Replaced the manual Fuel Time input with a live-calculated Fuel Time field that auto-computes `(Supply + Main) / Burn Rate`, and added a new input for the Burn Rate (GPH).
+- Refactored the Fuel Stations section. Replaced the manual Fuel Time input with a live-calculated Fuel Time field that auto-computes `(Supply + Main) / Burn Rate`, and added a new input for the Burn Rate (defaulting to 74 GPH).
 
 ## [0.0.19] - 2026-06-18
 ### Added

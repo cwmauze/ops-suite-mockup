@@ -603,6 +603,10 @@
                         <span style="font-size:0.7rem; text-transform:uppercase;">CG Pass</span>
                         <span style="font-size:1rem;">4509 mm</span>
                     </button>
+                    <button class="tile blue" style="flex-direction:column; padding:6px;" onclick="openModal('print-modal')">
+                        <span style="font-size:0.7rem; text-transform:uppercase;">Manifest</span>
+                        <span style="font-size:1rem;">📄</span>
+                    </button>
                 </div>
             </div>
 
@@ -751,11 +755,11 @@
                         </div>
                         <div class="form-group" style="flex: 1;">
                             <label>Fuel Time</label>
-                            <input type="text" id="fuel-time" value="02:58" style="text-align:center; font-weight:bold; color:var(--accent-blue); background-color: transparent;" readonly>
+                            <input type="text" id="fuel-time" value="02:58" inputmode="decimal" style="text-align:center; font-weight:bold; color:var(--accent-blue);" oninput="handleOverride('fuel-time')">
                         </div>
                         <div class="form-group" style="flex: 0.8;">
                             <label>S.O.B.</label>
-                            <input type="number" value="3" style="text-align:center;">
+                            <input type="number" id="sob" value="0" inputmode="decimal" style="text-align:center; font-weight:bold; color:var(--accent-blue);" oninput="handleOverride('sob')">
                         </div>
                     </div>
                 </div>
@@ -1020,6 +1024,19 @@
                         <div style="flex:1; text-align:right; color:var(--text-secondary)">4731.00</div>
                         <div style="flex:1; text-align:right; color:var(--text-secondary)">Default</div>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Print Manifest Modal -->
+        <div class="modal-overlay" id="print-modal">
+            <div class="modal-content" style="max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;">
+                <div class="modal-header" style="flex-shrink: 0;">
+                    <div class="modal-title">View Manifest</div>
+                    <div class="modal-close" onclick="closeModal('print-modal')">×</div>
+                </div>
+                <div class="modal-body" style="padding: 0; overflow-y: auto; background-color: #f5f5f5;">
+                    <img src="assets/dummy_manifest.png" alt="Dummy Manifest" style="width: 100%; height: auto; display: block;">
                 </div>
             </div>
         </div>
@@ -1313,7 +1330,36 @@
             active.dispatchEvent(new Event('input', { bubbles: true }));
         });
 
+        let fuelTimeOverridden = false;
+        let sobOverridden = false;
+
+        function handleOverride(field) {
+            const input = document.getElementById(field);
+            if (!input) return;
+            
+            if (field === 'fuel-time') {
+                fuelTimeOverridden = (input.value.trim() !== '');
+                if (!fuelTimeOverridden) calculateFuelTime();
+            } else if (field === 'sob') {
+                sobOverridden = (input.value.trim() !== '');
+                if (!sobOverridden) calculateSob();
+            }
+        }
+
+        function calculateSob() {
+            if (sobOverridden) return;
+            let count = 0;
+            document.querySelectorAll('.seat-occupant-input').forEach(input => {
+                if (input.value.trim() !== '' && input.value.trim().toLowerCase() !== 'empty') {
+                    count++;
+                }
+            });
+            const sobInput = document.getElementById('sob');
+            if (sobInput) sobInput.value = count;
+        }
+
         function calculateFuelTime() {
+            if (fuelTimeOverridden) return;
             const supply = parseFloat(document.getElementById('supply-tank').value) || 0;
             const main = parseFloat(document.getElementById('main-tank').value) || 0;
             const burn = parseFloat(document.getElementById('burn-rate').value) || 0;
@@ -1332,8 +1378,11 @@
             }
         }
         
-        // Initialize fuel time on load
-        setTimeout(calculateFuelTime, 100);
+        // Initialize fields on load
+        setTimeout(() => {
+            calculateFuelTime();
+            calculateSob();
+        }, 100);
 
         function setNow(inputId) {
             const now = new Date();
@@ -1375,18 +1424,20 @@
             }
         }
 
-        function clearSeat(num, event) {
-            const input = document.getElementById(`occ-${num}`);
+        function clearSeat(seatId, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            const input = document.getElementById(`occ-${seatId}`);
+            const wt = document.getElementById(`wt-${seatId}`);
             if(input) input.value = '';
-            const wt = document.getElementById(`wt-${num}`);
             if(wt) wt.value = '0';
-            
-            const dropdown = document.getElementById(`dropdown-${num}`);
+            const dropdown = document.getElementById(`dropdown-${seatId}`);
             if(dropdown) dropdown.style.display = 'none';
-            if(event) event.stopPropagation();
         }
 
         function filterPersonnel(seatId) {
+            calculateSob(); // Trigger SOB recount
             const input = document.getElementById(`occ-${seatId}`);
             const dropdown = document.getElementById(`dropdown-${seatId}`);
             if (!input || !dropdown) return;
@@ -1417,6 +1468,7 @@
                         const wt = document.getElementById(`wt-${seatId}`);
                         if (wt) wt.value = p.weight;
                         dropdown.style.display = 'none';
+                        calculateSob(); // Trigger SOB recount
                     };
                     dropdown.appendChild(item);
                 });

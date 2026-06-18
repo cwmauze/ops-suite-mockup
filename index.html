@@ -168,7 +168,7 @@
         /* --- GLOBAL FLIGHT HEADER --- */
         .global-header {
             background-color: var(--surface-color);
-            padding: 10px 12px;
+            padding: 4px 6px;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -176,7 +176,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 4px;
         }
 
         .aircraft-title { font-size: 1.4rem; font-weight: bold; }
@@ -185,10 +185,10 @@
         .global-stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 4px;
             background-color: var(--surface-color-light);
-            padding: 10px;
-            border-radius: 8px;
+            padding: 4px;
+            border-radius: 6px;
             border: 1px solid var(--border-color);
             cursor: pointer;
         }
@@ -209,8 +209,8 @@
         /* --- LEG TABS --- */
         .leg-tabs {
             display: flex;
-            gap: 8px;
-            padding: 6px 12px;
+            gap: 4px;
+            padding: 2px 6px;
             background-color: var(--surface-color);
             border-bottom: 1px solid var(--border-color);
             overflow-x: auto;
@@ -218,18 +218,18 @@
         .leg-tabs::-webkit-scrollbar { display: none; }
 
         .leg-tab {
-            padding: 6px 12px;
+            padding: 4px 8px;
             background-color: var(--surface-color-light);
             border: 2px solid var(--border-color);
-            border-radius: 16px;
+            border-radius: 12px;
             color: var(--text-primary);
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             white-space: nowrap;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
         }
         .leg-tab.active {
             background-color: var(--accent-blue);
@@ -289,16 +289,16 @@
 
 
         /* --- MAIN CONTENT --- */
-        .container { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
-        .section { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; }
-        .section-title { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; font-weight: bold; }
+        .container { padding: 4px; display: flex; flex-direction: column; gap: 4px; }
+        .section { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; padding: 4px; }
+        .section-title { font-size: 1rem; color: var(--text-secondary); margin-bottom: 4px; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; font-weight: bold; }
 
-        .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .form-group { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-        label { font-size: 0.85rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; }
+        .form-row { display: flex; gap: 4px; margin-bottom: 4px; }
+        .form-group { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+        label { font-size: 0.8rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; margin: 0; }
         input[type="text"], input[type="number"], input[type="time"], select {
             background-color: var(--input-bg); border: 2px solid var(--border-color);
-            color: var(--text-primary); padding: 8px 10px; border-radius: 6px; font-size: 1rem; font-weight: bold; width: 100%;
+            color: var(--text-primary); padding: 4px 6px; border-radius: 4px; font-size: 0.95rem; font-weight: bold; width: 100%; box-sizing: border-box; margin: 0;
         }
         input:focus, select:focus { outline: none; border-color: var(--accent-blue); }
         
@@ -311,13 +311,13 @@
         input:checked + .slider { background-color: var(--toggle-on); border-color: var(--toggle-on); }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background-color: var(--surface-color-light); padding: 12px; border-radius: 8px; border: 2px dashed var(--border-color); }
-        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; position: relative; }
+        .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background-color: var(--surface-color-light); padding: 4px; border-radius: 6px; border: 2px dashed var(--border-color); }
+        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 6px; padding: 4px; display: flex; flex-direction: column; gap: 2px; cursor: pointer; position: relative; }
         .seat-card.active { border-color: var(--accent-blue); }
-        .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .seat-title { font-size: 0.8rem; color: var(--text-secondary); text-align: left; text-transform: uppercase; font-weight: bold; margin: 0; }
-        .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 8px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 0.95rem; min-height: 38px; display: flex; align-items: center; justify-content: center; }
-        .seat-occupant-input { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 8px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 0.95rem; width: 100%; box-sizing: border-box; color: var(--text-primary); outline: none; margin: 0; }
+        .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+        .seat-title { font-size: 0.75rem; color: var(--text-secondary); text-align: left; text-transform: uppercase; font-weight: bold; margin: 0; }
+        .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 4px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; min-height: 28px; display: flex; align-items: center; justify-content: center; }
+        .seat-occupant-input { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 4px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; width: 100%; box-sizing: border-box; color: var(--text-primary); outline: none; margin: 0; }
         .seat-occupant-input::placeholder { color: var(--text-secondary); font-weight: normal; }
         .seat-occupant-input:focus { border-color: var(--accent-blue); }
         .autocomplete-dropdown { position: absolute; top: calc(100% - 10px); left: 12px; right: 12px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; max-height: 150px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
@@ -330,7 +330,7 @@
         .full-width { grid-column: 1 / -1; }
         
         /* --- ACTION BUTTONS --- */
-        .btn { flex: 1; padding: 15px; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; text-align: center; }
+        .btn { flex: 1; padding: 6px; font-size: 0.95rem; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; color: white; text-align: center; }
         .btn-primary { background-color: var(--accent-blue); }
         .btn-danger { background-color: var(--accent-red); }
         .btn-outline { background-color: transparent; border: 2px solid var(--border-color); color: var(--text-primary); }
@@ -342,7 +342,7 @@
             position: absolute; bottom: 0; left: 0; right: 0;
             background-color: #1a1a1a; border-top: 1px solid var(--border-color);
             display: flex; justify-content: space-around; align-items: center;
-            height: 60px; z-index: 50;
+            height: 48px; z-index: 50;
             border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
         }
         [data-theme="light"] .bottom-nav {
@@ -562,7 +562,7 @@
                 </div>
 
                 <!-- Spatial Stations -->
-                <div class="section" style="padding-top: 20px;">
+                <div class="section" style="padding-top: 4px;">
                     <div class="spatial-grid">
                         <div class="seat-card">
                             <div class="seat-header">
@@ -593,16 +593,13 @@
                                 <div class="seat-title">Aft Facing Right Hand</div>
                                 <div class="seat-weight">[<input type="number" id="wt-4" value="0"> KG]</div>
                             </div>
-                            <input type="text" class="seat-occupant-input" id="occ-4" value="Empty" placeholder="Search personnel..." oninput="filterPersonnel(4)" onfocus="showPersonnel(4)">
+                            <input type="text" class="seat-occupant-input" id="occ-4" value="" placeholder="Search personnel..." oninput="filterPersonnel(4)" onfocus="showPersonnel(4)">
                             <div class="autocomplete-dropdown" id="dropdown-4"></div>
                         </div>
                         <div class="seat-card">
-                            <div class="seat-header" style="justify-content: center;">
+                            <div class="seat-header">
                                 <div class="seat-title">Left Hand Litter</div>
-                            </div>
-                            <input type="text" class="seat-occupant-input" placeholder="Patient Name (Optional)" style="text-align: center;">
-                            <div class="seat-weight" style="justify-content: center; font-size: 1rem; color: var(--text-primary); margin-top: 4px;">
-                                <input type="number" id="wt-5" value="0" placeholder="0" style="width: 50px; font-size: 1rem; text-align: center; color: var(--text-primary); border-bottom: 2px solid var(--border-color);"> KG
+                                <div class="seat-weight">[<input type="number" id="wt-5" value="0"> KG]</div>
                             </div>
                         </div>
                         <div class="seat-card">

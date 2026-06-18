@@ -649,24 +649,30 @@
                         <div class="form-group">
                             <label>Supply Tank</label>
                             <div style="display:flex; align-items:center; gap:10px;">
-                                <input type="number" value="33" style="text-align:right;"> <span style="font-weight:bold; color:var(--text-secondary)">GAL</span>
+                                <input type="number" id="supply-tank" value="33" style="text-align:right;" oninput="calculateFuelTime()"> <span style="font-weight:bold; color:var(--text-secondary)">GAL</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Main Tank</label>
                             <div style="display:flex; align-items:center; gap:10px;">
-                                <input type="number" value="160" style="text-align:right;"> <span style="font-weight:bold; color:var(--text-secondary)">GAL</span>
+                                <input type="number" id="main-tank" value="160" style="text-align:right;" oninput="calculateFuelTime()"> <span style="font-weight:bold; color:var(--text-secondary)">GAL</span>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Fuel Time (HH:MM)</label>
-                            <input type="time" value="02:30">
+                        <div class="form-group" style="flex: 1.2;">
+                            <label>Burn Rate</label>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <input type="number" id="burn-rate" value="65" style="text-align:right;" oninput="calculateFuelTime()"> <span style="font-weight:bold; color:var(--text-secondary)">GPH</span>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Souls on Board</label>
-                            <input type="number" value="3">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Fuel Time</label>
+                            <input type="text" id="fuel-time" value="02:58" style="text-align:center; font-weight:bold; color:var(--accent-blue); background-color: transparent;" readonly>
+                        </div>
+                        <div class="form-group" style="flex: 0.8;">
+                            <label>S.O.B.</label>
+                            <input type="number" value="3" style="text-align:center;">
                         </div>
                     </div>
                 </div>
@@ -1039,6 +1045,28 @@
             { name: "Raquel Welch", weight: 55 },
             { name: "Pamela Anderson", weight: 60 }
         ];
+
+        function calculateFuelTime() {
+            const supply = parseFloat(document.getElementById('supply-tank').value) || 0;
+            const main = parseFloat(document.getElementById('main-tank').value) || 0;
+            const burn = parseFloat(document.getElementById('burn-rate').value) || 0;
+            
+            if (burn > 0) {
+                const totalGal = supply + main;
+                const hoursDecimal = totalGal / burn;
+                const hours = Math.floor(hoursDecimal);
+                const minutes = Math.floor((hoursDecimal - hours) * 60);
+                
+                const padH = hours.toString().padStart(2, '0');
+                const padM = minutes.toString().padStart(2, '0');
+                document.getElementById('fuel-time').value = `${padH}:${padM}`;
+            } else {
+                document.getElementById('fuel-time').value = '--:--';
+            }
+        }
+        
+        // Initialize fuel time on load
+        setTimeout(calculateFuelTime, 100);
 
         function showPersonnel(seatId) {
             filterPersonnel(seatId);

@@ -437,7 +437,7 @@
 </head>
 <body>
 
-    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.13</div>
+    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.14</div>
     
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative;">
         <div class="device-frame">
@@ -536,15 +536,15 @@
                         </div>
                         <div class="seat-card active">
                             <div class="seat-title">Pilot (Right)</div>
-                            <input type="text" class="seat-occupant-input" id="occ-2" value="Mauze, Charles" placeholder="Search personnel..." oninput="filterPersonnel(2)" onfocus="showPersonnel(2)">
+                            <input type="text" class="seat-occupant-input" id="occ-2" value="" placeholder="Search personnel..." oninput="filterPersonnel(2)" onfocus="showPersonnel(2)">
                             <div class="autocomplete-dropdown" id="dropdown-2"></div>
-                            <div class="seat-weight"><input type="number" id="wt-2" value="110"> KG</div>
+                            <div class="seat-weight"><input type="number" id="wt-2" value="0"> KG</div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-title">Aft Facing (LH)</div>
-                            <input type="text" class="seat-occupant-input" id="occ-3" value="Petty, Shannon" placeholder="Search personnel..." oninput="filterPersonnel(3)" onfocus="showPersonnel(3)">
+                            <input type="text" class="seat-occupant-input" id="occ-3" value="" placeholder="Search personnel..." oninput="filterPersonnel(3)" onfocus="showPersonnel(3)">
                             <div class="autocomplete-dropdown" id="dropdown-3"></div>
-                            <div class="seat-weight"><input type="number" id="wt-3" value="63"> KG</div>
+                            <div class="seat-weight"><input type="number" id="wt-3" value="0"> KG</div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-title">Aft Facing (RH)</div>
@@ -560,9 +560,9 @@
                         </div>
                         <div class="seat-card">
                             <div class="seat-title">Fwd Facing Aft Seat (RH)</div>
-                            <input type="text" class="seat-occupant-input" id="occ-6" value="Dail, Joshua" placeholder="Search personnel..." oninput="filterPersonnel(6)" onfocus="showPersonnel(6)">
+                            <input type="text" class="seat-occupant-input" id="occ-6" value="" placeholder="Search personnel..." oninput="filterPersonnel(6)" onfocus="showPersonnel(6)">
                             <div class="autocomplete-dropdown" id="dropdown-6"></div>
-                            <div class="seat-weight"><input type="number" id="wt-6" value="90"> KG</div>
+                            <div class="seat-weight"><input type="number" id="wt-6" value="0"> KG</div>
                         </div>
                         <div class="seat-card full-width" onclick="openModal('equip-modal')">
                             <div class="seat-title">Medical Equipment</div>
@@ -1133,7 +1133,11 @@
             <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
         </div>
         <div style="padding:20px; line-height:1.5; font-size: 0.95rem;">
-            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.13] - 2026-06-18</h4>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.14] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Cleared out default dummy personnel names (Mauze, Petty, Dail) from stations to start blank.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.13] - 2026-06-18</h4>
             <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
                 <li>Replaced the personnel selection modal with a smart inline dropdown menu with text search.</li>
             </ul>

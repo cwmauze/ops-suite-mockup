@@ -14,6 +14,43 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
+    <script>
+        function scaleDevice() {
+            const frame = document.querySelector('.device-frame');
+            const container = document.getElementById('main-view') || document.body;
+            if(frame) {
+                if (document.body.classList.contains('native-mode')) {
+                    frame.style.transform = 'none';
+                    return;
+                }
+                const isDesktop = window.innerWidth > 1100;
+                const instructionsWidth = isDesktop ? 350 : 0;
+                const availableWidth = window.innerWidth - instructionsWidth;
+                const availableHeight = window.innerHeight;
+                const scale = Math.min((availableWidth * 0.95) / 784, (availableHeight * 0.95) / 1173);
+                frame.style.transform = `scale(${scale})`;
+            }
+        }
+        window.addEventListener('resize', scaleDevice);
+        window.addEventListener('DOMContentLoaded', () => {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const isMobile = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isStandalone || isMobile) {
+                document.body.classList.add('native-mode');
+            }
+            scaleDevice();
+        });
+
+        function toggleChangelog() {
+            const panel = document.getElementById('changelog-panel');
+            if (panel && (panel.style.display === 'none' || panel.style.display === '')) {
+                panel.style.display = 'flex';
+            } else if (panel) {
+                panel.style.display = 'none';
+            }
+        }
+
+    </script>
     <style>
         :root {
             /* Colors */
@@ -1251,46 +1288,6 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-                function scaleDevice() {
-            const frame = document.querySelector('.device-frame');
-            const container = document.getElementById('main-view') || document.body;
-            if(frame) {
-                if (document.body.classList.contains('native-mode')) {
-                    frame.style.transform = 'none';
-                    return;
-                }
-                // Calculate available width and height for the container
-                // #main-view takes up window.innerWidth - instructions panel width (350px when visible)
-                const isDesktop = window.innerWidth > 1100;
-                const instructionsWidth = isDesktop ? 350 : 0;
-                const availableWidth = window.innerWidth - instructionsWidth;
-                const availableHeight = window.innerHeight;
-                
-                // iPad dimensions + padding
-                const targetWidth = 784;
-                const targetHeight = 1173;
-
-                const scale = Math.min((availableWidth * 0.95) / targetWidth, (availableHeight * 0.95) / targetHeight);
-                frame.style.transform = `scale(${scale})`;
-            }
-        }
-        window.addEventListener('resize', scaleDevice);
-        window.addEventListener('DOMContentLoaded', () => {
-            // Detect mobile/tablet devices, including iPadOS 13+ desktop mode, or PWA standalone mode
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-            const isMobile = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-            if (isStandalone || isMobile) {
-                document.body.classList.add('native-mode');
-            }
-            scaleDevice();
-        }
-
-        function toggleChangelog() {
-            const panel = document.getElementById('changelog-panel');
-            if (panel.style.display === 'none' || panel.style.display === '') {
-                panel.style.display = 'flex';
-            }
-
         // Map Implementation
         let leafletMap = null;
         let layers = {};
@@ -1302,7 +1299,7 @@
                 zoomControl: false, 
                 attributionControl: false 
             });
-
+            
             layers = {
                 street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(leafletMap),
                 sat: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
@@ -1375,7 +1372,6 @@
 
         // Initialize everything
         window.onload = () => {
-            scaleDevice();
             initMap();
         };
 

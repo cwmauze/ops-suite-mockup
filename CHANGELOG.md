@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.19] - 2026-06-18
+### Added
+- Added quick "x" clear buttons inside personnel selection fields to rapidly remove occupants from seats.
+
+### Fixed
+- Fixed an architectural layout bug that caused the bottom navigation bar and action buttons to spill outside of the iPad frame container.
+
 ## [0.0.18] - 2026-06-18
 ### Added
 - Added an interactive manual sync animation to the "Last sync" status in the global header. When tapped, the checkmark changes to a blue spinning arrow and the text updates to "Syncing..." for 10 seconds before resetting.

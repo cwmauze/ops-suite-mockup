@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.36] - 2026-06-19
+### Changed
+- Split Fuel Time input into separate Hours and Minutes fields with 'H' and 'M' annotations.
+- Updated the `--input-bg` CSS variable to a subtle cool gray (`#f7f7f9`) to provide better contrast against the section cards.
+- Split Departure and Arrival Time inputs into separate date and time fields.
+- Re-labeled "Departed" and "Arrived" to "Departure Date/Time" and "Arrival Date/Time", and removed placeholders.
+
 ## [0.0.35] - 2026-06-19
 ### Added
 - Added Quick "Offload Crew and Patient" / "Onload Crew" features to the roadmap.

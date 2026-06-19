@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.27] - 2026-06-18
+### Changed
+- Refactored the Mockup version and changelog UI to sit cleanly at the bottom of the left instructions panel instead of floating randomly.
+- Made the changelog panel overlay available on all simulator pages (index, home, flightlog, manifest).
+- Fixed CSS scope bugs to ensure the mockup version tag and changelog display properly across all views in simulator mode, while still hiding seamlessly in native PWA mode.
+
 ## [0.0.26] - 2026-06-18
 ### Added
 - Applied global theme toggle logic across all pages.

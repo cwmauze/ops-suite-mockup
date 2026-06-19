@@ -436,8 +436,8 @@
                                 <span class="detail-value">N/A</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label">Request Date</span>
-                                <span class="detail-value">6/18/2026, 10:26:28 AM</span>
+                                <span class="detail-label">Created At</span>
+                                <span class="detail-value" id="req-date-text">6/18/2026, 10:26</span>
                             </div>
                             <div class="detail-row">
                                 <span class="detail-label">Distance</span>
@@ -589,6 +589,18 @@
                     }).addTo(leafletMap);
 
                     leafletMap.fitBounds(routeLine.getBounds(), {padding: [30, 30]});
+                }
+                
+                const dateSpan = document.getElementById('req-date-text');
+                const storedTime = localStorage.getItem('ops_suite_flight_time');
+                if (dateSpan && storedTime) {
+                    const d = new Date(storedTime);
+                    const mm = String(d.getMonth() + 1).padStart(2, '0');
+                    const dd = String(d.getDate()).padStart(2, '0');
+                    const yyyy = d.getFullYear();
+                    const hh = String(d.getHours()).padStart(2, '0');
+                    const min = String(d.getMinutes()).padStart(2, '0');
+                    dateSpan.innerHTML = `${mm}/${dd}/${yyyy}, ${hh}:${min}`;
                 }
             }
         }

@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.8] - 2026-06-19
+### Changed
+- Updated the flight request time on the dashboard and request views to dynamically reflect the exact time the mock request was sent, formatted in 24-hour time.
+
 ## [0.1.7] - 2026-06-19
 ### Changed
 - Updated the flight request route text on the dashboard to explicitly list all waypoints (e.g. `KRWI -> NC91 -> KRWI`) instead of summarizing stops.

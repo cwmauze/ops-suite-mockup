@@ -554,12 +554,14 @@ window.FlightSimulator = {
         if (sendBtn) {
             sendBtn.addEventListener('click', () => {
                 localStorage.setItem('ops_suite_flight_sent', 'true');
+                localStorage.setItem('ops_suite_flight_time', new Date().toISOString());
                 this.dispatchUpdate();
             });
         }
 
         clearBtn.addEventListener('click', () => {
             localStorage.setItem('ops_suite_flight_sent', 'false');
+            localStorage.removeItem('ops_suite_flight_time');
             this.clearRoute();
             this.renderRouteList();
             this.dispatchUpdate();

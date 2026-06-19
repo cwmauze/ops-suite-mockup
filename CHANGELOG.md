@@ -98,7 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.14] - 2026-06-18
 ### Changed
-- Removed default placeholder names (Mauze, Petty, Dail) from station occupants so the user can test the smart dropdown cleanly.
+- Removed default placeholder names (Stallone, Petty, Dail) from station occupants so the user can test the smart dropdown cleanly.
 
 ## [0.0.13] - 2026-06-18
 ### Changed

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.35] - 2026-06-19
+### Added
+- Added Quick "Offload Crew and Patient" / "Onload Crew" features to the roadmap.
+
+### Changed
+- Reclaimed vertical space in `flightlog.html` by radically reducing padding and gaps within the container and seat cards, ensuring the entire form fits on a single iPad screen without scrolling.
+- Re-labeled "Obst. Height" to "HIGHEST OBSTACLE".
+- Re-labeled "Back" to "Manifest List" in the header.
+- Re-labeled "Flight Req" to "Flight Request" and "Edit Flt" to "Edit Flight".
+
+### Fixed
+- Fixed clear "x" buttons on inputs to dynamically hide via CSS `:placeholder-shown` when no text is present.
+
 ## [0.0.34] - 2026-06-18
 ### Added
 - Created `flight_request.html` mockup based on the flight request screenshot.

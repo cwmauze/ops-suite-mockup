@@ -1,0 +1,21 @@
+# System Files
+.DS_Store
+
+# Temporary AI/Agent Scripts & Output Files
+*.py
+*.txt
+*.swift
+*.log
+*.sh
+
+# Exceptions (If you ever decide you need specific python scripts, add them below)
+# !bump_version.py
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

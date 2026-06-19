@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="mid">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -176,6 +176,25 @@
             --text-main: #f0f0f0;
             --text-muted: #c0c0c0;
         }
+        [data-theme="mid"] {
+            --bg-color: #5c6065;
+            --surface-color: #6c7075;
+            --surface-color-light: #7c858c;
+            --text-primary: #ffffff;
+            --text-secondary: #d1d5db;
+            --border-color: #888888;
+            --input-bg: #40464c;
+            --toggle-off: #888888;
+            --bg-body: #5c6065;
+            --bg-card: #6c7075;
+            --text-main: #ffffff;
+            --text-muted: #d1d5db;
+            --accent-blue: #4468a3;
+            --accent-orange: #e69138;
+            --accent-green: #7eb522;
+            --accent-red: #d9381e;
+        }
+
 
         [data-theme="dark"] {
             --bg-color: #000000;
@@ -1354,7 +1373,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.2.0</div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.2.1</div>
     </div>
     </div>
 
@@ -1364,7 +1383,7 @@
 
             <!-- Sync Bar -->
             <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.2.0</span>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.2.1</span>
                 <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1655,10 +1674,10 @@
         };
 
     
-        const themes = ['light', 'neutral', 'dark', 'hc-dark', 'hc-light'];
+        const themes = ['light', 'neutral', 'mid', 'dark', 'hc-dark', 'hc-light'];
         function toggleTheme() {
             const html = document.documentElement;
-            let current = html.getAttribute('data-theme') || 'light';
+            let current = html.getAttribute('data-theme') || 'mid';
             let nextIndex = (themes.indexOf(current) + 1) % themes.length;
             let nextTheme = themes[nextIndex];
             html.setAttribute('data-theme', nextTheme);
@@ -1708,6 +1727,11 @@
             <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
         </div>
         <div style="padding:20px; line-height:1.5; font-size: 0.95rem;">
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.2.1] - 2026-06-19</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added a new "mid" neutral theme based on the legacy app's color scheme, balancing visibility for both bright daylight and dark cockpit environments.</li>
+                <li>Set the new "mid" neutral theme as the default theme for all pages across the prototype.</li>
+            </ul>
             <h4 style="margin-top:0; color:var(--accent-blue);">[0.2.0] - 2026-06-19</h4>
             <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
                 <li>Added a new `roadmap.html` page to dynamically fetch and natively render `ROADMAP.md` as an interactive checklist.</li>

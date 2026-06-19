@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-06-19
+### Fixed
+- Fixed an issue where the changelog UI was cut off by an unescaped `<script>` tag within historic release notes.
+- Locked the changelog panel to the viewport height for full scrollability on mobile.
+- Added the current mockup version tag to the top sync bar.
+
 ## [0.1.1] - 2026-06-19
 ### Added
 - Integrated ForeFlight URL scheme to open active flight routes directly in the ForeFlight Mobile app.

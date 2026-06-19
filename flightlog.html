@@ -947,10 +947,15 @@
                         </div>
                         <div class="form-group" style="flex: 1;">
                             <label style="font-size: 0.7rem; text-align: center;">Fuel time</label>
-                            <div style="display: flex; gap: 2px; align-items: center; justify-content: center;">
-                                <input type="number" id="fuel-time-hours" value="02" inputmode="decimal" pattern="[0-9]*" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px; flex: 1; min-width: 0;" oninput="handleOverride('fuel-time')">
-                                <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: bold;">:</span>
-                                <input type="number" id="fuel-time-minutes" value="58" inputmode="decimal" pattern="[0-9]*" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px; flex: 1; min-width: 0;" oninput="handleOverride('fuel-time')">
+                            <div style="display: flex; gap: 6px; align-items: center; justify-content: center;">
+                                <div style="display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0;">
+                                    <input type="number" id="fuel-time-hours" value="02" inputmode="decimal" pattern="[0-9]*" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px; width: 100%; box-sizing: border-box;" oninput="handleOverride('fuel-time')">
+                                    <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: bold;">H</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0;">
+                                    <input type="number" id="fuel-time-minutes" value="58" inputmode="decimal" pattern="[0-9]*" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px; width: 100%; box-sizing: border-box;" oninput="handleOverride('fuel-time')">
+                                    <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: bold;">M</span>
+                                </div>
                             </div>
                         </div>
                     </div>

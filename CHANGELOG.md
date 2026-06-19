@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-06-19
+### Changed
+- Moved the "Email Feedback" button on the Roadmap page into the top card header.
+- Updated the Roadmap card header to be sticky, ensuring the title and feedback button remain accessible while scrolling through the list.
+
 ## [0.2.1] - 2026-06-19
 ### Added
 - Added a new "mid" neutral theme based on the legacy app's color scheme, balancing visibility for both bright daylight and dark cockpit environments.

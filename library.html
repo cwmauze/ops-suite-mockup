@@ -14,15 +14,14 @@
     <script>
         function scaleDevice() {
             const frame = document.querySelector('.device-frame');
-            if(frame) {
+            const container = document.querySelector('.main-view');
+            if(frame && container) {
                 if (document.body.classList.contains('native-mode')) {
                     frame.style.transform = 'none';
                     return;
                 }
-                const isDesktop = window.innerWidth > 1100;
-                const instructionsWidth = isDesktop ? 350 : 0;
-                const availableWidth = window.innerWidth - instructionsWidth;
-                const availableHeight = window.innerHeight;
+                const availableWidth = container.clientWidth;
+                const availableHeight = container.clientHeight;
                 const scale = Math.min((availableWidth * 0.95) / 784, (availableHeight * 0.95) / 1173);
                 frame.style.transform = `scale(${scale})`;
             }
@@ -544,5 +543,7 @@
             }, 10000);
         }
     </script>
+    <!-- Simulator JS -->
+    <script src="assets/simulator.js"></script>
 </body>
 </html>

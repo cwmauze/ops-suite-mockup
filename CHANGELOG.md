@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.38] - 2026-06-19
+### Added
+- Refactored the Comm Center Simulator UI from a static text input to a dynamic, live-updating list of waypoints.
+- Added progressive leg generation to the Manifest page (`flightlog.html`) so that it only automatically generates the first leg upon dispatch, and progressively auto-fills subsequent legs based on the flight request as the user saves each leg.
+- Added fallback logic for progressive leg generation that safely handles exhausted waypoints by using the previous destination as the new origin.
+
 ## [0.0.37] - 2026-06-19
 ### Changed
 - Refined route header flex proportions in `flightlog.html` to widen "Origin", "Destination", "Time", and "NOW" button inputs while perfectly right-sizing "Date" inputs.

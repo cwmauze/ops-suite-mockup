@@ -19,11 +19,9 @@
                     return;
                 }
                 // Calculate available width and height for the container
-                // #main-view takes up window.innerWidth - instructions panel width (350px when visible)
-                const isDesktop = window.innerWidth > 1100;
-                const instructionsWidth = isDesktop ? 350 : 0;
-                const availableWidth = window.innerWidth - instructionsWidth;
-                const availableHeight = window.innerHeight;
+                // #main-view automatically sizes itself via flexbox to fit between the side panels
+                const availableWidth = container.clientWidth;
+                const availableHeight = container.clientHeight;
                 
                 // iPad dimensions + padding
                 const targetWidth = 784;
@@ -2619,5 +2617,6 @@
             </ul>
         </div>
     </div>
+<script src="assets/simulator.js"></script>
 </body>
 </html>

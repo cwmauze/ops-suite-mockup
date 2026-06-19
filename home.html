@@ -22,11 +22,10 @@
                 if (document.body.classList.contains('native-mode')) {
                     frame.style.transform = 'none';
                     return;
-                }
-                const isDesktop = window.innerWidth > 1100;
-                const instructionsWidth = isDesktop ? 350 : 0;
-                const availableWidth = window.innerWidth - instructionsWidth;
-                const availableHeight = window.innerHeight;
+                }                // Calculate available width and height for the container
+                // #main-view automatically sizes itself via flexbox to fit between the side panels
+                const availableWidth = container.clientWidth;
+                const availableHeight = container.clientHeight;
                 const scale = Math.min((availableWidth * 0.95) / 784, (availableHeight * 0.95) / 1173);
                 frame.style.transform = `scale(${scale})`;
             }
@@ -1153,7 +1152,7 @@
                 </div>
 
                 <!-- Flight Request Card -->
-                <div class="card">
+                <div class="card" id="home-flight-request-card" style="display: none;">
                     <div class="flight-card-layout">
                         <div class="flight-details">
                             <div class="flight-title">Flight Request #1029992</div>
@@ -1469,6 +1468,26 @@
         window.addEventListener('DOMContentLoaded', () => {
             const initialSyncText = document.querySelector('.sync-text');
             if (initialSyncText) initialSyncText.innerHTML = `Last sync: ${formatSyncTime()}`;
+            
+            const reqCard = document.getElementById('home-flight-request-card');
+            if (reqCard) {
+                if (localStorage.getItem('ops_suite_flight_sent') === 'true') {
+                    reqCard.style.display = 'block';
+                } else {
+                    reqCard.style.display = 'none';
+                }
+            }
+        });
+
+        document.addEventListener('flightRequestUpdated', () => {
+            const reqCard = document.getElementById('home-flight-request-card');
+            if (reqCard) {
+                if (localStorage.getItem('ops_suite_flight_sent') === 'true') {
+                    reqCard.style.display = 'block';
+                } else {
+                    reqCard.style.display = 'none';
+                }
+            }
         });
 </script>
 
@@ -1618,5 +1637,6 @@
             </ul>
         </div>
     </div>
+<script src="assets/simulator.js"></script>
 </body>
 </html>

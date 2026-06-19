@@ -337,7 +337,7 @@
 
         /* --- ACTION SECTIONS --- */
         .action-section {
-            padding: 15px 20px;
+            padding: 8px 12px;
             background-color: var(--surface-color);
             border-bottom: 2px solid var(--border-color);
         }
@@ -381,8 +381,8 @@
 
 
         /* --- MAIN CONTENT --- */
-        .container { padding: 4px; display: flex; flex-direction: column; gap: 12px; }
-        .section { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; }
+        .container { padding: 4px; display: flex; flex-direction: column; gap: 8px; }
+        .section { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; }
         .section-title { font-size: 1rem; color: var(--text-secondary); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; font-weight: bold; }
 
         .form-row { display: flex; gap: 12px; margin-bottom: 4px; }
@@ -403,7 +403,7 @@
         input:checked + .slider { background-color: var(--toggle-on); border-color: var(--toggle-on); }
         input:checked + .slider:before { transform: translateX(26px); }
 
-        .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background-color: var(--surface-color-light); padding: 8px; border-radius: 6px; border: 2px dashed var(--border-color); }
+        .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background-color: var(--surface-color-light); padding: 8px; border-radius: 6px; border: 2px dashed var(--border-color); }
         .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 6px; padding: 6px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; position: relative; transition: all 0.2s; }
         .seat-card.active { border-color: var(--accent-blue); }
         .seat-card:has(.seat-occupant-input:not(:placeholder-shown)) { background-color: rgba(39, 174, 96, 0.1); border-color: var(--accent-green); }
@@ -815,7 +815,7 @@
 
             <div class="container" id="main-content" style="flex: 1; overflow-y: auto; padding-bottom: 20px; box-sizing: border-box;">
                 <!-- Route & Times -->
-                <div class="section" style="padding-top: 20px;">
+                <div class="section">
                     <div class="form-row" style="margin-bottom: 8px;">
                         <div class="form-group" style="flex: 1;">
                             <label>HIGHEST OBSTACLE</label>

@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2026-06-19
+### Changed
+- Renamed "Left Hand Litter (Patient)" to "LEFT HAND LITTER" and perfectly aligned its weight input with adjacent stations.
+- Reformatted dummy personnel names in the smart search dropdown to "Lastname, Firstname".
+
 ## [0.1.5] - 2026-06-19
 ### Added
 - Added the ability for users to enter GPS coordinates directly into the Comm Center Simulator to generate unidentifiable "SCENE" locations.

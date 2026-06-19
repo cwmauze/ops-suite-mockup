@@ -645,21 +645,20 @@
         .table-row:last-child { border-bottom: none; }
         
         .mockup-version {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
+            margin-top: auto;
             color: #888;
             font-family: monospace;
             font-size: 1rem;
-            z-index: 9999;
             cursor: pointer;
-            padding: 5px 10px;
-            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
             border-radius: 6px;
+            text-align: center;
+            border: 1px solid #444;
         }
         .mockup-version:hover {
             color: #fff;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.6);
         }
 
         .login-container {
@@ -793,8 +792,6 @@
     </style>
 </head>
 <body>
-    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.26</div>
-    
     <div id="desktop-instructions">
         <h2>Ops Suite Prototype</h2>
         <p>Welcome to the Ops Suite interactive mockup.</p>
@@ -811,6 +808,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.26</div>
     </div>
     </div>
 
@@ -903,6 +901,138 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+<!-- Changelog Side Panel -->
+    <div id="changelog-panel" style="display:none; position:absolute; left:0; top:0; bottom:0; width:350px; background:#222; color:#fff; flex-direction:column; font-family:-apple-system, BlinkMacSystemFont, sans-serif; border-right: 1px solid #444; overflow-y:auto; box-shadow: 5px 0 15px rgba(0,0,0,0.5); z-index: 10000;">
+        <div style="padding:15px 20px; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:#222;">
+            <h3 style="margin:0;">Changelog</h3>
+            <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <div style="padding:20px; line-height:1.5; font-size: 0.95rem;">
+                        <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.26] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Applied global theme toggle logic across all pages, saving preferences to localStorage.</li>
+                <li>Unified theme CSS variables for seamless light/dark/high-contrast mode switching.</li>
+            </ul>
+                        <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.25] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Standardized global navigation bars (Top Sync and Bottom Nav) across all main pages.</li>
+                <li>Fixed CSS layout anchoring and restored Javascript interactivity for the theme toggle and sync animation.</li>
+            </ul>
+                        <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.24] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Created a custom 24-hour iOS-style Time Picker with scroll-snapping rollers.</li>
+                <li>Implemented dynamic Risk Assessment scoring (1-46 items) with responsive dashboard tile colors (Green/Orange/Red).</li>
+                <li>Added a "Sign to Approve" toggle in the Risk modal that forces the tile green.</li>
+                <li>Refactored Fuel section to a single compact horizontal row.</li>
+                <li>Bound IFR leg toggle to per-leg state engine.</li>
+                <li>Implemented tiered decluttering for Leg tabs to prevent horizontal scrolling.</li>
+                <li>Added dynamic timestamps to "Last sync" status.</li>
+                <li>Moved Leg deletion to a dedicated bottom button with confirmation prompt.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.23] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Expanded theme options. Replaced dual light/dark mode with 5 distinct modes: Light, Dark, Neutral, High-Contrast Light, and High-Contrast Dark.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.22] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Upgraded the "Departed" and "Arrived" inputs to full datetime fields, supporting the YYYY-MM-DD format plus time.</li>
+                <li>Wired up the "NOW" buttons to automatically inject the current UTC (Zulu) date and time into their respective fields.</li>
+                <li>Enhanced touch-friendly interactions: weight inputs now trigger the native numeric keypad on mobile/tablet devices (inputmode="decimal").</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.21] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added a visual CSS mockup of an iOS keyboard that automatically slides up from the bottom when clicking into any text/number input.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.20] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Refactored Fuel Stations section with live-calculated Fuel Time field `(Supply + Main) / Burn Rate`, and added new Burn Rate input.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.19] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added quick "x" clear buttons inside personnel selection fields to rapidly remove occupants.</li>
+                <li>Fixed architectural layout bug that caused bottom navigation bar to spill outside of the iPad frame.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.18] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added interactive manual sync animation to "Last sync" status.</li>
+                <li>Moved Save/Close buttons out of scrolling container and fixed them absolutely to the bottom.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.17] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Reorganized Action Buttons into distinct "Flight Actions" and "Leg Actions" for better visual hierarchy.</li>
+                <li>Removed text headers to ruthlessly compress vertical space.</li>
+                <li>Replaced floating save/close bar with a standard 5-tab App Bottom Navigation Bar with SVG icons.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.16] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Moved Dispatch Number from Route section to a prominent interactive button at the top of the screen.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.15] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Removed the name input field entirely from the Patient Litter station. Only weight entry is now allowed.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.14] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Cleared out default dummy personnel names (Mauze, Petty, Dail) from stations to start blank.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.13] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Replaced the personnel selection modal with a smart inline dropdown menu with text search.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.12] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added interactive personnel selection modal with action stars and bombshell actresses to dynamically populate seat occupant and weight data.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.11] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Moved the leg tabs below the stoplight action buttons.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.10] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added viewport-fit=cover, explicit standalone mode detection, safe area support, and hid the mockup version banner when in native app mode.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.9] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added PWA / Apple Mobile Web App meta tags so the app runs in full standalone mode when saved to the iOS Home Screen.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.8] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added native mode detection so the mockup scales fully to the viewport with no iPad frame when opened on an actual tablet device.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.7] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Removed "+ Add Leg" from top tabs, renamed bottom button to "Save/Add Leg", moved Verified slider to the right, and added verification warning.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.6] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Changed changelog modal to a right-aligned side panel that doesn't block the simulated iPad display.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.5] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added interactive changelog modal to the mockup version tag.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.4] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added responsive scaling script so the iPad device frame always zooms to fit entirely within the user's browser vertically and horizontally.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.3] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Moved the mockup version number outside of the iPad screen depiction so it's clear it tracks the mockup itself, not the UI.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.2] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Hotfix: Changed the default UI theme back to light mode.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.1] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:0; color:#ddd;">
+                <li>Created initial CHANGELOG.md.</li>
+                <li>Refactored prototype/index.html to a compressed, zero-vertical-scroll layout.</li>
+                <li>Consolidated global header to embed metrics into "Stop-Light" validation buttons.</li>
+                <li>Added a rigid "Close Flight" modal with strict hard-stop JavaScript validations for Night/NVG/IFR limits (BUG-005).</li>
+            </ul>
         </div>
     </div>
 </body>

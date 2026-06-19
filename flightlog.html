@@ -610,21 +610,20 @@
         .table-row:last-child { border-bottom: none; }
         
         .mockup-version {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
+            margin-top: auto;
             color: #888;
             font-family: monospace;
             font-size: 1rem;
-            z-index: 9999;
             cursor: pointer;
-            padding: 5px 10px;
-            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
             border-radius: 6px;
+            text-align: center;
+            border: 1px solid #444;
         }
         .mockup-version:hover {
             color: #fff;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.6);
         }
     
         .time-picker-popover {
@@ -728,8 +727,6 @@
 </head>
 <body>
 
-    <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.26</div>
-    
     <div id="desktop-instructions">
         <h2>Ops Suite Prototype</h2>
         <p>Welcome to the Ops Suite interactive mockup.</p>
@@ -746,6 +743,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.26</div>
     </div>
 
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
@@ -2397,8 +2395,9 @@
     </script>
     </div> <!-- Close main-view -->
 
-    <!-- Changelog Side Panel -->
-    <div id="changelog-panel" style="display:none; width: 400px; height: 100%; background:#222; color:#fff; flex-direction:column; font-family:-apple-system, BlinkMacSystemFont, sans-serif; border-left: 2px solid #444; overflow-y:auto; box-shadow: -5px 0 15px rgba(0,0,0,0.5); z-index: 10000; flex-shrink: 0;">
+    
+<!-- Changelog Side Panel -->
+    <div id="changelog-panel" style="display:none; position:absolute; left:0; top:0; bottom:0; width:350px; background:#222; color:#fff; flex-direction:column; font-family:-apple-system, BlinkMacSystemFont, sans-serif; border-right: 1px solid #444; overflow-y:auto; box-shadow: 5px 0 15px rgba(0,0,0,0.5); z-index: 10000;">
         <div style="padding:15px 20px; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:#222;">
             <h3 style="margin:0;">Changelog</h3>
             <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>

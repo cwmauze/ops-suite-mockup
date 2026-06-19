@@ -47,7 +47,10 @@
             const panel = document.getElementById('changelog-panel');
             if (panel.style.display === 'none' || panel.style.display === '') {
                 panel.style.display = 'flex';
+            } else {
+                panel.style.display = 'none';
             }
+        }
     </script>
     <style>
         :root {
@@ -678,6 +681,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
+    </div>
     </div>
 
     <div id="main-view">

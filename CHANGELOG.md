@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.9] - 2026-06-19
+### Changed
+- Refactored the UI Changelog Panel to dynamically fetch and parse `CHANGELOG.md` on page load, eliminating the need to manually copy-paste changelog HTML across multiple files.
+- Created `serve.sh` helper script to quickly spin up a local web server for testing `fetch()` requests.
+
 ## [0.1.8] - 2026-06-19
 ### Changed
 - Updated the flight request time on the dashboard and request views to dynamically reflect the exact time the mock request was sent, formatted in 24-hour time.

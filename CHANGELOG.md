@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.26] - 2026-06-18
+### Added
+- Applied global theme toggle logic across all pages.
+- Saved user theme preferences to `localStorage` for cross-page persistence.
+- Unified theme CSS variables for seamless light/dark/high-contrast mode switching across all layouts.
+
 ## [0.0.25] - 2026-06-18
 ### Fixed
 - Standardized the top Sync Bar and Bottom Navigation Bar across all main pages.

@@ -403,8 +403,9 @@
         input:checked + .slider:before { transform: translateX(22px); }
 
         .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background-color: var(--surface-color-light); padding: 4px; border-radius: 6px; border: 2px dashed var(--border-color); }
-        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 6px; padding: 4px; display: flex; flex-direction: column; gap: 2px; cursor: pointer; position: relative; }
+        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 6px; padding: 4px; display: flex; flex-direction: column; gap: 2px; cursor: pointer; position: relative; transition: all 0.2s; }
         .seat-card.active { border-color: var(--accent-blue); }
+        .seat-card:has(.seat-occupant-input:not(:placeholder-shown)) { background-color: rgba(39, 174, 96, 0.1); border-color: var(--accent-green); }
         .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
         .seat-title { font-size: 0.75rem; color: var(--text-secondary); text-align: left; text-transform: uppercase; font-weight: bold; margin: 0; }
         .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 4px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; min-height: 28px; display: flex; align-items: center; justify-content: center; }
@@ -743,7 +744,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.29</div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.32</div>
     </div>
 
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
@@ -810,15 +811,15 @@
             <div class="container" id="main-content" style="flex: 1; overflow-y: auto; padding-bottom: 20px; box-sizing: border-box;">
                 <!-- Route & Times -->
                 <div class="section" style="padding-top: 20px;">
-                    <div class="form-row" style="margin-bottom: 15px;">
+                    <div class="form-row" style="gap: 5px; margin-bottom: 8px;">
                         <div class="form-group" style="flex: 1;">
                             <label>Obst. Height</label>
-                            <input type="number" value="759">
+                            <input type="number" value="759" style="padding: 6px;">
                         </div>
                         <div class="form-group" style="flex: 1;">
-                            <label>&nbsp;</label>
-                            <div class="toggle-row" style="padding: 10px; margin-top: -5px;">
-                                <span style="font-weight:bold; font-size:1rem;">IFR leg</span>
+                            <label>Flight Rules</label>
+                            <div style="display: flex; align-items: center; justify-content: space-between; background-color: var(--input-bg); border: 2px solid var(--border-color); padding: 2px 10px; border-radius: 4px; box-sizing: border-box; height: 100%;">
+                                <span style="font-weight:bold; font-size:0.9rem; color:var(--text-secondary); text-transform:uppercase;">IFR</span>
                                 <label class="switch">
                                     <input type="checkbox" id="ifr-toggle" onchange="updateCurrentLeg()">
                                     <span class="slider"></span>
@@ -830,26 +831,26 @@
                     <div class="form-row" style="gap: 5px; margin-bottom: 8px;">
                         <div class="form-group" style="flex: 1;">
                             <label>Origin</label>
-                            <input type="text" id="leg-origin" value="RWI" oninput="updateCurrentLeg()" style="padding: 6px; font-weight: bold;">
+                            <input type="text" id="leg-origin" value="RWI" oninput="updateCurrentLeg()" style="padding: 6px; font-weight: bold; box-sizing: border-box;">
                         </div>
                         <div class="form-group" style="flex: 1.5;">
                             <label>Departed</label>
-                            <div style="display: flex; gap: 5px;">
-                                <input type="text" id="depart-time" class="datetime-sim" value="2026-06-18 19:12" inputmode="decimal" style="padding: 6px; flex: 1; text-align:center; font-family:monospace; font-size:0.9rem;">
-                                <button onclick="setNow('depart-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 0 10px; font-weight: bold; cursor: pointer;">NOW</button>
+                            <div style="display: flex; gap: 5px; align-items: stretch;">
+                                <input type="text" id="depart-time" class="datetime-sim" value="2026-06-18 19:12" inputmode="decimal" style="padding: 6px; flex: 1; text-align:center; font-weight:bold; font-size:0.95rem; box-sizing: border-box;">
+                                <button onclick="setNow('depart-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 4px; padding: 0 12px; font-weight: bold; font-size: 0.8rem; cursor: pointer;">NOW</button>
                             </div>
                         </div>
                     </div>
                     <div class="form-row" style="gap: 5px; margin-bottom: 8px;">
                         <div class="form-group" style="flex: 1;">
                             <label>Destination</label>
-                            <input type="text" id="leg-dest" value="NC91" oninput="updateCurrentLeg()" style="padding: 6px; font-weight: bold;">
+                            <input type="text" id="leg-dest" value="NC91" oninput="updateCurrentLeg()" style="padding: 6px; font-weight: bold; box-sizing: border-box;">
                         </div>
                         <div class="form-group" style="flex: 1.5;">
                             <label>Arrived</label>
-                            <div style="display: flex; gap: 5px;">
-                                <input type="text" id="arrive-time" class="datetime-sim" value="" inputmode="decimal" placeholder="YYYY-MM-DD HH:MM" style="padding: 6px; flex: 1; text-align:center; font-family:monospace; font-size:0.9rem;">
-                                <button onclick="setNow('arrive-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 0 10px; font-weight: bold; cursor: pointer;">NOW</button>
+                            <div style="display: flex; gap: 5px; align-items: stretch;">
+                                <input type="text" id="arrive-time" class="datetime-sim" value="" inputmode="decimal" placeholder="YYYY-MM-DD HH:MM" style="padding: 6px; flex: 1; text-align:center; font-weight:bold; font-size:0.95rem; box-sizing: border-box;">
+                                <button onclick="setNow('arrive-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 4px; padding: 0 12px; font-weight: bold; font-size: 0.8rem; cursor: pointer;">NOW</button>
                             </div>
                         </div>
                     </div>
@@ -913,7 +914,10 @@
                                 <div class="seat-title">Fwd Facing Aft Seat Right Hand</div>
                                 <div class="seat-weight">[<input type="number" id="wt-6" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
                             </div>
-                            <input type="text" class="seat-occupant-input" id="occ-6" value="" placeholder="Search personnel..." oninput="filterPersonnel(6)" onfocus="showPersonnel(6)">
+                            <div style="position: relative;">
+                                <input type="text" class="seat-occupant-input" id="occ-6" value="" placeholder="Search personnel..." oninput="filterPersonnel(6)" onfocus="showPersonnel(6)">
+                                <span class="clear-btn" onclick="clearSeat(6, event)">&times;</span>
+                            </div>
                             <div class="autocomplete-dropdown" id="dropdown-6"></div>
                         </div>
 
@@ -924,25 +928,21 @@
                 <div class="section">
                     <h2 class="section-title">Fuel Stations</h2>
                     <div class="form-row" style="gap: 5px;">
-                        <div class="form-group" style="flex: 1.2;">
+                        <div class="form-group" style="flex: 1;">
                             <label style="font-size: 0.7rem; text-align: center;">Supply Tanks <span style="color:var(--text-secondary)">(GAL)</span></label>
                             <input type="number" id="supply-tank" value="33" inputmode="decimal" pattern="[0-9]*" style="text-align:center; padding: 6px;" oninput="calculateFuelTime()">
                         </div>
-                        <div class="form-group" style="flex: 1.2;">
+                        <div class="form-group" style="flex: 1;">
                             <label style="font-size: 0.7rem; text-align: center;">Main tanks <span style="color:var(--text-secondary)">(GAL)</span></label>
                             <input type="number" id="main-tank" value="160" inputmode="decimal" pattern="[0-9]*" style="text-align:center; padding: 6px;" oninput="calculateFuelTime()">
                         </div>
-                        <div class="form-group" style="flex: 1.2;">
+                        <div class="form-group" style="flex: 1;">
                             <label style="font-size: 0.7rem; text-align: center;">Burn Rate <span style="color:var(--text-secondary)">(GPH)</span></label>
                             <input type="number" id="burn-rate" value="74" inputmode="decimal" pattern="[0-9]*" style="text-align:center; padding: 6px;" oninput="calculateFuelTime()">
                         </div>
-                        <div class="form-group" style="flex: 1.2;">
+                        <div class="form-group" style="flex: 1;">
                             <label style="font-size: 0.7rem; text-align: center;">Fuel time</label>
                             <input type="text" id="fuel-time" value="02:58" inputmode="decimal" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px;" oninput="handleOverride('fuel-time')">
-                        </div>
-                        <div class="form-group" style="flex: 1;">
-                            <label style="font-size: 0.7rem; text-align: center;">S.O.B.</label>
-                            <input type="number" id="sob" value="0" inputmode="decimal" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px;" oninput="handleOverride('sob')">
                         </div>
                     </div>
                 </div>
@@ -1006,7 +1006,9 @@
             <div class="kb-row">
                 <div class="kb-key special" style="max-width:100px; height:60px; font-size:26px;">.</div>
                 <div class="kb-key" style="max-width:100px; height:60px;">0</div>
-                <div class="kb-key special dismiss-btn" style="max-width:100px; height:60px; font-size:24px;" onclick="document.activeElement.blur()">⌨️</div>
+                <div class="kb-key special dismiss-btn" style="max-width:100px; height:60px; font-size:24px; display:flex; align-items:center; justify-content:center;" onclick="document.activeElement.blur()">
+                    <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="12" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6.01" y2="8"></line><line x1="10" y1="8" x2="10.01" y2="8"></line><line x1="14" y1="8" x2="14.01" y2="8"></line><line x1="18" y1="8" x2="18.01" y2="8"></line><line x1="8" y1="12" x2="16" y2="12"></line><polyline points="8 19 12 23 16 19"></polyline></svg>
+                </div>
             </div>
         </div>
 
@@ -1051,7 +1053,9 @@
                 <div class="kb-key special" style="max-width: 70px;">.?123</div>
                 <div class="kb-key spacebar"></div>
                 <div class="kb-key special" style="max-width: 80px;" onclick="document.activeElement.blur()">Return</div>
-                <div class="kb-key special dismiss-btn" style="max-width: 60px;" onclick="document.activeElement.blur()">⌨️</div>
+                <div class="kb-key special dismiss-btn" style="max-width: 60px; display:flex; align-items:center; justify-content:center;" onclick="document.activeElement.blur()">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="12" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6.01" y2="8"></line><line x1="10" y1="8" x2="10.01" y2="8"></line><line x1="14" y1="8" x2="14.01" y2="8"></line><line x1="18" y1="8" x2="18.01" y2="8"></line><line x1="8" y1="12" x2="16" y2="12"></line><polyline points="8 19 12 23 16 19"></polyline></svg>
+                </div>
             </div>
         </div>
         
@@ -2143,6 +2147,7 @@
                         const wt = document.getElementById(`wt-${seatId}`);
                         if (wt) wt.value = p.weight;
                         dropdown.style.display = 'none';
+                        input.blur(); // Auto-hide keyboard
                         calculateSob(); // Trigger SOB recount
                     };
                     dropdown.appendChild(item);

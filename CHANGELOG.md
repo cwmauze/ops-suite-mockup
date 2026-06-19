@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.32] - 2026-06-18
+### Fixed
+- Fixed a bug where the "Fwd Facing Aft Seat Right Hand" station was missing the quick-clear "x" button to remove personnel.
+
+## [0.0.31] - 2026-06-18
+### Added
+- Upgraded the "hide keyboard" button on the simulated numpad and keyboard to an explicit iOS-style stow SVG icon.
+- Selecting personnel from the smart dropdown automatically stows the keyboard.
+
+## [0.0.30] - 2026-06-18
+### Changed
+- Refactored Route & Times layout to condense Obstacle Height and IFR leg toggle.
+- Removed S.O.B. input from the Fuel Stations block.
+- Standardized the padding, font weight, and heights for Arrived/Departed inputs and their adjacent "NOW" buttons.
+- Added subtle CSS visual cues (using `:has()`) to automatically highlight seat cards when a station is occupied.
+
 ## [0.0.29] - 2026-06-18
 ### Changed
 - Replaced hardcoded pilot names (Stallone, Charles) with Chuck Norris across the UI, leaving Stallone in the dropdown pilot selection list.

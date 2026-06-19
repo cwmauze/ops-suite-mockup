@@ -456,11 +456,12 @@
             bottom: 0;
             left: 0; right: 0;
             transform: translateY(120%);
+            visibility: hidden;
             background: rgba(209, 213, 219, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             z-index: 1000;
-            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), visibility 0s linear 0.3s;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -473,7 +474,7 @@
         }
         .simulated-keyboard { height: 410px; }
         .simulated-numpad { height: 350px; }
-        .simulated-keyboard.visible, .simulated-numpad.visible { transform: translateY(0); }
+        .simulated-keyboard.visible, .simulated-numpad.visible { transform: translateY(0); visibility: visible; transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), visibility 0s linear; }
         [data-theme='dark'] .simulated-keyboard, [data-theme='dark'] .simulated-numpad { background: rgba(44, 44, 46, 0.95); }
         .kb-row { display: flex; justify-content: center; gap: 8px; width: 100%; }
         .kb-key {
@@ -745,7 +746,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.32</div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.33</div>
     </div>
 
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
@@ -1908,19 +1909,33 @@
                 const inputMode = target.getAttribute('inputmode');
                 const isNumeric = target.type === 'number' || inputMode === 'decimal' || inputMode === 'numeric';
                 
+                const hideInstantly = (el) => {
+                    if (el && el.classList.contains('visible')) {
+                        el.style.transition = 'none';
+                        el.classList.remove('visible');
+                        void el.offsetWidth;
+                        el.style.transition = '';
+                    }
+                };
+                
                 if (isNumeric) {
-                    kb.classList.remove('visible');
-                    numpad.classList.add('visible');
+                    hideInstantly(kb);
+                    if(numpad) numpad.classList.add('visible');
                 } else {
-                    numpad.classList.remove('visible');
-                    kb.classList.add('visible');
+                    hideInstantly(numpad);
+                    if(kb) kb.classList.add('visible');
                 }
                 
                 const mainContent = document.getElementById('main-content');
                 if (mainContent) {
                     mainContent.style.paddingBottom = isNumeric ? '400px' : '460px'; // added extra padding
                     setTimeout(() => {
-                        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        const targetRect = target.getBoundingClientRect();
+                        const containerRect = mainContent.getBoundingClientRect();
+                        const targetCenter = targetRect.top + targetRect.height / 2;
+                        const containerCenter = containerRect.top + containerRect.height / 2;
+                        const scrollAmount = targetCenter - containerCenter;
+                        mainContent.scrollBy({ top: scrollAmount, behavior: 'smooth' });
                     }, 300);
                 }
             }

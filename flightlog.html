@@ -453,13 +453,14 @@
         /* --- SIMULATED KEYBOARDS --- */
         .simulated-keyboard, .simulated-numpad {
             position: absolute;
-            bottom: -420px; /* Hidden */
+            bottom: 0;
             left: 0; right: 0;
+            transform: translateY(120%);
             background: rgba(209, 213, 219, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             z-index: 1000;
-            transition: bottom 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -471,8 +472,8 @@
             box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
         }
         .simulated-keyboard { height: 410px; }
-        .simulated-numpad { height: 350px; bottom: -360px; }
-        .simulated-keyboard.visible, .simulated-numpad.visible { bottom: 0; }
+        .simulated-numpad { height: 350px; }
+        .simulated-keyboard.visible, .simulated-numpad.visible { transform: translateY(0); }
         [data-theme='dark'] .simulated-keyboard, [data-theme='dark'] .simulated-numpad { background: rgba(44, 44, 46, 0.95); }
         .kb-row { display: flex; justify-content: center; gap: 8px; width: 100%; }
         .kb-key {
@@ -1917,7 +1918,7 @@
                 
                 const mainContent = document.getElementById('main-content');
                 if (mainContent) {
-                    mainContent.style.paddingBottom = isNumeric ? '350px' : '410px';
+                    mainContent.style.paddingBottom = isNumeric ? '400px' : '460px'; // added extra padding
                     setTimeout(() => {
                         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }, 300);

@@ -31,6 +31,87 @@
             }
         }
         window.addEventListener('resize', scaleDevice);
+
+        function updateManifestPage() {
+            const container = document.getElementById('dynamic-manifest-container');
+            if (!container) return;
+
+            if (localStorage.getItem('ops_suite_flight_sent') === 'true' && window.FlightSimulator && window.FlightSimulator.activeRoute) {
+                const route = window.FlightSimulator.activeRoute;
+                let routeText = route.length > 0 ? route.map(wp => wp.id).join(' &rarr; ') : '';
+                
+                let dateText = 'N/A';
+                let timeText = 'N/A';
+                const storedTime = localStorage.getItem('ops_suite_flight_time');
+                if (storedTime) {
+                    const d = new Date(storedTime);
+                    const mm = String(d.getMonth() + 1).padStart(2, '0');
+                    const dd = String(d.getDate()).padStart(2, '0');
+                    const yyyy = d.getFullYear();
+                    const hh = String(d.getHours()).padStart(2, '0');
+                    const min = String(d.getMinutes()).padStart(2, '0');
+                    dateText = `${mm}/${dd}/${yyyy}`;
+                    timeText = `${hh}:${min}`;
+                }
+
+                container.innerHTML = `
+                <a href="flightlog.html" class="manifest-card" style="border: 2px solid var(--accent-blue);">
+                    <div class="manifest-card-left">
+                        <div class="manifest-plane-icon">
+                            <svg viewBox="0 0 24 24"><path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/></svg>
+                        </div>
+                    </div>
+                    <div class="manifest-card-body">
+                        <div class="manifest-card-top">
+                            <div class="manifest-id">#1029992</div>
+                            <div class="manifest-status">OPEN</div>
+                        </div>
+                        <div class="manifest-route-row">
+                            <div class="manifest-route">
+                                <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z"/></svg>
+                                ${routeText}
+                            </div>
+                            <div class="manifest-legs">${route.length > 1 ? route.length - 1 : 0} legs</div>
+                        </div>
+                        <div class="manifest-details-row">
+                            <div class="manifest-detail-item">
+                                <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M19,4H18V2H16V4H8V2H6V4H5C3.89,4 3,4.9 3,6V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V6A2,2 0 0,0 19,4M19,20H5V10H19V20M19,8H5V6H19V8Z"/></svg>
+                                ${dateText}
+                            </div>
+                            <div class="manifest-detail-item">
+                                <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg>
+                                ${timeText}
+                            </div>
+                            <div class="manifest-detail-item">
+                                <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/></svg>
+                                N850BU
+                            </div>
+                        </div>
+                        <div class="manifest-details-row" style="margin-top:-4px;">
+                            <div class="manifest-detail-item">
+                                <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>
+                                Norris, Chuck
+                            </div>
+                        </div>
+                    </div>
+                    <div class="manifest-card-right">
+                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"/></svg>
+                    </div>
+                </a>
+                `;
+            } else {
+                container.innerHTML = '';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateManifestPage();
+        });
+
+        document.addEventListener('flightRequestUpdated', () => {
+            updateManifestPage();
+        });
+
         window.addEventListener('DOMContentLoaded', () => {
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
             const isMobile = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -39,8 +120,6 @@
             }
             scaleDevice();
         });
-
-        }
 
     </script>
     <style>
@@ -1187,6 +1266,22 @@
             background-color: var(--accent-green);
             border-radius: 50%;
         }
+
+        .manifest-status.closed {
+            background-color: #f1f2f5;
+            color: var(--text-muted);
+        }
+        [data-theme="dark"] .manifest-status.closed, [data-theme="hc-dark"] .manifest-status.closed {
+            background-color: #333;
+            color: #9ca3af;
+        }
+        .manifest-status.closed::before {
+            background-color: var(--text-muted);
+        }
+        .manifest-card.closed-card {
+            opacity: 0.6;
+        }
+
         .manifest-route-row {
             background-color: #f0f7ff;
             padding: 8px 12px;
@@ -1259,7 +1354,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.1.10</div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.1.11</div>
     </div>
     </div>
 
@@ -1269,8 +1364,13 @@
 
             <!-- Sync Bar -->
             <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.1.10</span>
-                <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1rem;">🌓</button>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.1.11</span>
+                <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+                    </svg>
+                </button>
                 <div style="cursor: pointer; display: flex; align-items: center; gap: 4px;" onclick="triggerManualSync(this)">
                     <span class="sync-icon">✔</span> <span class="sync-text">Last sync: Just now</span>
                 </div>
@@ -1293,8 +1393,10 @@
                     </button>
                 </div>
 
+                <div id="dynamic-manifest-container"></div>
+
                 <!-- Card 1 -->
-                <a href="flightlog.html" class="manifest-card">
+                <a href="flightlog_archive.html" class="manifest-card closed-card">
                     <div class="manifest-card-left">
                         <div class="manifest-plane-icon">
                             <svg viewBox="0 0 24 24"><path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/></svg>
@@ -1303,7 +1405,7 @@
                     <div class="manifest-card-body">
                         <div class="manifest-card-top">
                             <div class="manifest-id">#3664375</div>
-                            <div class="manifest-status">OPEN</div>
+                            <div class="manifest-status closed">CLOSED</div>
                         </div>
                         <div class="manifest-route-row">
                             <div class="manifest-route">
@@ -1339,7 +1441,7 @@
                 </a>
 
                 <!-- Card 2 -->
-                <a href="flightlog.html" class="manifest-card">
+                <a href="flightlog_archive.html" class="manifest-card closed-card">
                     <div class="manifest-card-left">
                         <div class="manifest-plane-icon">
                             <svg viewBox="0 0 24 24"><path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/></svg>
@@ -1348,7 +1450,7 @@
                     <div class="manifest-card-body">
                         <div class="manifest-card-top">
                             <div class="manifest-id">#3664374</div>
-                            <div class="manifest-status">OPEN</div>
+                            <div class="manifest-status closed">CLOSED</div>
                         </div>
                         <div class="manifest-route-row">
                             <div class="manifest-route">
@@ -1384,7 +1486,7 @@
                 </a>
 
                 <!-- Card 3 -->
-                <a href="flightlog.html" class="manifest-card">
+                <a href="flightlog_archive.html" class="manifest-card closed-card">
                     <div class="manifest-card-left">
                         <div class="manifest-plane-icon">
                             <svg viewBox="0 0 24 24"><path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/></svg>
@@ -1393,7 +1495,7 @@
                     <div class="manifest-card-body">
                         <div class="manifest-card-top">
                             <div class="manifest-id">#3664365</div>
-                            <div class="manifest-status">OPEN</div>
+                            <div class="manifest-status closed">CLOSED</div>
                         </div>
                         <div class="manifest-route-row">
                             <div class="manifest-route">

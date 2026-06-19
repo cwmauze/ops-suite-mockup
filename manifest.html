@@ -1354,7 +1354,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.1.11</div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.2.0</div>
     </div>
     </div>
 
@@ -1364,7 +1364,8 @@
 
             <!-- Sync Bar -->
             <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.1.11</span>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.2.0</span>
+                <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
@@ -1707,7 +1708,50 @@
             <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
         </div>
         <div style="padding:20px; line-height:1.5; font-size: 0.95rem;">
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.2.0] - 2026-06-19</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added a new `roadmap.html` page to dynamically fetch and natively render `ROADMAP.md` as an interactive checklist.</li>
+                <li>Added a "Roadmap" button to the global header across all prototype pages for easy access.</li>
+                <li>Converted markdown checkbox lists in the Roadmap into visually consistent SVG icons with strikethrough styling for completed items.</li>
+                <li>Configured the Roadmap "Email Feedback" button to automatically draft emails to `cmauze@metroaviation.com`.</li>
+            </ul>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.1.11] - 2026-06-19</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Implemented a dynamic manifest entry in `manifest.html` that automatically populates at the top of the list when a dummy flight request is active in the simulator.</li>
+                <li>Replaced the emoji theme toggle button with a consistent, scalable SVG icon across all prototype pages.</li>
+                <li>Fixed a javascript syntax error in `manifest.html` that was preventing page scripts from running properly.</li>
+            </ul>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.1.10] - 2026-06-19</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added `duty_options.html` page mockup.</li>
+                <li>Connected `index.html` and `home.html` to the new duty options mockup.</li>
+                <li>Removed the sync bar, mockup version, and theme toggle from the `index.html` login page.</li>
+            </ul>
             <h4 style="margin-top:0; color:var(--accent-blue);">[0.1.9] - 2026-06-19</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Refactored the UI Changelog Panel to dynamically fetch and parse `CHANGELOG.md` on page load, eliminating the need to manually copy-paste changelog HTML across multiple files.</li>
+                <li>Created `serve.sh` helper script to quickly spin up a local web server for testing `fetch()` requests.</li>
+            </ul>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.1.8] - 2026-06-19</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Updated the flight request time on the dashboard and request views to dynamically reflect the exact time the mock request was sent, formatted in 24-hour time.</li>
+            </ul>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.1.7] - 2026-06-19</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Updated the flight request route text on the dashboard to explicitly list all waypoints (e.g. `KRWI -&gt; NC91 -&gt; KRWI`) instead of summarizing stops.</li>
+            </ul>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.1.6] - 2026-06-19</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Renamed "Left Hand Litter (Patient)" to "LEFT HAND LITTER" and perfectly aligned its weight input with adjacent stations.</li>
+                <li>Reformatted dummy personnel names in the smart search dropdown to "Lastname, Firstname".</li>
+            </ul>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.1.5] - 2026-06-19</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added the ability for users to enter GPS coordinates directly into the Comm Center Simulator to generate unidentifiable "SCENE" locations.</li>
+                <li>Supported multiple coordinate input formats including Decimal Degrees (e.g. `35.85,-77.89`) and Degrees Decimal Minutes (e.g. `3551.38N/07753.51W`).</li>
+                <li>Formatted entered coordinates securely for the ForeFlight URL scheme so they map seamlessly to ForeFlight natively.</li>
+            </ul>
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.1.4] - 2026-06-19</h4>
             <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
                 <li>Fixed an issue where iOS devices aggressively cached an outdated Comm Center Simulator script by standardizing a cache-busting query parameter across all HTML pages.</li>
             </ul>

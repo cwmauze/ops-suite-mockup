@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Ops Suite">
     
-    <title>Ops Suite - Home</title>
+    <title>Ops Suite - Roadmap</title>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -1081,7 +1081,18 @@
 
 
 
-    </style>
+    
+        .roadmap-content h1 { font-size: 1.5rem; margin-bottom: 10px; color: var(--text-main); }
+        .roadmap-content h2 { font-size: 1.2rem; margin-top: 20px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+        .roadmap-content ul { list-style: none; padding-left: 0; }
+        .roadmap-content li { margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: flex-start; gap: 8px; color: var(--text-main); }
+        .roadmap-content li.completed { opacity: 0.7; }
+        .roadmap-content li.completed span { text-decoration: line-through; }
+        .roadmap-content p { margin-bottom: 10px; line-height: 1.5; font-size: 0.95rem; color: var(--text-muted); }
+        .roadmap-content hr { border: none; border-top: 1px solid var(--border-color); margin: 20px 0; }
+        .feedback-btn-container { margin-top: 20px; text-align: center; }
+</style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
 
@@ -1129,183 +1140,29 @@
 
             <!-- Content Area -->
             <div class="content-container">
-                
-                <div class="greeting-section">
-                    <div class="greeting-date">June 18</div>
-                    <div class="greeting-title">Good Evening Chuck</div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <button class="btn-action blue" onclick="window.location.href='manifest.html'">
-                        <svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/></svg> New Manifest
-                    </button>
-                    <button class="btn-action blue">
-                        <svg viewBox="0 0 24 24"><path d="M6.5,17.5A3.5,3.5 0 0,1 3,14A3.5,3.5 0 0,1 6.5,10.5C6.8,10.5 7.1,10.5 7.4,10.6C8.2,7.7 10.8,5.5 14,5.5A6.5,6.5 0 0,1 20.5,12C21.9,12.2 23,13.5 23,15A3,3 0 0,1 20,18H6.5V17.5Z"/></svg> Weather
-                    </button>
-                    <button class="btn-action orange">
-                        <svg viewBox="0 0 24 24"><path d="M10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6H12L10,4Z"/></svg> Library
-                    </button>
-                    <button class="btn-action red" onclick="window.location.href='index.html'">
-                        <svg viewBox="0 0 24 24"><path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"/></svg> Log Out
-                    </button>
-                </div>
-
-                <!-- Flight Request Card -->
-                <div class="card" id="home-flight-request-card" style="display: none;">
-                    <div class="flight-card-layout">
-                        <div class="flight-details">
-                            <div class="flight-title">Flight Request #1029992</div>
-                            <div class="tag-yellow">Inter-Facility Transfer</div>
-                            
-                            <div class="flight-info-text">
-                                <span id="home-flight-date-text">06/18/2026, 10:26</span><br>
-                                Pilot: <strong>Norris, Chuck</strong><br>
-                                Aircraft: <strong>N850BU</strong><br>
-                                <span id="home-flight-route-text">KRWI &rarr; NC91 &rarr; KRWI</span>
-                            </div>
-                            
-                            <button class="btn-green-outline" onclick="window.location.href='flight_request.html'">
-                                <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
-                                View Flight Request
+                <div class="card">
+                    <div class="card-header" style="justify-content:center;">
+                        <span style="font-size:1.2rem; font-weight:800; display:flex; align-items:center; gap:8px;">
+                            <svg style="width:24px;height:24px;fill:var(--accent-blue);" viewBox="0 0 24 24"><path d="M14,10H2V12H14V10M14,6H2V8H14V6M2,16H10V14H2V16M21.5,11.5L23,13L16,20L11.5,15.5L13,14L16,17L21.5,11.5Z"/></svg>
+                            Product Roadmap
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div id="roadmap-output" class="roadmap-content">Loading roadmap...</div>
+                        
+                        <div class="feedback-btn-container">
+                            <button class="btn-action blue" onclick="window.location.href='mailto:cmauze@metroaviation.com?subject=Ops Suite Feedback'" style="width:100%;">
+                                <svg viewBox="0 0 24 24"><path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/></svg>
+                                Email Feedback
                             </button>
                         </div>
-                        <div class="flight-map">
-                            <div id="leaflet-map"></div>
-                            <div class="map-layer-control">
-                                <button class="map-layer-btn active" onclick="setBaseView('street')" id="b-street">Street</button>
-                                <button class="map-layer-btn" onclick="setBaseView('sat')" id="b-sat">Sat</button>
-                                <button class="map-layer-btn" onclick="setBaseView('vfr')" id="b-vfr">VFR</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
-
-                <!-- Duty Period Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <span style="display:flex;align-items:center;gap:8px;">
-                            <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M19,4H18V2H16V4H8V2H6V4H5C3.89,4 3,4.9 3,6V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V6A2,2 0 0,0 19,4M19,20H5V10H19V20M19,8H5V6H19V8Z"/></svg>
-                            DUTY PERIOD
-                        </span>
-                    </div>
-                    <div class="card-body">
-                        <div class="tag-green">
-                            <svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>
-                            ON DUTY
-                        </div>
-                        <div class="duty-stats">
-                            <div>Current Duty Time: <strong>9h 33m</strong></div>
-                            <div>Dutied In: <strong>06/18/2026 09:23</strong></div>
-                            <div>Previous Rest: <strong>&gt;10h</strong></div>
-                        </div>
-                        <button class="btn-blue" onclick="window.location.href='duty_options.html'">
-                            <svg viewBox="0 0 24 24"><path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"/></svg>
-                            Duty Options
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Currency Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <span style="display:flex;align-items:center;gap:8px;color:var(--accent-blue);">
-                            <svg style="width:20px;height:20px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/></svg>
-                            <span style="color:var(--text-main);">CHUCK CURRENCY</span>
-                        </span>
-                        <a href="#" class="link-right">View Details &rsaquo;</a>
-                    </div>
-                    <div class="card-body">
-                        <div class="alert-box">
-                            <div class="alert-icon">x</div>
-                            <div>
-                                <div class="alert-title">Expired</div>
-                                <div class="alert-subtitle">3 items expired</div>
-                            </div>
-                        </div>
-                        <div class="pill-group">
-                            <div class="pill red">3 Expired</div>
-                            <div class="pill yellow">4 Warning</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bases Section -->
-                <div class="section-title">BASES (1)</div>
-                <div class="search-container">
-                    <svg viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L19.71,19L18.3,20.41L13.03,15.14C11.89,16.11 10.41,16.7 8.8,16.7A6.5,6.5 0 0,1 2.3,10.2A6.5,6.5 0 0,1 8.8,3M8.8,5A4.5,4.5 0 0,0 4.3,9.5A4.5,4.5 0 0,0 8.8,14A4.5,4.5 0 0,0 13.3,9.5A4.5,4.5 0 0,0 8.8,5Z"/></svg>
-                    <input type="text" class="search-input" placeholder="Search bases...">
-                </div>
-
-                <div class="card">
-                    <div class="card-header" style="font-size:18px;">
-                        <span style="display:flex;align-items:center;gap:8px;">
-                            <svg style="width:24px;height:24px;fill:currentColor;" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/></svg>
-                            RWI BASE
-                        </span>
-                    </div>
-                    <div class="card-body">
-                        <div class="base-header-row">
-                            <div class="base-status">Status: In Service</div>
-                            <div class="base-weather">
-                                <svg style="width:16px;height:16px;fill:currentColor;" viewBox="0 0 24 24"><path d="M6.5,17.5A3.5,3.5 0 0,1 3,14A3.5,3.5 0 0,1 6.5,10.5C6.8,10.5 7.1,10.5 7.4,10.6C8.2,7.7 10.8,5.5 14,5.5A6.5,6.5 0 0,1 20.5,12C21.9,12.2 23,13.5 23,15A3,3 0 0,1 20,18H6.5V17.5Z"/></svg>
-                                Weather: Red
-                            </div>
-                        </div>
-                        
-                        <div class="base-alerts">
-                            <strong>Base Alerts:</strong>
-                            200' unlit towels at Carteret. <span style="color:var(--text-muted); margin-left:8px;">Chuck Norris 6/16/2026</span>
-                        </div>
-                        
-                        <button class="btn-blue" style="margin-top:0;">EDIT</button>
-
-                        <div class="inner-card">
-                            <div class="inner-card-title">
-                                N850BU
-                                <span class="tag-red-text">
-                                    <svg style="width:16px;height:16px;fill:currentColor;" viewBox="0 0 24 24"><path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg>
-                                    OOS: UNSCHD MX &gt; 2 Hours
-                                </span>
-                            </div>
-                            <div class="inner-card-info">MEL Items: None</div>
-                            <a href="#" class="inner-link">Aircraft Maintenance Status &rsaquo;</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Open Manifests -->
-                <div class="section-title">Open Manifests</div>
-                <div class="list-card">
-                    <div class="list-item">
-                        <span>3664374 : 06/18/2026 : N850BU : Norris</span>
-                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
-                    </div>
-                    <div class="list-item">
-                        <span>3664375 : 06/18/2026 : N850BU : Norris</span>
-                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
-                    </div>
-                    <div class="list-item">
-                        <span>3664365 : 06/16/2026 : N850BU : Norris</span>
-                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
-                    </div>
-                </div>
-
-                <!-- Recent Flights -->
-                <div class="section-title">Recent Flights</div>
-                <div class="list-card">
-                    <div class="list-item">
-                        <span>3664234 : 03/12/2026 : N850BU : Schwarzenegger</span>
-                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
-                    </div>
-                </div>
-
             </div> <!-- End Content Container -->
 
-        
-            <!-- Bottom Navigation -->
+        <!-- Bottom Navigation -->
             <div class="bottom-nav">
-                <div class="nav-item active" onclick="window.location.href='home.html'" style="cursor:pointer;">
+                <div class="nav-item" onclick="window.location.href='home.html'" style="cursor:pointer;">
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     <span>Home</span>
                 </div>
@@ -1493,6 +1350,38 @@
 
         document.addEventListener('flightRequestUpdated', () => {
             updateFlightRequestCard();
+        });
+
+        // Fetch and render roadmap
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('ROADMAP.md');
+                const text = await response.text();
+                
+                document.getElementById('roadmap-output').innerHTML = marked.parse(text);
+                
+                // Style checkboxes natively via DOM to avoid marked.js versioning issues
+                const listItems = document.querySelectorAll('#roadmap-output li');
+                listItems.forEach(li => {
+                    const checkbox = li.querySelector('input[type="checkbox"]');
+                    if (checkbox) {
+                        const isChecked = checkbox.checked;
+                        const iconHtml = isChecked 
+                            ? `<svg style="width:18px;height:18px;fill:var(--accent-green);flex-shrink:0;margin-top:2px;margin-right:8px;" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"/></svg>`
+                            : `<svg style="width:18px;height:18px;fill:var(--text-muted);flex-shrink:0;margin-top:2px;margin-right:8px;" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg>`;
+                        
+                        const temp = document.createElement('div');
+                        temp.innerHTML = iconHtml;
+                        checkbox.replaceWith(temp.firstChild);
+                        
+                        if (isChecked) {
+                            li.classList.add('completed');
+                        }
+                    }
+                });
+            } catch (e) {
+                document.getElementById('roadmap-output').innerHTML = '<div style="color:var(--accent-red);padding:20px;text-align:center;">Failed to load roadmap. Ensure ROADMAP.md exists.</div>';
+            }
         });
 </script>
 

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- PWA / iOS Native App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ops Suite">
+    
+    <title>Ops Suite - Duty Options</title>
+    
+        
+    <script>
+        function scaleDevice() {
+            const frame = document.querySelector('.device-frame');
+            const container = document.getElementById('main-view') || document.body;
+            if(frame && container) {
+                if (document.body.classList.contains('native-mode')) {
+                    frame.style.transform = 'none';
+                    return;
+                }
+                const availableWidth = container.clientWidth;
+                const availableHeight = container.clientHeight;
+                const scale = Math.min((availableWidth * 0.95) / 784, (availableHeight * 0.95) / 1173);
+                frame.style.transform = `scale(${scale})`;
+            }
+        }
+        window.addEventListener('resize', scaleDevice);
+        window.addEventListener('DOMContentLoaded', () => {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const isMobile = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isStandalone || isMobile) {
+                document.body.classList.add('native-mode');
+            }
+            scaleDevice();
+        });
+    </script>
+    <style>
+        :root {
+            /* Colors */
+            --bg-body: #f1f2f5;
+            --bg-card: #ffffff;
+            --text-main: #181c20;
+            --text-muted: #5e646e;
+            --border-color: #e4e6eb;
+            --accent-blue: #1b68e3;
+            --accent-blue-hover: #1557bf;
+            --accent-red: #ea4335;
+            --accent-green: #34a853;
+            --accent-yellow: #fbbc04;
+            --accent-orange: #f9ab00;
+            --slate-blue: #607d8b; /* For ForeFlight button */
+            
+            /* UI Elements */
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            
+            /* Safe Area Insets for iOS PWA */
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        /* Universal Theme overrides */
+        [data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --surface-color: #ffffff;
+            --surface-color-light: #f8f9fa;
+            --text-primary: #111111;
+            --text-secondary: #666666;
+            --border-color: #e4e6eb;
+            --bg-body: #f1f2f5;
+            --bg-card: #ffffff;
+            --text-main: #181c20;
+            --text-muted: #5e646e;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #000000;
+            --surface-color: #111111;
+            --surface-color-light: #222222;
+            --text-primary: #ffffff;
+            --text-secondary: #aaaaaa;
+            --border-color: #333333;
+            --bg-body: #000000;
+            --bg-card: #111111;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #333;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            width: 100vw;
+        }
+
+        /* --- IPAD SIMULATION WRAPPER --- */
+        .device-frame {
+            width: 744px;
+            height: 1133px; 
+            background-color: #111;
+            border-radius: 40px;
+            padding: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .device-screen {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- NATIVE APP SIMULATION (IPAD) --- */
+        body.native-mode { background-color: var(--bg-body); }
+        body.native-mode .device-frame {
+            width: 100vw !important; height: 100vh !important; border-radius: 0 !important;
+            padding: 0 !important; box-shadow: none !important; transform: none !important;
+        }
+        body.native-mode .device-screen {
+            border-radius: 0 !important;
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-top: env(safe-area-inset-top);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 100;
+        }
+        .header-back {
+            cursor: pointer;
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+        }
+        .header-back svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-main);
+        }
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Map Section */
+        .map-section {
+            height: 220px;
+            background-color: #e0e0e0;
+            position: relative;
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        #leaflet-map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Scrollable Content */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .content-scroll::-webkit-scrollbar { display: none; }
+
+        /* Card container */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        .card-title {
+            padding: 12px 16px;
+            font-size: 16px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        /* Details list */
+        .details-list {
+            display: flex;
+            flex-direction: column;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            color: var(--text-muted);
+        }
+        .detail-value {
+            font-weight: 600;
+            color: var(--text-main);
+            text-align: right;
+        }
+
+        /* Route List */
+        .route-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .route-row:last-child {
+            border-bottom: none;
+        }
+        .waypoint-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .waypoint-id {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .waypoint-stats {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 12px;
+        }
+        .waypoint-eta {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+        .waypoint-stats .ground-time {
+            color: var(--accent-orange);
+            font-weight: 600;
+        }
+
+        /* Bottom Fixed Bar */
+        .bottom-bar {
+            padding: 12px 16px;
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn:active {
+            opacity: 0.8;
+            transform: translateY(1px);
+        }
+        .btn-orange {
+            background-color: var(--accent-orange);
+        }
+        .btn-slate {
+            background-color: var(--slate-blue);
+        }
+        .btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* --- SYNC BAR --- */
+        .sync-bar {
+            background-color: var(--surface-color);
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .sync-icon { color: var(--accent-green); display: inline-block; }
+        
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- BOTTOM NAV BAR --- */
+        .bottom-nav {
+            flex-shrink: 0; width: 100%;
+            background-color: #1a1a1a; border-top: 1px solid var(--border-color);
+            display: flex; justify-content: space-around; align-items: center;
+            height: 48px; z-index: 50;
+            border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
+        }
+        [data-theme="light"] .bottom-nav {
+            background-color: #ffffff;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #888; font-size: 0.75rem; font-weight: bold; width: 20%;
+            cursor: pointer; gap: 4px;
+        }
+        .nav-item:active { opacity: 0.6; }
+        .nav-item.active { color: var(--accent-blue); }
+        
+        .nav-icon { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 2px; }
+
+        /* Desktop Instructions */
+        #desktop-instructions {
+            display: none;
+            width: 350px;
+            background-color: #222;
+            color: #ddd;
+            padding: 40px 30px;
+            box-sizing: border-box;
+            flex-direction: column;
+            gap: 15px;
+            border-right: 1px solid #444;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        #desktop-instructions h2 { color: #fff; font-size: 1.5rem; margin-bottom: 5px; }
+        #desktop-instructions p { font-size: 0.95rem; line-height: 1.5; margin-bottom: 5px; }
+        @media (min-width: 1100px) {
+            body:not(.native-mode) #desktop-instructions {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="desktop-instructions">
+        <h2>Ops Suite Prototype</h2>
+        <p>This is the Duty Options mockup view.</p>
+        <p>It demonstrates the pre-duty checklist and options.</p>
+    </div>
+
+    <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative;">
+        <div class="device-frame" id="deviceFrame">
+            <div class="device-screen">
+
+                
+                <!-- Sync Bar -->
+                <div class="sync-bar">
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.1.1</span>
+                    <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-main); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1rem;">🌓</button>
+                    <div style="cursor: pointer; display: flex; align-items: center; gap: 4px;" onclick="triggerManualSync(this)">
+                        <span class="sync-icon">✔</span> <span class="sync-text">Last sync: Just now</span>
+                    </div>
+                </div>
+
+                <!-- Header -->
+                <div class="header">
+                    <div class="header-back" onclick="window.history.back()">
+                        <svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/></svg>
+                    </div>
+                    <div class="header-title" style="flex: 1; text-align: center;">Duty In</div>
+                    <div style="color: var(--accent-blue); font-weight: 600; cursor: pointer;" onclick="window.location.href='home.html'">Skip</div>
+                </div>
+
+                <!-- Scrollable Content -->
+                <div class="content-scroll">
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        
+                        <!-- Duty In Time -->
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="font-size: 12px; color: var(--text-muted); font-weight: bold;">DUTY IN TIME</label>
+                            <input type="datetime-local" value="2026-06-19T14:37" style="padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; background-color: var(--bg-card); color: var(--text-main);">
+                        </div>
+                        
+                        <!-- Location -->
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="font-size: 12px; color: var(--text-muted); font-weight: bold;">LOCATION</label>
+                            <select style="padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; background-color: var(--bg-card); color: var(--text-main);">
+                                <option>RWI</option>
+                            </select>
+                        </div>
+
+                        <!-- Rest from last & Consecutive Shifts -->
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                            <span style="color: var(--text-main); font-weight: 600;">Rest from last:</span>
+                            <span style="color: var(--text-muted);">&gt;10h</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                            <span style="color: var(--text-main); font-weight: 600;">Consecutive Shifts:</span>
+                            <span style="color: var(--text-muted);">1</span>
+                        </div>
+
+                        <!-- Aircraft -->
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label style="font-size: 12px; color: var(--text-muted); font-weight: bold;">AIRCRAFT</label>
+                            <div style="display: flex; align-items: center; padding: 12px; border-radius: 8px; background-color: var(--bg-card); border: 1px solid var(--border-color);">
+                                <input type="checkbox" style="margin-right: 12px; width: 20px; height: 20px;">
+                                <span style="font-size: 16px; font-weight: 600; color: var(--text-main);">N850BU</span>
+                            </div>
+                        </div>
+
+                        <!-- Duty In Risk Button -->
+                        <button style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-card); font-size: 16px; font-weight: 600; color: var(--text-main); box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; margin-top: 8px;">Duty In Risk</button>
+                        
+                        <!-- Currency Hard Stop -->
+                        <div style="background-color: var(--accent-red); color: white; padding: 16px; border-radius: 8px; margin-top: 16px;">
+                            <div style="font-weight: 700; font-size: 16px; margin-bottom: 8px;">Currency Hard Stop</div>
+                            <div style="font-size: 14px; margin-bottom: 12px;">The following currency items have expired:</div>
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 4px;">
+                                <span style="display:inline-block; width: 16px; height: 16px; border-radius: 50%; background: white; color: var(--accent-red); text-align: center; line-height: 16px; font-size: 12px; font-weight: bold;">✕</span> Day Take-off/Landings Currency
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 4px;">
+                                <span style="display:inline-block; width: 16px; height: 16px; border-radius: 50%; background: white; color: var(--accent-red); text-align: center; line-height: 16px; font-size: 12px; font-weight: bold;">✕</span> Night Take-off/Landing Currency
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                                <span style="display:inline-block; width: 16px; height: 16px; border-radius: 50%; background: white; color: var(--accent-red); text-align: center; line-height: 16px; font-size: 12px; font-weight: bold;">✕</span> HNVG Operations
+                            </div>
+                        </div>
+
+                        <!-- CURRENCY COMPLIANCE -->
+                        <div style="margin-top: 16px;">
+                            <div style="font-size: 12px; color: var(--text-muted); font-weight: bold; margin-bottom: 8px;">CURRENCY COMPLIANCE</div>
+                            <div style="background-color: var(--bg-card); border-radius: 8px; padding: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 12px;">
+                                <div style="color: var(--accent-blue); font-weight: 600; text-align: center; cursor: pointer;">View Details</div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                                    <span style="font-size: 14px; font-weight: 600; color: var(--text-main); flex: 1; padding-right: 12px;">I confirm my currency and qualifications are current:</span>
+                                    <div style="width: 50px; height: 28px; background-color: #e4e6eb; border-radius: 14px; position: relative; cursor: pointer;">
+                                        <div style="width: 24px; height: 24px; background-color: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DUTY IN -->
+                        <div style="margin-top: 16px; margin-bottom: 24px;">
+                            <div style="font-size: 12px; color: var(--text-muted); font-weight: bold; margin-bottom: 8px;">DUTY IN</div>
+                            <div style="background-color: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color);">
+                                <div style="display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border-color);">
+                                    <span style="color: var(--text-main);">Duty In Test Stat:</span>
+                                    <span style="color: var(--text-muted);">[ 0 ]</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border-color);">
+                                    <span style="color: var(--text-main);">Last 10 h rest:</span>
+                                    <span style="color: var(--text-muted);">&gt;10h</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border-color);">
+                                    <span style="color: var(--text-main);">Total rest last 24 hours:</span>
+                                    <span style="color: var(--text-muted);">--</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 12px;">
+                                    <span style="color: var(--text-main);">Rest Time Prior to Duty In:</span>
+                                    <span style="color: var(--text-muted);">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Navigation / Actions -->
+                <div class="bottom-bar">
+                    <button class="btn" style="background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color);" onclick="window.history.back()">Cancel</button>
+                    <button class="btn btn-blue" style="background-color: var(--accent-blue);" onclick="window.location.href='home.html'">Save</button>
+                </div>
+
+                <!-- Bottom Navigation -->
+
+                <div class="bottom-nav">
+                    <div class="nav-item" onclick="window.location.href='home.html'" style="cursor:pointer;">
+                        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        <span>Home</span>
+                    </div>
+                    <div class="nav-item" style="cursor:pointer;">
+                        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                        <span>Map</span>
+                    </div>
+                    <div class="nav-item" onclick="window.location.href='manifest.html'" style="cursor:pointer;">
+                        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span>Manifest</span>
+                    </div>
+                    <div class="nav-item" onclick="window.location.href='library.html'" style="cursor:pointer;">
+                        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477-4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        <span>Library</span>
+                    </div>
+                    <div class="nav-item" onclick="if(window.FlightSimulator) window.FlightSimulator.toggleMobile(); else alert('Simulator not loaded.');" style="cursor:pointer;">
+                        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                        <span>Chat</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    
+    <script>
+        // Map Implementation
+        let leafletMap = null;
+
+        async function initMap() {
+            leafletMap = L.map('leaflet-map', { 
+                zoomControl: false, 
+                attributionControl: false 
+            });
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(leafletMap);
+
+            updateFlightRequestView();
+        }
+
+        function updateFlightRequestView() {
+            if (window.FlightSimulator && window.FlightSimulator.activeRoute) {
+                const route = window.FlightSimulator.activeRoute;
+                
+                // Update Route List
+                const routeList = document.getElementById('flight-request-route-list');
+                if (routeList) {
+                    if (route.length === 0) {
+                        routeList.innerHTML = '<div style="padding: 10px; color: var(--text-muted); text-align: center;">No active route.</div>';
+                    } else {
+                        routeList.innerHTML = route.map((wp, index) => {
+                            let statsHtml = '';
+                            if (index > 0) {
+                                statsHtml = `<span>${wp.legDistance} nm</span> <span>${wp.heading}&deg;</span>`;
+                            }
+                            
+                            // Mock ETA just for display
+                            const etaOffset = wp.etaOffset || 0;
+                            const d = new Date();
+                            d.setMinutes(d.getMinutes() + etaOffset);
+                            const etaStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            
+                            return `
+                            <div class="route-row">
+                                <div class="waypoint-info">
+                                    <span class="waypoint-id">${wp.id}</span>
+                                    <span class="waypoint-stats">${statsHtml}</span>
+                                </div>
+                                <span class="waypoint-eta">ETA: ${etaStr}</span>
+                            </div>`;
+                        }).join('');
+                    }
+                }
+
+                // Update Map
+                if (leafletMap && route.length > 0) {
+                    // Clear previous layers
+                    leafletMap.eachLayer((layer) => {
+                        if (layer instanceof L.Marker || layer instanceof L.Polyline) {
+                            leafletMap.removeLayer(layer);
+                        }
+                    });
+
+                    const waypoints = [];
+                    route.forEach((wp, index) => {
+                        const latLng = [wp.lat, wp.lon];
+                        waypoints.push(latLng);
+
+                        let colorClass = 'var(--accent-green)';
+                        if (index === 1) colorClass = 'var(--accent-orange)';
+                        if (index === 2) colorClass = 'var(--accent-red)';
+
+                        const markerHtml = `<div style="background-color: ${colorClass}; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${index + 1}</div>`;
+                        const customIcon = L.divIcon({
+                            html: markerHtml,
+                            className: 'custom-div-icon',
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                        });
+
+                        L.marker(latLng, {icon: customIcon}).addTo(leafletMap);
+                    });
+
+                    const routeLine = L.polyline(waypoints, {
+                        color: '#181c20',
+                        weight: 3,
+                        opacity: 0.8,
+                        dashArray: null
+                    }).addTo(leafletMap);
+
+                    leafletMap.fitBounds(routeLine.getBounds(), {padding: [30, 30]});
+                }
+                
+                const dateSpan = document.getElementById('req-date-text');
+                const storedTime = localStorage.getItem('ops_suite_flight_time');
+                if (dateSpan && storedTime) {
+                    const d = new Date(storedTime);
+                    const mm = String(d.getMonth() + 1).padStart(2, '0');
+                    const dd = String(d.getDate()).padStart(2, '0');
+                    const yyyy = d.getFullYear();
+                    const hh = String(d.getHours()).padStart(2, '0');
+                    const min = String(d.getMinutes()).padStart(2, '0');
+                    dateSpan.innerHTML = `${mm}/${dd}/${yyyy}, ${hh}:${min}`;
+                }
+            }
+        }
+
+        document.addEventListener('flightRequestUpdated', () => {
+            updateFlightRequestView();
+        });
+
+        function openInForeFlight() {
+            if (window.FlightSimulator && window.FlightSimulator.activeRoute) {
+                const route = window.FlightSimulator.activeRoute;
+                if (route.length > 0) {
+                    const waypointIds = route.map(wp => wp.id).join('+');
+                    const url = `foreflightmobile://maps/search?q=${waypointIds}`;
+                    window.location.href = url;
+                } else {
+                    alert('No active route to open in ForeFlight.');
+                }
+            }
+        }
+
+        // Initialize everything
+        window.onload = () => {
+            initMap();
+        };
+
+        const themes = ['light', 'neutral', 'dark', 'hc-dark', 'hc-light'];
+        function toggleTheme() {
+            const html = document.documentElement;
+            let current = html.getAttribute('data-theme') || 'light';
+            let nextIndex = (themes.indexOf(current) + 1) % themes.length;
+            let nextTheme = themes[nextIndex];
+            html.setAttribute('data-theme', nextTheme);
+            localStorage.setItem('ops_suite_theme', nextTheme);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('ops_suite_theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+            
+            const initialSyncText = document.querySelector('.sync-text');
+            if (initialSyncText) {
+                initialSyncText.innerHTML = `Last sync: ${formatSyncTime()}`;
+            }
+        });
+
+        function formatSyncTime() {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function triggerManualSync(el) {
+            if (el.classList.contains('syncing')) return;
+            el.classList.add('syncing');
+            const icon = el.querySelector('.sync-icon');
+            const text = el.querySelector('.sync-text');
+            icon.innerHTML = '↻';
+            icon.style.animation = 'spin 1s linear infinite';
+            icon.style.color = 'var(--accent-blue)';
+            text.innerHTML = 'Syncing...';
+            setTimeout(() => {
+                icon.style.animation = 'none';
+                icon.innerHTML = '✔';
+                icon.style.color = 'var(--accent-green)';
+                text.innerHTML = `Last sync: ${formatSyncTime()}`;
+                el.classList.remove('syncing');
+            }, 10000);
+        }
+    </script>
+<script src="assets/simulator.js?v=4"></script>
+<script src="assets/changelog.js"></script>
+</body>
+</html>

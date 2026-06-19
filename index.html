@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -51,7 +51,43 @@
                 panel.style.display = 'none';
             }
         }
-    </script>
+    
+        const themes = ['light', 'neutral', 'dark', 'hc-dark', 'hc-light'];
+        function toggleTheme() {
+            const html = document.documentElement;
+            let current = html.getAttribute('data-theme') || 'light';
+            let nextIndex = (themes.indexOf(current) + 1) % themes.length;
+            html.setAttribute('data-theme', themes[nextIndex]);
+        }
+
+        function formatSyncTime() {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function triggerManualSync(el) {
+            if (el.classList.contains('syncing')) return;
+            el.classList.add('syncing');
+            const icon = el.querySelector('.sync-icon');
+            const text = el.querySelector('.sync-text');
+            icon.innerHTML = '↻';
+            icon.style.animation = 'spin 1s linear infinite';
+            icon.style.color = 'var(--accent-blue)';
+            text.innerHTML = 'Syncing...';
+            setTimeout(() => {
+                icon.style.animation = 'none';
+                icon.innerHTML = '✔';
+                icon.style.color = 'var(--accent-green)';
+                text.innerHTML = `Last sync: ${formatSyncTime()}`;
+                el.classList.remove('syncing');
+            }, 10000);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const initialSyncText = document.querySelector('.sync-text');
+            if (initialSyncText) initialSyncText.innerHTML = `Last sync: ${formatSyncTime()}`;
+        });
+</script>
     <style>
         :root {
             --bg-color: #f4f5f7;
@@ -687,6 +723,15 @@
     <div id="main-view">
         <div class="device-frame">
             <div class="device-screen">
+
+            <!-- Sync Bar -->
+            <div class="sync-bar">
+                <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1rem;">🌓</button>
+                <div style="cursor: pointer; display: flex; align-items: center; gap: 4px;" onclick="triggerManualSync(this)">
+                    <span class="sync-icon">✔</span> <span class="sync-text">Last sync: Just now</span>
+                </div>
+            </div>
+
                 <div class="login-container">
                     <div class="logo-section">
                         <div class="logo-title">

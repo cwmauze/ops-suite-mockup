@@ -1,0 +1,2573 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <!-- PWA / iOS Native App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ops Suite">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Ops Suite - Manifest Prototype</title>
+    <script>
+                function scaleDevice() {
+            const frame = document.querySelector('.device-frame');
+            const container = document.getElementById('main-view') || document.body;
+            if(frame) {
+                if (document.body.classList.contains('native-mode')) {
+                    frame.style.transform = 'none';
+                    return;
+                }
+                // Calculate available width and height for the container
+                // #main-view takes up window.innerWidth - instructions panel width (350px when visible)
+                const isDesktop = window.innerWidth > 1100;
+                const instructionsWidth = isDesktop ? 350 : 0;
+                const availableWidth = window.innerWidth - instructionsWidth;
+                const availableHeight = window.innerHeight;
+                
+                // iPad dimensions + padding
+                const targetWidth = 784;
+                const targetHeight = 1173;
+
+                const scale = Math.min((availableWidth * 0.95) / targetWidth, (availableHeight * 0.95) / targetHeight);
+                frame.style.transform = `scale(${scale})`;
+            }
+        }
+        window.addEventListener('resize', scaleDevice);
+        window.addEventListener('DOMContentLoaded', () => {
+            // Detect mobile/tablet devices, including iPadOS 13+ desktop mode, or PWA standalone mode
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const isMobile = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isStandalone || isMobile) {
+                document.body.classList.add('native-mode');
+            }
+            scaleDevice();
+        });
+
+        function toggleChangelog() {
+            const panel = document.getElementById('changelog-panel');
+            if (panel.style.display === 'none' || panel.style.display === '') {
+                panel.style.display = 'flex';
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --surface-color: #111111;
+            --surface-color-light: #222222;
+            --text-primary: #ffffff;
+            --text-secondary: #aaaaaa;
+            --accent-blue: #2f80ed;
+            --accent-orange: #f2994a;
+            --accent-green: #27ae60;
+            --accent-red: #eb5757;
+            --border-color: #333333;
+            --error-color: #ff4d4f;
+            --input-bg: #1a1a1a;
+            --toggle-off: #444444;
+            --toggle-on: #27ae60;
+            
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Universal Theme overrides */
+        [data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --surface-color: #ffffff;
+            --surface-color-light: #f8f9fa;
+            --text-primary: #111111;
+            --text-secondary: #666666;
+            --border-color: #dddddd;
+            --input-bg: #ffffff;
+            --toggle-off: #cccccc;
+            --bg-body: #f1f2f5;
+            --bg-card: #ffffff;
+            --text-main: #181c20;
+            --text-muted: #5e646e;
+        }
+
+        [data-theme="neutral"] {
+            --bg-color: #2b2b2b;
+            --surface-color: #3b3b3b;
+            --surface-color-light: #4b4b4b;
+            --text-primary: #f0f0f0;
+            --text-secondary: #c0c0c0;
+            --border-color: #555555;
+            --input-bg: #444444;
+            --toggle-off: #666666;
+            --bg-body: #2b2b2b;
+            --bg-card: #3b3b3b;
+            --text-main: #f0f0f0;
+            --text-muted: #c0c0c0;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #000000;
+            --surface-color: #111111;
+            --surface-color-light: #222222;
+            --text-primary: #ffffff;
+            --text-secondary: #aaaaaa;
+            --border-color: #333333;
+            --input-bg: #1a1a1a;
+            --toggle-off: #444444;
+            --bg-body: #000000;
+            --bg-card: #111111;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+        }
+
+        [data-theme="hc-dark"] {
+            --bg-color: #000000;
+            --surface-color: #000000;
+            --surface-color-light: #000000;
+            --text-primary: #ffffff;
+            --text-secondary: #dddddd;
+            --accent-blue: #55aaff;
+            --accent-orange: #ffaa55;
+            --accent-green: #55ff55;
+            --accent-red: #ff5555;
+            --border-color: #ffffff;
+            --input-bg: #000000;
+            --toggle-off: #ffffff;
+            --bg-body: #000000;
+            --bg-card: #000000;
+            --text-main: #ffffff;
+            --text-muted: #dddddd;
+        }
+
+        [data-theme="hc-light"] {
+            --bg-color: #ffffff;
+            --surface-color: #ffffff;
+            --surface-color-light: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #000000;
+            --accent-blue: #0000ee;
+            --accent-orange: #cc5500;
+            --accent-green: #008800;
+            --accent-red: #cc0000;
+            --border-color: #000000;
+            --input-bg: #ffffff;
+            --toggle-off: #000000;
+            --bg-body: #ffffff;
+            --bg-card: #ffffff;
+            --text-main: #000000;
+            --text-muted: #000000;
+        }
+
+
+        .input-error { border-color: var(--error-color) !important; border-width: 3px !important; }
+        .error-msg { color: var(--error-color); font-size: 0.85rem; font-weight: bold; margin-top: 5px; }
+
+        
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #333;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            width: 100vw;
+        }
+
+        .device-frame {
+            width: 744px;
+            height: 1133px; 
+            background-color: #111;
+            border-radius: 40px;
+            padding: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .device-screen {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            border-radius: 24px;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .device-screen::-webkit-scrollbar { width: 8px; }
+        .device-screen::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 4px; }
+
+        /* --- NATIVE APP SIMULATION (IPAD) --- */
+        body.native-mode {
+            background-color: var(--bg-color);
+        }
+        body.native-mode .device-frame {
+            width: 100vw !important;
+            height: 100vh !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+        body.native-mode .device-screen {
+            border-radius: 0 !important;
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-top: env(safe-area-inset-top);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+        body.native-mode .sticky-bottom-bar {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
+        }
+        body.native-mode body.native-mode .mockup-version {
+            display: none !important;
+        }
+
+        /* --- SYNC BAR --- */
+        .sync-bar {
+            background-color: var(--surface-color-light);
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .sync-icon { color: var(--accent-green); display: inline-block; }
+        
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- GLOBAL FLIGHT HEADER --- */
+        .global-header {
+            background-color: var(--surface-color);
+            padding: 4px 6px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .aircraft-title { font-size: 1.4rem; font-weight: bold; }
+        .manifest-number { color: var(--text-secondary); font-weight: bold; }
+
+        .global-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            background-color: var(--surface-color-light);
+            padding: 4px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+        
+        .global-stats-grid:active {
+            opacity: 0.7;
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: bold; }
+        .stat-value { font-size: 1rem; font-weight: bold; color: var(--text-primary); }
+
+        /* --- LEG TABS --- */
+        .leg-tabs {
+            display: flex;
+            gap: 12px;
+            padding: 6px 10px;
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+        .leg-tabs::-webkit-scrollbar { display: none; }
+
+        .leg-tab {
+            padding: 10px 16px;
+            background-color: var(--surface-color-light);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .leg-tab.active {
+            background-color: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+        .leg-tab .close-btn {
+            background: rgba(0,0,0,0.2);
+            border-radius: 50%;
+            width: 20px; height: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        /* --- ACTION SECTIONS --- */
+        .action-section {
+            padding: 15px 20px;
+            background-color: var(--surface-color);
+            border-bottom: 2px solid var(--border-color);
+        }
+        .action-section.leg-level {
+            background-color: var(--surface-color-light);
+        }
+        .action-header {
+            font-size: 0.8rem; font-weight: bold; color: var(--text-secondary); text-transform: uppercase;
+            margin-bottom: 10px; letter-spacing: 1px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .action-tiles {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+        }
+        .action-tiles::-webkit-scrollbar { display: none; }
+
+        .tile {
+            flex: 1;
+            padding: 10px;
+            min-height: 54px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-align: center;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tile:active { opacity: 0.8; }
+        .tile.blue { background-color: var(--accent-blue); }
+        .tile.orange { background-color: var(--accent-orange); }
+        .tile.green { background-color: var(--accent-green); }
+        .tile.red { background-color: var(--accent-red); }
+        .tile.dark { background-color: #333; border: 1px solid #555; }
+
+
+        /* --- MAIN CONTENT --- */
+        .container { padding: 4px; display: flex; flex-direction: column; gap: 12px; }
+        .section { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; }
+        .section-title { font-size: 1rem; color: var(--text-secondary); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; font-weight: bold; }
+
+        .form-row { display: flex; gap: 12px; margin-bottom: 4px; }
+        .form-group { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        label { font-size: 0.85rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; margin: 0; }
+        input[type="text"], input[type="number"], input[type="time"], select {
+            background-color: var(--input-bg); border: 2px solid var(--border-color);
+            color: var(--text-primary); padding: 12px 10px; border-radius: 4px; font-size: 1rem; font-weight: bold; width: 100%; box-sizing: border-box; margin: 0; min-height: 48px;
+        }
+        input:focus, select:focus { outline: none; border-color: var(--accent-blue); }
+        
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; background-color: var(--input-bg); border: 2px solid var(--border-color); padding: 10px 15px; border-radius: 8px; min-height: 54px; }
+        
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--toggle-off); transition: .4s; border-radius: 34px; border: 2px solid var(--border-color); }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--toggle-on); border-color: var(--toggle-on); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background-color: var(--surface-color-light); padding: 8px; border-radius: 6px; border: 2px dashed var(--border-color); }
+        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 6px; padding: 6px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; position: relative; transition: all 0.2s; }
+        .seat-card.active { border-color: var(--accent-blue); }
+        .seat-card:has(.seat-occupant-input:not(:placeholder-shown)) { background-color: rgba(39, 174, 96, 0.1); border-color: var(--accent-green); }
+        .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .seat-title { font-size: 0.8rem; color: var(--text-secondary); text-align: left; text-transform: uppercase; font-weight: bold; margin: 0; }
+        .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 12px 10px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 1rem; min-height: 48px; display: flex; align-items: center; justify-content: center; }
+        .seat-occupant-input { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 12px 10px; padding-right: 36px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 1rem; width: 100%; box-sizing: border-box; color: var(--text-primary); outline: none; margin: 0; min-height: 48px; }
+        .seat-occupant-input::placeholder { color: var(--text-secondary); font-weight: normal; }
+        .seat-occupant-input:focus { border-color: var(--accent-blue); }
+        .clear-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 1.4rem; font-weight: bold; line-height: 1; padding: 10px; width: 44px; text-align: center; box-sizing: border-box; }
+        .seat-occupant-input:placeholder-shown + .clear-btn { display: none; }
+        .clear-btn:hover { color: var(--accent-red); }
+        .autocomplete-dropdown { position: absolute; top: calc(100% - 10px); left: 12px; right: 12px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; max-height: 150px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
+        .autocomplete-item { padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; display: flex; justify-content: space-between; cursor: pointer; color: var(--text-primary); }
+        .autocomplete-item:last-child { border-bottom: none; }
+        .autocomplete-item:hover { background-color: var(--input-bg); }
+        .seat-weight { display: flex; align-items: center; gap: 2px; font-size: 0.85rem; font-weight: bold; color: var(--accent-blue); margin: 0; }
+        .seat-weight input { width: 40px; padding: 0; text-align: right; background: transparent; border: none; color: var(--accent-blue); font-weight: bold; font-size: 0.85rem; }
+        .seat-weight input:focus { outline: none; border-bottom: 1px solid var(--accent-blue); }
+        .full-width { grid-column: 1 / -1; }
+        
+        /* --- ACTION BUTTONS --- */
+        .btn { flex: 1; padding: 6px; min-height: 54px; font-size: 1rem; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; color: white; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background-color: var(--accent-blue); }
+        .btn-danger { background-color: var(--accent-red); }
+        .btn-outline { background-color: transparent; border: 2px solid var(--border-color); color: var(--text-primary); }
+        .verify-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 70px; }
+        .verify-wrapper label { font-size: 0.85rem; margin-bottom: 4px; font-weight: bold; color: var(--text-secondary); }
+
+        /* --- BOTTOM NAV BAR --- */
+        .bottom-nav {
+            flex-shrink: 0; width: 100%;
+            background-color: #1a1a1a; border-top: 1px solid var(--border-color);
+            display: flex; justify-content: space-around; align-items: center;
+            height: 48px; z-index: 50;
+            border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
+        }
+        [data-theme="light"] .bottom-nav {
+            background-color: #ffffff;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #888; font-size: 0.75rem; font-weight: bold; width: 20%;
+            cursor: pointer; gap: 4px;
+        }
+        .nav-item:active { opacity: 0.6; }
+        .nav-item.active { color: var(--accent-blue); }
+        
+        /* --- SIMULATED KEYBOARDS --- */
+        .simulated-keyboard, .simulated-numpad {
+            position: absolute;
+            bottom: 0;
+            left: 0; right: 0;
+            transform: translateY(120%);
+            visibility: hidden;
+            background: rgba(209, 213, 219, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), visibility 0s linear 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 15px 10px;
+            box-sizing: border-box;
+            gap: 12px;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        }
+        .simulated-keyboard { height: 410px; }
+        .simulated-numpad { height: 350px; }
+        .simulated-keyboard.visible, .simulated-numpad.visible { transform: translateY(0); visibility: visible; transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), visibility 0s linear; }
+        [data-theme='dark'] .simulated-keyboard, [data-theme='dark'] .simulated-numpad { background: rgba(44, 44, 46, 0.95); }
+        .kb-row { display: flex; justify-content: center; gap: 8px; width: 100%; }
+        .kb-key {
+            background: #ffffff; border-radius: 8px; box-shadow: 0 1px 1px rgba(0,0,0,0.3);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 22px; font-weight: 400; color: #000; cursor: pointer;
+            user-select: none; flex: 1; max-width: 65px; height: 55px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            transition: background 0.1s;
+        }
+        .kb-key:active { background: #e5e5ea; }
+        [data-theme='dark'] .kb-key { background: #636366; color: #fff; box-shadow: 0 1px 1px rgba(0,0,0,0.6); }
+        [data-theme='dark'] .kb-key:active { background: #48484a; }
+        .kb-key.special { background: #aeb3ba; max-width: 90px; font-size: 18px; font-weight: 500; }
+        [data-theme='dark'] .kb-key.special { background: #3a3a3c; }
+        .kb-key.spacebar { max-width: 350px; flex: 4; }
+
+        #desktop-instructions {
+            display: none;
+            width: 350px;
+            background-color: #222;
+            color: #ddd;
+            padding: 40px 30px;
+            box-sizing: border-box;
+            flex-direction: column;
+            gap: 15px;
+            border-right: 1px solid #444;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        #desktop-instructions h2 { color: #fff; font-size: 1.5rem; margin-bottom: 5px; }
+        #desktop-instructions p { font-size: 0.95rem; line-height: 1.5; margin-bottom: 5px; }
+        #desktop-instructions .instruction-box {
+            background-color: #333;
+            border: 1px solid #555;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+        #desktop-instructions .instruction-box h3 { color: var(--accent-blue); font-size: 1.1rem; margin-bottom: 12px; }
+        #desktop-instructions ol { margin-left: 20px; font-size: 0.9rem; line-height: 1.6; }
+        #desktop-instructions li { margin-bottom: 8px; }
+
+        @media (min-width: 1100px) {
+            body:not(.native-mode) #desktop-instructions {
+                display: flex;
+            }
+        }
+
+        /* ================= MEDIA QUERIES ================= */
+        .nav-icon { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 2px; }
+
+
+        /* --- MODALS --- */
+        .modal-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 1000; display: none; align-items: center; justify-content: center;
+            border-radius: 24px;
+        }
+        .modal-overlay.active { display: flex; }
+        
+        .modal-content {
+            background-color: var(--surface-color);
+            width: 90%; max-height: 90%;
+            border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .modal-full { width: 100%; height: 100%; border-radius: 24px; }
+        
+        .modal-header {
+            padding: 15px 20px; border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+            background-color: var(--surface-color-light);
+        }
+        .modal-title { font-size: 1.2rem; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        
+        .modal-close {
+            background: var(--input-bg); border: 1px solid var(--border-color);
+            border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-weight: bold; color: var(--text-secondary); font-size: 1.2rem;
+        }
+        
+        .modal-body { padding: 0; overflow-y: auto; flex: 1; background-color: var(--bg-color); }
+        .modal-body-pad { padding: 20px; }
+        
+        .modal-footer {
+            padding: 15px 20px; border-top: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; gap: 10px;
+            background-color: var(--surface-color);
+        }
+
+        /* Modal specific styles */
+        .risk-pill { background-color: var(--accent-green); color: white; padding: 4px 12px; border-radius: 12px; font-size: 1rem; font-weight: bold; }
+        
+        .alert-banner {
+            background-color: rgba(242, 153, 74, 0.2); border-left: 4px solid var(--accent-orange);
+            padding: 12px 20px; color: var(--text-primary); font-weight: bold; font-size: 0.95rem;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .alert-banner.red {
+            background-color: var(--accent-red); border-left: none; color: white;
+            border-radius: 8px; margin: 20px 20px 0 20px;
+        }
+        
+        .risk-list { background-color: var(--surface-color); border-top: 1px solid var(--border-color); }
+        .risk-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; border-bottom: 1px solid var(--border-color);
+        }
+        .risk-text { flex: 1; padding-right: 15px; font-size: 1rem; color: var(--text-primary); }
+        .risk-pts { color: var(--text-secondary); font-weight: bold; margin-right: 15px; }
+
+        .list-btn {
+            background-color: var(--surface-color); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 15px; margin-bottom: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer;
+        }
+        .list-btn-title { font-weight: bold; font-size: 1.1rem; color: var(--text-primary); }
+        .list-btn-sub { font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px; text-transform: uppercase;}
+        
+        .equip-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 20px; border-bottom: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+        }
+        
+        .table-row {
+            display: flex; justify-content: space-between; padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .table-row:last-child { border-bottom: none; }
+        
+        .mockup-version {
+            margin-top: auto;
+            color: #888;
+            font-family: monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #444;
+        }
+        .mockup-version:hover {
+            color: #fff;
+            background: rgba(0,0,0,0.6);
+        }
+    
+        .time-picker-popover {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #d1d5db;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            border-top: 1px solid var(--border-color);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        [data-theme="dark"] .time-picker-popover, [data-theme="hc-dark"] .time-picker-popover {
+            background-color: #333;
+        }
+
+        .picker-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: #f3f4f6;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .picker-header, [data-theme="hc-dark"] .picker-header {
+            background-color: #222;
+        }
+
+        .picker-btn {
+            background: none;
+            border: none;
+            color: #007aff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .picker-body {
+            display: flex;
+            height: 200px;
+            position: relative;
+            background: white;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .picker-body, [data-theme="hc-dark"] .picker-body {
+            background: #000;
+            color: white;
+        }
+
+        .picker-highlight {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            margin-top: -20px;
+            background-color: rgba(0, 122, 255, 0.1);
+            border-top: 1px solid rgba(0, 122, 255, 0.3);
+            border-bottom: 1px solid rgba(0, 122, 255, 0.3);
+            pointer-events: none;
+        }
+
+        .picker-column {
+            flex: 1;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 80px 0;
+        }
+        
+        .picker-column::-webkit-scrollbar {
+            display: none;
+        }
+
+        .picker-item {
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            font-size: 1.4rem;
+            scroll-snap-align: center;
+            font-family: monospace;
+            cursor: pointer;
+        }
+        
+        .picker-label {
+            position: absolute;
+            top: 50%;
+            margin-top: -10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            pointer-events: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="desktop-instructions">
+        <h2>Ops Suite Prototype</h2>
+        <p>Welcome to the Ops Suite interactive mockup.</p>
+        <p>This prototype demonstrates the offline-first layout, risk assessment tools, and manifest management designed for seamless tablet operations.</p>
+        
+        <div class="instruction-box">
+            <h3>📱 Install on iOS (PWA)</h3>
+            <p>For the most realistic experience, install this prototype as a native app on your iPad or iPhone:</p>
+            <ol>
+                <li>Open this page in <strong>Safari</strong> on your device.</li>
+                <li>Tap the <strong>Share</strong> button (the square with an arrow pointing up).</li>
+                <li>Scroll down and select <strong>Add to Home Screen</strong>.</li>
+                <li>Tap <strong>Add</strong> in the top right corner.</li>
+                <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
+            </ol>
+        </div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.34</div>
+    </div>
+
+    <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
+        <div class="device-frame">
+        <div class="device-screen">
+            
+            <div class="sync-bar">
+                <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1rem;">🌓</button>
+                <div style="cursor: pointer; display: flex; align-items: center; gap: 4px;" onclick="triggerManualSync(this)">
+                    <span class="sync-icon">✔</span> <span class="sync-text">Last sync: Just now</span>
+                </div>
+            </div>
+
+            <div class="global-header">
+                <div class="header-top-row" style="align-items: stretch; gap: 15px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px; justify-content: center; min-width: 120px;">
+                        <div class="back-link" style="font-size: 1rem; color: var(--accent-blue); font-weight: bold; cursor: pointer; margin-bottom: 4px;" onclick="window.location.href='manifest.html'">
+                            &lt; Back
+                        </div>
+                        <div class="manifest-title" style="font-size: 1.2rem; font-weight: 700;">Manifest: 3664365</div>
+                        <div class="aircraft-number" style="font-size: 0.95rem; color: var(--text-secondary); font-weight: bold;">N850BU</div>
+                        <div class="team-badge" style="font-size: 0.85rem; color: var(--accent-blue); font-weight: bold; cursor: pointer; text-transform: uppercase;">👥 RWI Medical Team</div>
+                    </div>
+                    <div class="action-tiles" style="flex: 1; padding: 0; margin: 0; background: none; border: none;">
+                        <button class="tile blue" onclick="window.location.href='flight_request.html'">Flight Request</button>
+                        <button class="tile blue" onclick="openModal('edit-modal')">Edit Flight</button>
+                        <button id="risk-btn" class="tile orange" onclick="openModal('risk-modal')">Risk Assessment</button>
+                        <button id="dispatch-btn" class="tile red" onclick="promptDispatch()">Dispatch #</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="leg-tabs" id="leg-tabs-container">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- LEG ACTIONS -->
+            <div class="action-section leg-level">
+                <div class="action-tiles">
+                    <button class="tile dark" style="flex-direction:column; padding:6px;" onclick="openModal('edit-modal')">
+                        <span style="font-size:0.7rem; text-transform:uppercase;">Config</span>
+                        <span style="font-size:0.85rem; color: var(--accent-blue); margin-top:2px;">VCF #1</span>
+                    </button>
+                    <button class="tile dark" style="flex-direction:column; padding:6px;" onclick="openModal('equip-modal')">
+                        <span style="font-size:0.7rem; text-transform:uppercase;">Equipment</span>
+                        <span style="font-size:0.85rem; color: var(--accent-blue); margin-top:2px;">143.00 kg</span>
+                    </button>
+                    <button class="tile green" style="flex-direction:column; padding:6px;" onclick="openModal('weight-modal')">
+                        <span style="font-size:0.7rem; text-transform:uppercase;">Weight Pass</span>
+                        <span style="font-size:1rem;">3323 kg</span>
+                    </button>
+                    <button class="tile green" style="flex-direction:column; padding:6px;" onclick="openModal('cg-modal')">
+                        <span style="font-size:0.7rem; text-transform:uppercase;">CG Pass</span>
+                        <span style="font-size:1rem;">4509 mm</span>
+                    </button>
+                    <button class="tile blue" style="flex-direction:column; padding:6px;" onclick="openModal('print-modal')">
+                        <span style="font-size:0.7rem; text-transform:uppercase;">View</span>
+                        <span style="font-size:1rem;">Manifest</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="container" id="main-content" style="flex: 1; overflow-y: auto; padding-bottom: 20px; box-sizing: border-box;">
+                <!-- Route & Times -->
+                <div class="section" style="padding-top: 20px;">
+                    <div class="form-row" style="gap: 5px; margin-bottom: 8px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Obst. Height</label>
+                            <input type="number" value="759" style="padding: 6px;">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Flight Rules</label>
+                            <div style="display: flex; align-items: center; justify-content: space-between; background-color: var(--input-bg); border: 2px solid var(--border-color); padding: 2px 10px; border-radius: 4px; box-sizing: border-box; height: 100%;">
+                                <span style="font-weight:bold; font-size:0.9rem; color:var(--text-secondary); text-transform:uppercase;">IFR</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="ifr-toggle" onchange="updateCurrentLeg()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="gap: 5px; margin-bottom: 8px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Origin</label>
+                            <input type="text" id="leg-origin" value="RWI" oninput="updateCurrentLeg()" style="padding: 6px; font-weight: bold; box-sizing: border-box;">
+                        </div>
+                        <div class="form-group" style="flex: 1.5;">
+                            <label>Departed</label>
+                            <div style="display: flex; gap: 5px; align-items: stretch;">
+                                <input type="text" id="depart-time" class="datetime-sim" value="2026-06-18 19:12" inputmode="decimal" style="padding: 6px; flex: 1; text-align:center; font-weight:bold; font-size:0.95rem; box-sizing: border-box;">
+                                <button onclick="setNow('depart-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 4px; padding: 0 12px; font-weight: bold; font-size: 0.8rem; cursor: pointer;">NOW</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row" style="gap: 5px; margin-bottom: 8px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Destination</label>
+                            <input type="text" id="leg-dest" value="NC91" oninput="updateCurrentLeg()" style="padding: 6px; font-weight: bold; box-sizing: border-box;">
+                        </div>
+                        <div class="form-group" style="flex: 1.5;">
+                            <label>Arrived</label>
+                            <div style="display: flex; gap: 5px; align-items: stretch;">
+                                <input type="text" id="arrive-time" class="datetime-sim" value="" inputmode="decimal" placeholder="YYYY-MM-DD HH:MM" style="padding: 6px; flex: 1; text-align:center; font-weight:bold; font-size:0.95rem; box-sizing: border-box;">
+                                <button onclick="setNow('arrive-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 4px; padding: 0 12px; font-weight: bold; font-size: 0.8rem; cursor: pointer;">NOW</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spatial Stations -->
+                <div class="section" style="padding-top: 4px;">
+                    <div class="spatial-grid">
+                        <div class="seat-card">
+                            <div class="seat-header">
+                                <div class="seat-title">Copilot Seat</div>
+                                <div class="seat-weight">[<input type="number" id="wt-1" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
+                            </div>
+                            <div style="position: relative;">
+                                <input type="text" class="seat-occupant-input" id="occ-1" placeholder="Search personnel..." oninput="filterPersonnel(1)" onfocus="showPersonnel(1)">
+                                <span class="clear-btn" onclick="clearSeat(1, event)">&times;</span>
+                            </div>
+                            <div class="autocomplete-dropdown" id="dropdown-1"></div>
+                        </div>
+                        <div class="seat-card active">
+                            <div class="seat-header">
+                                <div class="seat-title">Pilot Seat</div>
+                                <div class="seat-weight">[<input type="number" id="wt-2" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
+                            </div>
+                            <div style="position: relative;">
+                                <input type="text" class="seat-occupant-input" id="occ-2" value="" placeholder="Search personnel..." oninput="filterPersonnel(2)" onfocus="showPersonnel(2)">
+                                <span class="clear-btn" onclick="clearSeat(2, event)">&times;</span>
+                            </div>
+                            <div class="autocomplete-dropdown" id="dropdown-2"></div>
+                        </div>
+                        <div class="seat-card">
+                            <div class="seat-header">
+                                <div class="seat-title">Aft Facing Left Hand</div>
+                                <div class="seat-weight">[<input type="number" id="wt-3" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
+                            </div>
+                            <div style="position: relative;">
+                                <input type="text" class="seat-occupant-input" id="occ-3" value="" placeholder="Search personnel..." oninput="filterPersonnel(3)" onfocus="showPersonnel(3)">
+                                <span class="clear-btn" onclick="clearSeat(3, event)">&times;</span>
+                            </div>
+                            <div class="autocomplete-dropdown" id="dropdown-3"></div>
+                        </div>
+                        <div class="seat-card">
+                            <div class="seat-header">
+                                <div class="seat-title">Aft Facing Right Hand</div>
+                                <div class="seat-weight">[<input type="number" id="wt-4" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
+                            </div>
+                            <div style="position: relative;">
+                                <input type="text" class="seat-occupant-input" id="occ-4" value="" placeholder="Search personnel..." oninput="filterPersonnel(4)" onfocus="showPersonnel(4)">
+                                <span class="clear-btn" onclick="clearSeat(4, event)">&times;</span>
+                            </div>
+                            <div class="autocomplete-dropdown" id="dropdown-4"></div>
+                        </div>
+                        <div class="seat-card">
+                            <div class="seat-header">
+                                <div class="seat-title">Left Hand Litter (Patient)</div>
+                            </div>
+                            <div style="position: relative;">
+                                <input type="number" class="seat-occupant-input" id="wt-5" value="" placeholder="Patient Weight" inputmode="decimal" pattern="[0-9]*">
+                                <span class="clear-btn" onclick="document.getElementById('wt-5').value=''; event.stopPropagation();">&times;</span>
+                            </div>
+                        </div>
+                        <div class="seat-card">
+                            <div class="seat-header">
+                                <div class="seat-title">Fwd Facing Aft Seat Right Hand</div>
+                                <div class="seat-weight">[<input type="number" id="wt-6" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
+                            </div>
+                            <div style="position: relative;">
+                                <input type="text" class="seat-occupant-input" id="occ-6" value="" placeholder="Search personnel..." oninput="filterPersonnel(6)" onfocus="showPersonnel(6)">
+                                <span class="clear-btn" onclick="clearSeat(6, event)">&times;</span>
+                            </div>
+                            <div class="autocomplete-dropdown" id="dropdown-6"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Fuel Section -->
+                <div class="section">
+                    <h2 class="section-title">Fuel Stations</h2>
+                    <div class="form-row" style="gap: 5px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label style="font-size: 0.7rem; text-align: center;">Supply Tanks <span style="color:var(--text-secondary)">(GAL)</span></label>
+                            <input type="number" id="supply-tank" value="33" inputmode="decimal" pattern="[0-9]*" style="text-align:center; padding: 6px;" oninput="calculateFuelTime()">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label style="font-size: 0.7rem; text-align: center;">Main tanks <span style="color:var(--text-secondary)">(GAL)</span></label>
+                            <input type="number" id="main-tank" value="160" inputmode="decimal" pattern="[0-9]*" style="text-align:center; padding: 6px;" oninput="calculateFuelTime()">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label style="font-size: 0.7rem; text-align: center;">Burn Rate <span style="color:var(--text-secondary)">(GPH)</span></label>
+                            <input type="number" id="burn-rate" value="74" inputmode="decimal" pattern="[0-9]*" style="text-align:center; padding: 6px;" oninput="calculateFuelTime()">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label style="font-size: 0.7rem; text-align: center;">Fuel time</label>
+                            <input type="text" id="fuel-time" value="02:58" inputmode="decimal" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px;" oninput="handleOverride('fuel-time')">
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- Close main-content -->
+
+            <!-- Fixed Action Buttons Footer -->
+            <div style="flex-shrink: 0; width: 100%; box-sizing: border-box; background-color: var(--surface-color); padding: 8px 12px; border-top: 1px solid var(--border-color); z-index: 40; display: flex; align-items: center; gap: 8px; overflow-x: auto;">
+                <button class="btn btn-primary" style="padding: 10px; font-size: 0.85rem;">Save</button>
+                <button class="btn btn-primary" onclick="handleSaveAddLeg()" style="padding: 10px; font-size: 0.85rem;">Save/Add Leg</button>
+                <button class="btn btn-outline" onclick="deleteCurrentLeg()" style="color:var(--accent-red); border-color:var(--accent-red); padding: 10px; font-size: 0.85rem;">Delete Leg</button>
+                <button class="btn btn-danger" onclick="openModal('close-modal')" style="padding: 10px; font-size: 0.85rem;">Close Flt</button>
+                <div class="verify-wrapper" style="margin-left: auto; flex-shrink: 0;">
+                    <label>Verified</label>
+                    <label class="switch">
+                        <input type="checkbox" id="manifest-verified-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='home.html'" style="cursor:pointer;">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" style="cursor:pointer;">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                <span>Map</span>
+            </div>
+            <div class="nav-item active" onclick="window.location.href='manifest.html'" style="cursor:pointer;">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span>Manifest</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='library.html'" style="cursor:pointer;">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                <span>Library</span>
+            </div>
+            <div class="nav-item">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                <span>Chat</span>
+            </div>
+        </div>
+
+        <!-- Simulated iPad Numpad -->
+        <div id="simulated-numpad" class="simulated-numpad" onmousedown="event.preventDefault()">
+            <div class="kb-row">
+                <div class="kb-key" style="max-width:100px; height:60px;">1</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">2</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">3</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key" style="max-width:100px; height:60px;">4</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">5</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">6</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key" style="max-width:100px; height:60px;">7</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">8</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">9</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key special" style="max-width:100px; height:60px; font-size:26px;">.</div>
+                <div class="kb-key" style="max-width:100px; height:60px;">0</div>
+                <div class="kb-key special dismiss-btn" style="max-width:100px; height:60px; font-size:24px; display:flex; align-items:center; justify-content:center;" onclick="document.activeElement.blur()">
+                    <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="12" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6.01" y2="8"></line><line x1="10" y1="8" x2="10.01" y2="8"></line><line x1="14" y1="8" x2="14.01" y2="8"></line><line x1="18" y1="8" x2="18.01" y2="8"></line><line x1="8" y1="12" x2="16" y2="12"></line><polyline points="8 19 12 23 16 19"></polyline></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulated iPad Keyboard -->
+        
+        <!-- Simulated Time Picker -->
+        <div id="simulated-time-picker" class="time-picker-popover" onmousedown="event.preventDefault()">
+            <div class="picker-header">
+                <button class="picker-btn" style="color:var(--accent-red);" onclick="closeTimePicker()">Cancel</button>
+                <div style="font-weight:bold; font-size:1.1rem; line-height:1.5;">Time</div>
+                <button class="picker-btn" onclick="applyTimePicker()">Done</button>
+            </div>
+            <div class="picker-body">
+                <div class="picker-highlight"></div>
+                <div class="picker-label" style="left: 30%;">hrs</div>
+                <div class="picker-label" style="left: 80%;">min</div>
+                <div id="picker-col-hours" class="picker-column" onscroll="snapPicker('hours')">
+                    <!-- populated by js -->
+                </div>
+                <div id="picker-col-minutes" class="picker-column" onscroll="snapPicker('minutes')">
+                    <!-- populated by js -->
+                </div>
+            </div>
+        </div>
+
+        <div id="simulated-keyboard" class="simulated-keyboard" onmousedown="event.preventDefault()">
+            <div class="kb-row">
+                <div class="kb-key">1</div><div class="kb-key">2</div><div class="kb-key">3</div><div class="kb-key">4</div><div class="kb-key">5</div><div class="kb-key">6</div><div class="kb-key">7</div><div class="kb-key">8</div><div class="kb-key">9</div><div class="kb-key">0</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key">Q</div><div class="kb-key">W</div><div class="kb-key">E</div><div class="kb-key">R</div><div class="kb-key">T</div><div class="kb-key">Y</div><div class="kb-key">U</div><div class="kb-key">I</div><div class="kb-key">O</div><div class="kb-key">P</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key" style="margin-left: 20px;">A</div><div class="kb-key">S</div><div class="kb-key">D</div><div class="kb-key">F</div><div class="kb-key">G</div><div class="kb-key">H</div><div class="kb-key">J</div><div class="kb-key">K</div><div class="kb-key">L</div><div class="kb-key" style="margin-right: 20px;">'</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key special">Shift</div>
+                <div class="kb-key">Z</div><div class="kb-key">X</div><div class="kb-key">C</div><div class="kb-key">V</div><div class="kb-key">B</div><div class="kb-key">N</div><div class="kb-key">M</div>
+                <div class="kb-key special">⌫</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key special" style="max-width: 70px;">.?123</div>
+                <div class="kb-key spacebar"></div>
+                <div class="kb-key special" style="max-width: 80px;" onclick="document.activeElement.blur()">Return</div>
+                <div class="kb-key special dismiss-btn" style="max-width: 60px; display:flex; align-items:center; justify-content:center;" onclick="document.activeElement.blur()">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="12" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6.01" y2="8"></line><line x1="10" y1="8" x2="10.01" y2="8"></line><line x1="14" y1="8" x2="14.01" y2="8"></line><line x1="18" y1="8" x2="18.01" y2="8"></line><line x1="8" y1="12" x2="16" y2="12"></line><polyline points="8 19 12 23 16 19"></polyline></svg>
+                </div>
+            </div>
+        </div>
+        
+        </div> <!-- Close device-screen -->
+
+        <!-- ================= MODALS ================= -->
+
+        <!-- Risk Modal -->
+        <div class="modal-overlay" id="risk-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">HAA Risk (rev 10.3.2024)<br><span style="font-size:0.8rem; color:var(--text-secondary); font-weight:normal;">Warn: 16 | Fail: 21</span></div>
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <div class="risk-pill" id="risk-pill">0</div>
+                        <div class="modal-close" onclick="closeModal('risk-modal')">×</div>
+                    </div>
+                </div>
+                <div class="alert-banner">
+                    ⚠️ This risk form has no flight request linked.
+                </div>
+                <div class="modal-body">
+                    <div style="padding: 15px 20px; font-weight:bold; color:var(--text-secondary); letter-spacing:1px; font-size:0.9rem;">STATIC SCORE</div>
+                    <div class="risk-list">
+
+                        <div style="background-color: var(--border-color); padding: 4px 12px; font-size:0.8rem; font-weight:bold; color:var(--text-secondary); text-transform:uppercase;">STATIC SCORE</div>
+                        <div class="risk-item">
+                            <div class="risk-text">1- Consecutive shifts > 7</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">2- Consecutive night shifts > 4</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">3- PIC < 1 YR or 100 flights at program</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">4- Scene Flight w/ Medcrew Member(s) <6 mos @ Program</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">5- PIC < 100 hours in type</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">6- Last flight > 30 days</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">7- Last Night and/or HNVGO flight > 30 days (Only applicable when conducting Night Flight)</div>
+                            <div class="risk-pts">4 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="4" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">8- Last instrument approach > 30 days</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">9- Relief Pilot new to local area and operating with an approved LBO Waiver</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+<div class="risk-item">
+                            <div class="risk-text">10- In differently equipped or different model aircraft</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">11- Instruments or Equipment MEL "Restrictive to this Flight"</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+                        <div style="background-color: var(--border-color); padding: 4px 12px; font-size:0.8rem; font-weight:bold; color:var(--text-secondary); text-transform:uppercase;">DYNAMIC SCORE</div>
+                        <div class="risk-item">
+                            <div class="risk-text">12- More than four (4) hours of flight time during a duty period</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">13- Flight ending greater than twelve (12) hours of duty time but less than fourteen (14) hours of duty time</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">14- Flight ending greater than fourteen (14) hours of duty time (Added by OCC after consultation with Pilot)</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">15- Flight occurring between official sunset and sunrise (Use caution Dusk to Dawn)</div>
+                            <div class="risk-pts">1 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="1" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">16- NVG use not available or permitted for flight (Operations Management Approval Required)</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">17- First flight after maintenance has been completed on aircraft</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">18- Scene Flight</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">18a- First Responder at Night (H114)</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">19- Previous WX Turndown/Abort; Applicable to route and flight type (VFR/IFR)</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">20- VFR Flight Plan- Temp/Dew Point within 2 degrees C & Less Than 5 Knots Wind (Departure/Enroute/Destination)</div>
+                            <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="0" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">21- VFR Flight Plan- Ceilings (Enroute/Destination) "SELECTION REQUIRED"</div>
+                            <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="0" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">22- VFR Flight Plan- Visibility (Enroute/Destination) "SELECTION REQUIRED"</div>
+                            <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="0" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">23- VFR Flight Plan- Forecasted IFR Conditions (Enroute/Destination- FM/TEMPO)</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">24- IFR Flight Plan- Ceilings (Departure and Destination) "SELECTION REQUIRED"</div>
+                            <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="0" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">25- IFR Flight Plan- Visibility (Departure and Destination) "SELECTION REQUIRED"</div>
+                            <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="0" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">26- Fog, Snow, or Ground Ice Reported or Forecasted Along Route</div>
+                            <div class="risk-pts">4 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="4" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">27- Convective Activity within 20 NM of Route</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">28- Lightning Reported within 20 NM of Route</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">29- Surface Winds > 30 KTS or Gust Spread > 10 KTS</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">30- Mountainous, Offshore or Hazardous Terrain Along Route</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">31- Moderate or Greater Turbulence Below 030' AGL Reported or Forecasted Along Route</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">32- Less Than 10 Minutes of Fuel Above Required Minimums</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">33- Off Airport Operations within 5% of MGTOW or HOGE not assured</div>
+                            <div class="risk-pts">3 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">34- Flight Operations when OAT > 85*F (29*C) or <32*F (0*C)</div>
+                            <div class="risk-pts">2 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">35- Passengers / Ride- Along</div>
+                            <div class="risk-pts">0 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="0" onchange="calculateRisk()">
+                        </div>
+                        <div style="background-color: var(--border-color); padding: 4px 12px; font-size:0.8rem; font-weight:bold; color:var(--text-secondary); text-transform:uppercase;">CONTROL MEASURES</div>
+                        <div class="risk-item">
+                            <div class="risk-text">36- Aircraft equipped with functioning AFCS</div>
+                            <div class="risk-pts">-1 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="-1" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">37- IFR Qualified Pilot in an IFR Capable Aircraft</div>
+                            <div class="risk-pts">-1 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="-1" onchange="calculateRisk()">
+                        </div>
+
+                    
+                        <div class="risk-item">
+                            <div class="risk-text">38- Use of a pre-designated LZ at a scene</div>
+                            <div class="risk-pts">-1 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="-1" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">39- Add extra fuel stop</div>
+                            <div class="risk-pts">-1 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="-1" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">40- Change route to avoid hazardous terrain or weather</div>
+                            <div class="risk-pts">-1 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="-1" onchange="calculateRisk()">
+                        </div>
+                        
+                        <div style="background-color: var(--border-color); padding: 4px 12px; font-size:0.8rem; font-weight:bold; color:var(--text-secondary); text-transform:uppercase; margin-top: 15px;">TURNDOWN</div>
+                        <div class="risk-item">
+                            <div class="risk-text">41- Weather Conditions are Unacceptable</div>
+                            <div class="risk-pts">35 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="35" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">42- Medical Crew Declined Flight Request</div>
+                            <div class="risk-pts">35 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="35" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">43- Insufficient Duty Time available</div>
+                            <div class="risk-pts">35 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="35" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">44- Aircraft Range Inadequate</div>
+                            <div class="risk-pts">35 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="35" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">45- Aircraft Performance or Equipment Inadequate</div>
+                            <div class="risk-pts">35 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="35" onchange="calculateRisk()">
+                        </div>
+                        <div class="risk-item">
+                            <div class="risk-text">46- Other (explain briefly in comments)</div>
+                            <div class="risk-pts">35 pts</div>
+                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="35" onchange="calculateRisk()">
+                        </div>
+</div>
+                    <div style="background-color: var(--surface-color); padding: 15px; margin-top: 15px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-weight:bold; font-size:1.1rem;">Sign to Approve</span>
+                        <label class="switch">
+                            <input type="checkbox" id="risk-sign-toggle" onchange="toggleRiskSignature(this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeModal('risk-modal')">Cancel</button>
+                    <button class="btn btn-primary" onclick="closeModal('risk-modal')">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Manifest Modal -->
+        <div class="modal-overlay" id="edit-modal">
+            <div class="modal-content modal-full">
+                <div class="modal-header">
+                    <div class="modal-title">MANIFEST 3664365<br><span style="font-size:0.8rem; color:var(--text-secondary); font-weight:normal;">06/16/2026, 19:11 EDT</span></div>
+                    <div class="modal-close" onclick="closeModal('edit-modal')">×</div>
+                </div>
+                <div class="modal-body">
+                    <div class="alert-banner red">
+                        <span style="font-size:1.5rem">!</span>
+                        <div>Active Duty Log Not Found.<br><span style="font-weight:normal">Should you duty in first?</span></div>
+                    </div>
+                    <div class="modal-body-pad">
+                        <div class="form-row">
+                            <div class="list-btn" style="flex:1;">
+                                <div>
+                                    <div class="list-btn-sub">CHOOSE AIRCRAFT</div>
+                                    <div class="list-btn-title">N850BU</div>
+                                </div>
+                                <div style="color:var(--accent-blue); font-weight:bold;">❯</div>
+                            </div>
+                            <div class="list-btn" style="flex:1;">
+                                <div>
+                                    <div class="list-btn-sub">Medical Team</div>
+                                    <div class="list-btn-title">TEAM</div>
+                                </div>
+                                <div style="color:var(--accent-blue); font-weight:bold;">❯</div>
+                            </div>
+                        </div>
+
+                        <div class="list-btn">
+                            <div>
+                                <div class="list-btn-title">Inter-Facility Transfer</div>
+                                <div class="list-btn-sub">FLIGHT TYPE</div>
+                            </div>
+                            <div style="color:var(--accent-blue); font-weight:bold;">❯</div>
+                        </div>
+
+                        <div class="list-btn" onclick="openModal('equip-modal')">
+                            <div>
+                                <div class="list-btn-title">VCF #1 - EMS Configuration</div>
+                                <div class="list-btn-sub">CONFIGURATION</div>
+                            </div>
+                            <div style="color:var(--accent-blue); font-weight:bold;">❯</div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group section">
+                                <label>REPO Reason</label>
+                                <select><option>Select...</option></select>
+                            </div>
+                            <div class="form-group section">
+                                <label>A/C Status Report Review <span style="color:var(--error-color)">*</span></label>
+                                <select><option>Select...</option></select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group section">
+                                <label>Next Due Item(s) Verification <span style="color:var(--error-color)">*</span></label>
+                                <select><option>Select...</option></select>
+                            </div>
+                            <div style="flex:1"></div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="closeModal('edit-modal')">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Equipment Editor Modal -->
+        <div class="modal-overlay" id="equip-modal" style="z-index: 1010;">
+            <div class="modal-content modal-full">
+                <div class="modal-header" style="justify-content:space-between">
+                    <button style="background:none; border:none; color:var(--accent-blue); font-size:1.1rem; cursor:pointer;" onclick="closeModal('equip-modal')">Cancel</button>
+                    <div style="font-weight:bold; font-size:1.1rem;">Equipment Editor</div>
+                    <button style="background:none; border:none; color:var(--accent-blue); font-size:1.1rem; cursor:pointer; font-weight:bold;" onclick="closeModal('equip-modal')">Save</button>
+                </div>
+                <div style="display:flex; padding: 15px; border-bottom:1px solid var(--border-color); background-color:var(--surface-color);">
+                    <div style="flex:1; text-align:center;">
+                        <div style="font-size:0.8rem; color:var(--text-secondary); text-transform:uppercase;">Total Weight</div>
+                        <div style="font-size:1.2rem; font-weight:bold;">143.00 kg</div>
+                    </div>
+                    <div style="flex:1; text-align:center;">
+                        <div style="font-size:0.8rem; color:var(--text-secondary); text-transform:uppercase;">Eff. Arm</div>
+                        <div style="font-size:1.2rem; font-weight:bold;">4804.97 mm</div>
+                    </div>
+                </div>
+                <div style="display:flex; padding: 10px 20px; font-size:0.8rem; font-weight:bold; color:var(--text-secondary); background-color:var(--bg-color);">
+                    <div style="flex:2">ITEM</div>
+                    <div style="flex:1; text-align:right;">WT (KG)</div>
+                    <div style="flex:1; text-align:right;">ARM (MM)</div>
+                    <div style="flex:1; text-align:right;">STATION</div>
+                </div>
+                <div class="modal-body" style="background-color:var(--surface-color);">
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Pilot publications (EFBs)</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">1.50</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">2328.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Cockpit miscellaneous items</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">2.10</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">2800.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">4 x life vests</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">2.20</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">2800.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Tower drawers</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">3.80</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">3117.70</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Hamilton vent + mount</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">7.60</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">3150.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Small red drug bag</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">1.20</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">4731.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Blue statpack + CMAC</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">12.40</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">4731.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-secondary);">CTT isolette Stryker stretcher</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">146.14</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">4731.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--border-color); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color); opacity: 0.5;">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-secondary);">CTT isolette sled</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">134.40</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">4731.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--border-color); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color); opacity: 0.5;">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-secondary);">QuinFlow blood and fluid warmer</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">4.20</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">4731.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--border-color); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color); opacity: 0.5;">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-secondary);">Baby pod 2</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">13.60</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">4731.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--border-color); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color); opacity: 0.5;">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">IV pump fwd (left side)</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">1.60</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">4822.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Stryker MX Pro stretcher</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">42.50</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">4822.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">IV cooler/credo/survival</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">13.00</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">4991.40</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Zoll X monitor</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">8.20</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">5000.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-secondary);">CTT blue neonatal bag</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">14.63</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">5200.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--border-color); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color); opacity: 0.5;">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-secondary);">CTT yellow respiratory bag</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">10.50</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">5200.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--border-color); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color); opacity: 0.5;">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Right aft cabin O2 bottle</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">3.80</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">5380.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">IV pumps x 3 (right side)</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">5.00</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">5270.80</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Yellow/black Contera bag</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">3.50</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">5296.20</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Lockable overhead bin items</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">3.60</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">5785.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Red Meret airway bag</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">23.20</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">5215.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem; color:var(--text-secondary);">Teleflex AC3 balloon pump</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">47.20</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--border-color);">5215.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--border-color); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color); opacity: 0.5;">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Left clamshell miscellaneous</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">4.00</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">5867.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+    <div class="equip-item">
+        <div style="flex:2; display:flex; align-items:center; gap:10px;">
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            <span style="font-weight:bold; font-size:0.9rem;">Right clamshell O2 bottle</span>
+        </div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">3.80</div>
+        <div style="flex:1; text-align:right; font-size:0.9rem; color:var(--text-secondary);">5867.00</div>
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div style="border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; width: 100%; max-width: 90px; text-align: center; background: var(--surface-color);">Default</div>
+        </div>
+    </div>
+</div>
+            </div>
+        </div>
+        
+        <!-- Print Manifest Modal -->
+        <div class="modal-overlay" id="print-modal">
+            <div class="modal-content" style="max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;">
+                <div class="modal-header" style="flex-shrink: 0;">
+                    <div class="modal-title">View Manifest</div>
+                    <div class="modal-close" onclick="closeModal('print-modal')">×</div>
+                </div>
+                <div class="modal-body" style="padding: 0; overflow-y: auto; background-color: #f5f5f5;">
+                    <img src="assets/dummy_manifest.png" alt="Dummy Manifest" style="width: 100%; height: auto; display: block;">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Weight Details Modal -->
+        <div class="modal-overlay" id="weight-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Weight Details</div>
+                    <div class="modal-close" onclick="closeModal('weight-modal')">×</div>
+                </div>
+                <div class="modal-body modal-body-pad">
+                    <div style="background-color: rgba(39, 174, 96, 0.15); color: #219653; padding: 12px; border-radius: 8px; font-weight:bold; margin-bottom: 15px;">
+                        Weight Passes
+                    </div>
+                    <div class="section" style="padding:15px; margin-bottom:15px;">
+                        <div style="font-weight:bold; font-size:1.1rem; margin-bottom:10px;">Weight & Balance</div>
+                        <div class="table-row">
+                            <span style="color:var(--text-secondary)">Total Weight</span>
+                            <span style="font-weight:bold;">3323.3 kg</span>
+                        </div>
+                        <div class="table-row">
+                            <span style="color:var(--text-secondary)">Allowable Gross</span>
+                            <span style="font-weight:bold;">3585.0 kg</span>
+                        </div>
+                        <div class="table-row">
+                            <span style="color:var(--text-secondary)">Aircraft Empty Weight</span>
+                            <span style="font-weight:bold;">2328.7 kg</span>
+                        </div>
+                        <div class="table-row">
+                            <span style="color:var(--text-secondary)">Zero Fuel Weight</span>
+                            <span style="font-weight:bold;">2734.7 kg</span>
+                        </div>
+                        <div class="table-row">
+                            <span style="color:var(--text-secondary)">Available Weight</span>
+                            <span style="font-weight:bold;">261.65 kg</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CG Envelope Modal -->
+        <div class="modal-overlay" id="cg-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">CG Envelope</div>
+                    <div class="modal-close" onclick="closeModal('cg-modal')">×</div>
+                </div>
+                <div class="modal-body" style="padding:20px; display:flex; flex-direction:column; align-items:center;">
+                    <div style="width:100%; aspect-ratio: 1; background-color: var(--surface-color-light); border: 2px solid var(--border-color); display:flex; align-items:center; justify-content:center; position:relative;">
+                        <svg width="80%" height="80%" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <!-- Polygon -->
+                            <polygon points="10,90 20,20 70,20 90,80" fill="rgba(200,200,200,0.5)" stroke="var(--accent-orange)" stroke-width="1" />
+                            <!-- Current Dot -->
+                            <circle cx="50" cy="40" r="3" fill="var(--accent-red)" />
+                            <!-- Zero fuel Dot -->
+                            <circle cx="60" cy="60" r="3" fill="var(--accent-orange)" />
+                            <!-- Line connecting them -->
+                            <polyline points="50,40 55,50 60,60" fill="none" stroke="var(--accent-blue)" stroke-width="1" />
+                        </svg>
+                    </div>
+                    <div style="display:flex; gap:20px; margin-top:20px;">
+                        <div style="display:flex; align-items:center; gap:5px;"><span style="color:var(--accent-orange)">●</span> Zero Fuel</div>
+                        <div style="display:flex; align-items:center; gap:5px;"><span style="color:var(--accent-red)">●</span> Current</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Close Flight Modal -->
+        <div class="modal-overlay" id="close-modal" style="z-index: 1020;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Close Flight Leg</div>
+                    <div class="modal-close" onclick="closeModal('close-modal')">×</div>
+                </div>
+                <div class="modal-body modal-body-pad">
+                    <div class="alert-banner red" id="close-error-banner" style="display:none; margin: 0 0 15px 0;">
+                        Errors found. Correct them to close flight.
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Night Time</label>
+                            <input type="number" id="val-night" value="0.0" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>NVG Time</label>
+                            <input type="number" id="val-nvg" value="0.0" step="0.1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>HNVGOs</label>
+                            <input type="number" id="val-hnvgo" value="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Instrument Time</label>
+                            <input type="number" id="val-inst" value="0.0" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Hood Time</label>
+                            <input type="number" id="val-hood" value="0.0" step="0.1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Approaches</label>
+                            <input type="number" id="val-app" value="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeModal('close-modal')">Cancel</button>
+                    <button class="btn btn-danger" onclick="validateAndClose()">Submit</button>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div> <!-- /device-frame -->
+
+    <script>
+        const AppState = {
+            legs: [
+                { id: 1, origin: 'RWI', dest: 'NC91', isIfr: false, active: true },
+                { id: 2, origin: 'NC91', dest: 'RWI', isIfr: false, active: false }
+            ]
+        };
+
+        const DummyPersonnel = [
+            { name: "Empty", weight: 0 },
+            { name: "Arnold Schwarzenegger", weight: 105 },
+            { name: "Sylvester Stallone", weight: 85 },
+            { name: "Chuck Norris", weight: 77 },
+            { name: "Dwayne Johnson", weight: 118 },
+            { name: "Jason Statham", weight: 84 },
+            { name: "Bruce Willis", weight: 82 },
+            { name: "Tom Cruise", weight: 68 },
+            { name: "Keanu Reeves", weight: 79 },
+            { name: "Jean-Claude Van Damme", weight: 82 },
+            { name: "Harrison Ford", weight: 80 },
+            { name: "Marilyn Monroe", weight: 54 },
+            { name: "Scarlett Johansson", weight: 57 },
+            { name: "Margot Robbie", weight: 57 },
+            { name: "Charlize Theron", weight: 61 },
+            { name: "Angelina Jolie", weight: 54 },
+            { name: "Megan Fox", weight: 52 },
+            { name: "Salma Hayek", weight: 54 },
+            { name: "Sofia Vergara", weight: 64 },
+            { name: "Raquel Welch", weight: 55 },
+            { name: "Pamela Anderson", weight: 60 }
+        ];
+
+        // Simulated Keyboard Logic
+        // Convert datetime-sim inputs to real datetime-local on touch devices
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        
+        if (isTouchDevice || document.body.classList.contains('native-mode')) {
+            // Disabled: We now use our custom Time Picker popover instead of native datetime-local
+            // to ensure 24-hour compliance and a faster scrolling experience without a calendar popup.
+        }
+        
+        document.addEventListener('focusin', (e) => {
+            if (isTouchDevice || document.body.classList.contains('native-mode')) return;
+            
+            const target = e.target;
+            const kb = document.getElementById('simulated-keyboard');
+            const numpad = document.getElementById('simulated-numpad');
+
+            if ((target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') && 
+                !target.readOnly && 
+                target.type !== 'checkbox' && 
+                target.type !== 'radio' &&
+                target.type !== 'range') {
+                
+                const inputMode = target.getAttribute('inputmode');
+                const isNumeric = target.type === 'number' || inputMode === 'decimal' || inputMode === 'numeric';
+                
+                const hideInstantly = (el) => {
+                    if (el && el.classList.contains('visible')) {
+                        el.style.transition = 'none';
+                        el.classList.remove('visible');
+                        void el.offsetWidth;
+                        el.style.transition = '';
+                    }
+                };
+                
+                if (isNumeric) {
+                    hideInstantly(kb);
+                    if(numpad) numpad.classList.add('visible');
+                } else {
+                    hideInstantly(numpad);
+                    if(kb) kb.classList.add('visible');
+                }
+                
+                const mainContent = document.getElementById('main-content');
+                if (mainContent) {
+                    mainContent.style.paddingBottom = isNumeric ? '400px' : '460px'; // added extra padding
+                    setTimeout(() => {
+                        const targetRect = target.getBoundingClientRect();
+                        const containerRect = mainContent.getBoundingClientRect();
+                        const targetCenter = targetRect.top + targetRect.height / 2;
+                        const containerCenter = containerRect.top + containerRect.height / 2;
+                        const scrollAmount = targetCenter - containerCenter;
+                        mainContent.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+                    }, 300);
+                }
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            if (isTouchDevice || document.body.classList.contains('native-mode')) return;
+            
+            setTimeout(() => {
+                const active = document.activeElement;
+                if (!active || (active.tagName !== 'INPUT' && active.tagName !== 'TEXTAREA') || active.readOnly) {
+                    if (isTouchDevice) return;
+                    const kb = document.getElementById('simulated-keyboard');
+                    const numpad = document.getElementById('simulated-numpad');
+                    kb.classList.remove('visible');
+                    numpad.classList.remove('visible');
+                    
+                    const mainContent = document.getElementById('main-content');
+                    if (mainContent) {
+                        mainContent.style.paddingBottom = '20px';
+                    }
+                }
+            }, 50);
+        });
+
+        // Make simulated keys functional
+        document.addEventListener('click', (e) => {
+            if (isTouchDevice) return;
+            
+            const key = e.target.closest('.kb-key');
+            if (!key) return;
+            
+            const active = document.activeElement;
+            if (!active || (active.tagName !== 'INPUT' && active.tagName !== 'TEXTAREA') || active.readOnly) return;
+            
+            if (key.classList.contains('dismiss-btn')) {
+                active.blur();
+                return;
+            }
+            
+            // Handle Backspace
+            if (key.innerText === '⌫') {
+                if (active.type === 'number' || active.type === 'time' || active.type === 'datetime-local') {
+                    active.value = active.value.slice(0, -1);
+                } else if (active.selectionStart !== undefined) {
+                    const start = active.selectionStart;
+                    const end = active.selectionEnd;
+                    if (start === end && start > 0) {
+                        active.value = active.value.slice(0, start - 1) + active.value.slice(start);
+                        active.setSelectionRange(start - 1, start - 1);
+                    } else if (start !== end) {
+                        active.value = active.value.slice(0, start) + active.value.slice(end);
+                        active.setSelectionRange(start, start);
+                    }
+                } else {
+                    active.value = active.value.slice(0, -1);
+                }
+                active.dispatchEvent(new Event('input', { bubbles: true }));
+                return;
+            }
+            
+            // Ignore other special keys (Shift, Return, .?123)
+            if (key.classList.contains('special') && key.innerText !== '.') {
+                if (key.innerText.includes('Return')) active.blur();
+                return; 
+            }
+            
+            // Handle regular keys
+            let char = key.classList.contains('spacebar') ? ' ' : key.innerText;
+            
+            // Handle input
+            if (active.type === 'number' || active.type === 'time' || active.type === 'datetime-local') {
+                // If it's a number and they hit '.', and it already has one, ignore
+                if (active.type === 'number' && char === '.' && active.value.includes('.')) return;
+                
+                // Read current as string to handle appending properly
+                let curVal = active.value.toString();
+                active.value = curVal + char;
+            } else if (active.selectionStart !== undefined) {
+                const start = active.selectionStart;
+                const end = active.selectionEnd;
+                active.value = active.value.slice(0, start) + char + active.value.slice(end);
+                active.setSelectionRange(start + char.length, start + char.length);
+            } else {
+                active.value += char;
+            }
+            
+            active.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+
+        let fuelTimeOverridden = false;
+        let sobOverridden = false;
+
+        function handleOverride(field) {
+            const input = document.getElementById(field);
+            if (!input) return;
+            
+            if (field === 'fuel-time') {
+                fuelTimeOverridden = (input.value.trim() !== '');
+                if (!fuelTimeOverridden) calculateFuelTime();
+            } else if (field === 'sob') {
+                sobOverridden = (input.value.trim() !== '');
+                if (!sobOverridden) calculateSob();
+            }
+        }
+
+        function calculateSob() {
+            if (sobOverridden) return;
+            let count = 0;
+            document.querySelectorAll('.seat-occupant-input').forEach(input => {
+                if (input.value.trim() !== '' && input.value.trim().toLowerCase() !== 'empty') {
+                    count++;
+                }
+            });
+            const sobInput = document.getElementById('sob');
+            if (sobInput) sobInput.value = count;
+        }
+
+        function calculateFuelTime() {
+            if (fuelTimeOverridden) return;
+            const supply = parseFloat(document.getElementById('supply-tank').value) || 0;
+            const main = parseFloat(document.getElementById('main-tank').value) || 0;
+            const burn = parseFloat(document.getElementById('burn-rate').value) || 0;
+            
+            if (burn > 0) {
+                const totalGal = supply + main;
+                const hoursDecimal = totalGal / burn;
+                const hours = Math.floor(hoursDecimal);
+                const minutes = Math.floor((hoursDecimal - hours) * 60);
+                
+                const padH = hours.toString().padStart(2, '0');
+                const padM = minutes.toString().padStart(2, '0');
+                document.getElementById('fuel-time').value = `${padH}:${padM}`;
+            } else {
+                document.getElementById('fuel-time').value = '--:--';
+            }
+        }
+        
+        // Initialize fields on load
+        setTimeout(() => {
+            calculateFuelTime();
+            calculateSob();
+        }, 100);
+
+        function setNow(inputId) {
+            const now = new Date();
+            const year = now.getUTCFullYear();
+            const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(now.getUTCDate()).padStart(2, '0');
+            const hours = String(now.getUTCHours()).padStart(2, '0');
+            const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+            
+            const input = document.getElementById(inputId);
+            if(input) {
+                if (input.type === 'datetime-local') {
+                    input.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+                } else {
+                    input.value = `${year}-${month}-${day} ${hours}:${minutes}`;
+                }
+            }
+        }
+
+        function showPersonnel(seatId) {
+            filterPersonnel(seatId);
+        }
+
+        let dispatchNumber = "";
+        function promptDispatch() {
+            const num = prompt("Enter Dispatch Number:", dispatchNumber);
+            if (num !== null) {
+                dispatchNumber = num.trim();
+                const btn = document.getElementById('dispatch-btn');
+                if (dispatchNumber === "") {
+                    btn.className = "tile red";
+                    btn.innerHTML = "Dispatch #";
+                } else {
+                    btn.className = "tile green";
+                    btn.style.flexDirection = "column";
+                    btn.innerHTML = `<span style="font-size:0.7rem; text-transform:uppercase;">Dispatch #</span><span style="font-size:1rem; font-weight:bold; margin-top:2px;">${dispatchNumber}</span>`;
+                }
+            }
+        }
+
+        function clearSeat(seatId, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            const input = document.getElementById(`occ-${seatId}`);
+            const wt = document.getElementById(`wt-${seatId}`);
+            if(input) input.value = '';
+            if(wt) wt.value = '0';
+            const dropdown = document.getElementById(`dropdown-${seatId}`);
+            if(dropdown) dropdown.style.display = 'none';
+        }
+
+        function filterPersonnel(seatId) {
+            calculateSob(); // Trigger SOB recount
+            const input = document.getElementById(`occ-${seatId}`);
+            const dropdown = document.getElementById(`dropdown-${seatId}`);
+            if (!input || !dropdown) return;
+            const query = input.value.toLowerCase();
+            
+            for(let i=1; i<=6; i++) {
+                if(i !== seatId) {
+                    const other = document.getElementById(`dropdown-${i}`);
+                    if(other) other.style.display = 'none';
+                }
+            }
+            
+            dropdown.innerHTML = '';
+            
+            let matches = DummyPersonnel;
+            if (query.trim() !== '') {
+                matches = DummyPersonnel.filter(p => p.name.toLowerCase().includes(query));
+            }
+
+            if (matches.length > 0) {
+                matches.forEach(p => {
+                    const item = document.createElement('div');
+                    item.className = 'autocomplete-item';
+                    item.innerHTML = `<span>${p.name}</span><span style="color:var(--text-secondary);">${p.weight} KG</span>`;
+                    item.onmousedown = (e) => {
+                        e.preventDefault(); 
+                        input.value = p.name;
+                        const wt = document.getElementById(`wt-${seatId}`);
+                        if (wt) wt.value = p.weight;
+                        dropdown.style.display = 'none';
+                        input.blur(); // Auto-hide keyboard
+                        calculateSob(); // Trigger SOB recount
+                    };
+                    dropdown.appendChild(item);
+                });
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('focusout', (e) => {
+            if (e.target.classList.contains('seat-occupant-input')) {
+                const seatId = parseInt(e.target.id.split('-')[1]);
+                const dropdown = document.getElementById(`dropdown-${seatId}`);
+                setTimeout(() => { if (dropdown) dropdown.style.display = 'none'; }, 150);
+            }
+        });
+
+        const themes = ['light', 'neutral', 'dark', 'hc-dark', 'hc-light'];
+        function toggleTheme() {
+            const html = document.documentElement;
+            let current = html.getAttribute('data-theme') || 'light';
+            let nextIndex = (themes.indexOf(current) + 1) % themes.length;
+            let nextTheme = themes[nextIndex];
+            html.setAttribute('data-theme', nextTheme);
+            localStorage.setItem('ops_suite_theme', nextTheme);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('ops_suite_theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+        });
+
+        function renderTabs() {
+            const tabsContainer = document.getElementById('leg-tabs-container');
+            tabsContainer.innerHTML = '';
+            AppState.legs.forEach(leg => {
+                const btn = document.createElement('button');
+                btn.className = `leg-tab ${leg.active ? 'active' : ''}`;
+                let labelText = `Leg ${leg.id}: ${leg.origin} ➔ ${leg.dest}`;
+                if (AppState.legs.length === 3) {
+                    labelText = `${leg.id}: ${leg.origin} ➔ ${leg.dest}`;
+                } else if (AppState.legs.length > 3) {
+                    labelText = `${leg.origin} ➔ ${leg.dest}`;
+                }
+                btn.innerHTML = `
+                    <span style="color:${leg.active ? 'var(--accent-green)' : 'var(--text-secondary)'}">●</span> 
+                    ${labelText}
+                `;
+                btn.onclick = () => activateLeg(leg.id);
+                tabsContainer.appendChild(btn);
+            });
+            
+            updateFormFromState();
+        }
+
+        function deleteCurrentLeg() {
+            const activeLeg = AppState.legs.find(l => l.active);
+            if (activeLeg) {
+                if (confirm(`Are you sure you want to delete Leg ${activeLeg.id} (${activeLeg.origin} ➔ ${activeLeg.dest})?`)) {
+                    removeLeg(activeLeg.id, {stopPropagation: () => {}});
+                }
+            }
+        }
+        function handleSaveAddLeg() {
+            const verifiedToggle = document.getElementById('manifest-verified-toggle');
+            if (!verifiedToggle || !verifiedToggle.checked) {
+                alert("Warning: You must verify the manifest for the current leg before saving and adding a new leg.");
+                return;
+            }
+            addLeg();
+            if (verifiedToggle) {
+                verifiedToggle.checked = false;
+            }
+        }
+
+        function addLeg() {
+            const newId = AppState.legs.length ? Math.max(...AppState.legs.map(l=>l.id)) + 1 : 1;
+            const origin = AppState.legs.length ? AppState.legs[AppState.legs.length-1].dest : '???';
+            AppState.legs.push({ id: newId, origin: origin, dest: '???', isIfr: false, active: false });
+            activateLeg(newId);
+        }
+
+        function removeLeg(id, event) {
+            event.stopPropagation();
+            AppState.legs = AppState.legs.filter(l => l.id !== id);
+            if (AppState.legs.length > 0 && !AppState.legs.some(l => l.active)) {
+                AppState.legs[0].active = true;
+            }
+            renderTabs();
+        }
+
+        function activateLeg(id) {
+            AppState.legs.forEach(l => l.active = (l.id === id));
+            renderTabs();
+        }
+        
+        function updateFormFromState() {
+            const activeLeg = AppState.legs.find(l => l.active);
+            if(activeLeg) {
+                document.getElementById('leg-origin').value = activeLeg.origin;
+                document.getElementById('leg-dest').value = activeLeg.dest;
+                const toggle = document.getElementById('ifr-toggle');
+                if (toggle) toggle.checked = activeLeg.isIfr || false;
+            } else {
+                document.getElementById('leg-origin').value = '';
+                document.getElementById('leg-dest').value = '';
+                const toggle = document.getElementById('ifr-toggle');
+                if (toggle) toggle.checked = false;
+            }
+        }
+        
+        function updateCurrentLeg() {
+            const activeLeg = AppState.legs.find(l => l.active);
+            if(activeLeg) {
+                activeLeg.origin = document.getElementById('leg-origin').value;
+                activeLeg.dest = document.getElementById('leg-dest').value;
+                const toggle = document.getElementById('ifr-toggle');
+                if (toggle) activeLeg.isIfr = toggle.checked;
+                
+                // re-render just the tabs to show updated text
+                renderTabs();
+            }
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function validateAndClose() {
+            const night = parseFloat(document.getElementById('val-night').value) || 0;
+            const nvg = parseFloat(document.getElementById('val-nvg').value) || 0;
+            const hnvgo = parseInt(document.getElementById('val-hnvgo').value) || 0;
+            const inst = parseFloat(document.getElementById('val-inst').value) || 0;
+            const hood = parseFloat(document.getElementById('val-hood').value) || 0;
+            const app = parseInt(document.getElementById('val-app').value) || 0;
+            const isIfr = document.getElementById('ifr-toggle') ? document.getElementById('ifr-toggle').checked : false;
+
+            let error = "";
+
+            if (nvg > night) {
+                error = "NVG time cannot exceed Night time.";
+            } else if (hnvgo > 0 && nvg <= 0) {
+                error = "HNVGO logged but NVG time is 0.";
+            } else if (nvg > 0 && night <= 0) {
+                error = "NVG time logged but Night time is 0.";
+            } else if (app > 0 && (inst + hood) <= 0) {
+                error = "Approaches logged without Instrument/Hood time.";
+            } else if (inst > 0 && !isIfr) {
+                error = "Instrument time logged but IFR Flight is NOT toggled.";
+            }
+
+            const errorBanner = document.getElementById('close-error-banner');
+            if (error) {
+                errorBanner.innerText = error;
+                errorBanner.style.display = "flex";
+            } else {
+                errorBanner.style.display = "none";
+                alert("Flight leg closed successfully!");
+                closeModal('close-modal');
+            }
+        }
+
+        function formatSyncTime() {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Initialize
+        renderTabs();
+        calculateRisk();
+        const initialSyncText = document.querySelector('.sync-text');
+        if (initialSyncText) initialSyncText.innerHTML = `Last sync: ${formatSyncTime()}`;
+
+        // --- SYNC INTERACTION ---
+        function triggerManualSync(el) {
+            if (el.classList.contains('syncing')) return;
+            el.classList.add('syncing');
+            
+            const icon = el.querySelector('.sync-icon');
+            const text = el.querySelector('.sync-text');
+            
+            // Change icon to a spinner
+            icon.innerHTML = '↻';
+            icon.style.animation = 'spin 1s linear infinite';
+            icon.style.color = 'var(--accent-blue)';
+            text.innerHTML = 'Syncing...';
+            
+            setTimeout(() => {
+                icon.style.animation = 'none';
+                icon.innerHTML = '✔';
+                icon.style.color = 'var(--accent-green)';
+                text.innerHTML = `Last sync: ${formatSyncTime()}`;
+                el.classList.remove('syncing');
+            }, 10000);
+        }
+    
+
+        let currentRiskScore = 0;
+        let isRiskSigned = false;
+
+        function calculateRisk() {
+            let total = 0;
+            document.querySelectorAll('.risk-checkbox').forEach(cb => {
+                if (cb.checked) {
+                    total += parseInt(cb.getAttribute('data-pts') || 0, 10);
+                }
+            });
+            currentRiskScore = total;
+            document.getElementById('risk-pill').innerText = total;
+            updateRiskTile();
+        }
+
+        function toggleRiskSignature(checked) {
+            isRiskSigned = checked;
+            updateRiskTile();
+        }
+
+        function updateRiskTile() {
+            const btn = document.getElementById('risk-btn');
+            btn.style.flexDirection = "column";
+            btn.style.padding = "6px";
+            
+            let label = `<span style="font-size:0.6rem; text-transform:uppercase;">Risk Assmt</span>`;
+            
+            if (isRiskSigned) {
+                btn.className = "tile green";
+                btn.innerHTML = `${label}<span style="font-size:1rem; font-weight:bold; margin-top:2px;">${currentRiskScore} ✓</span>`;
+                return;
+            }
+            
+            btn.innerHTML = `${label}<span style="font-size:1rem; font-weight:bold; margin-top:2px;">${currentRiskScore} pts</span>`;
+            
+            if (currentRiskScore <= 15) {
+                btn.className = "tile green";
+            } else if (currentRiskScore <= 20) {
+                btn.className = "tile orange";
+            } else {
+                btn.className = "tile red";
+            }
+        }
+
+        
+    </script>
+    </div> <!-- Close main-view -->
+
+    
+<!-- Changelog Side Panel -->
+    <div id="changelog-panel" style="display:none; position:absolute; left:0; top:0; bottom:0; width:350px; background:#222; color:#fff; flex-direction:column; font-family:-apple-system, BlinkMacSystemFont, sans-serif; border-right: 1px solid #444; overflow-y:auto; box-shadow: 5px 0 15px rgba(0,0,0,0.5); z-index: 10000;">
+        <div style="padding:15px 20px; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:#222;">
+            <h3 style="margin:0;">Changelog</h3>
+            <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <div style="padding:20px; line-height:1.5; font-size: 0.95rem;">
+                        <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.29] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Replaced hardcoded pilot names with Chuck Norris across the UI.</li>
+            </ul>
+                        <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.28] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Removed hardcoded pilot names and replaced them with action heroes.</li>
+                <li>Cleaned up all temporary Python/Swift scripts and text files from the repository.</li>
+            </ul>
+                        <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.27] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Refactored the Mockup version and changelog UI to sit cleanly at the bottom of the left instructions panel.</li>
+                <li>Made the changelog panel overlay available on all simulator pages (index, home, flightlog, manifest).</li>
+                <li>Fixed CSS bugs to ensure the mockup version tag displays properly across all views in simulator mode.</li>
+            </ul>
+                        <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.26] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Applied global theme toggle logic across all pages, saving preferences to localStorage.</li>
+                <li>Unified theme CSS variables for seamless light/dark/high-contrast mode switching.</li>
+            </ul>
+                        <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.25] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Standardized global navigation bars (Top Sync and Bottom Nav) across all main pages.</li>
+                <li>Fixed CSS layout anchoring and restored Javascript interactivity for the theme toggle and sync animation.</li>
+            </ul>
+                        <h4 style="margin-top:0; color:var(--accent-blue);">[0.0.24] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Created a custom 24-hour iOS-style Time Picker with scroll-snapping rollers.</li>
+                <li>Implemented dynamic Risk Assessment scoring (1-46 items) with responsive dashboard tile colors (Green/Orange/Red).</li>
+                <li>Added a "Sign to Approve" toggle in the Risk modal that forces the tile green.</li>
+                <li>Refactored Fuel section to a single compact horizontal row.</li>
+                <li>Bound IFR leg toggle to per-leg state engine.</li>
+                <li>Implemented tiered decluttering for Leg tabs to prevent horizontal scrolling.</li>
+                <li>Added dynamic timestamps to "Last sync" status.</li>
+                <li>Moved Leg deletion to a dedicated bottom button with confirmation prompt.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.23] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Expanded theme options. Replaced dual light/dark mode with 5 distinct modes: Light, Dark, Neutral, High-Contrast Light, and High-Contrast Dark.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.22] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Upgraded the "Departed" and "Arrived" inputs to full datetime fields, supporting the YYYY-MM-DD format plus time.</li>
+                <li>Wired up the "NOW" buttons to automatically inject the current UTC (Zulu) date and time into their respective fields.</li>
+                <li>Enhanced touch-friendly interactions: weight inputs now trigger the native numeric keypad on mobile/tablet devices (inputmode="decimal").</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.21] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added a visual CSS mockup of an iOS keyboard that automatically slides up from the bottom when clicking into any text/number input.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.20] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Refactored Fuel Stations section with live-calculated Fuel Time field `(Supply + Main) / Burn Rate`, and added new Burn Rate input.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.19] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added quick "x" clear buttons inside personnel selection fields to rapidly remove occupants.</li>
+                <li>Fixed architectural layout bug that caused bottom navigation bar to spill outside of the iPad frame.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.18] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added interactive manual sync animation to "Last sync" status.</li>
+                <li>Moved Save/Close buttons out of scrolling container and fixed them absolutely to the bottom.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.17] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Reorganized Action Buttons into distinct "Flight Actions" and "Leg Actions" for better visual hierarchy.</li>
+                <li>Removed text headers to ruthlessly compress vertical space.</li>
+                <li>Replaced floating save/close bar with a standard 5-tab App Bottom Navigation Bar with SVG icons.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.16] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Moved Dispatch Number from Route section to a prominent interactive button at the top of the screen.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.15] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Removed the name input field entirely from the Patient Litter station. Only weight entry is now allowed.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.14] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Cleared out default dummy personnel names (Norris, Petty, Dail) from stations to start blank.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.13] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Replaced the personnel selection modal with a smart inline dropdown menu with text search.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.12] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added interactive personnel selection modal with action stars and bombshell actresses to dynamically populate seat occupant and weight data.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.11] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Moved the leg tabs below the stoplight action buttons.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.10] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added viewport-fit=cover, explicit standalone mode detection, safe area support, and hid the mockup version banner when in native app mode.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.9] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added PWA / Apple Mobile Web App meta tags so the app runs in full standalone mode when saved to the iOS Home Screen.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.8] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added native mode detection so the mockup scales fully to the viewport with no iPad frame when opened on an actual tablet device.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.7] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Removed "+ Add Leg" from top tabs, renamed bottom button to "Save/Add Leg", moved Verified slider to the right, and added verification warning.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.6] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Changed changelog modal to a right-aligned side panel that doesn't block the simulated iPad display.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.5] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added interactive changelog modal to the mockup version tag.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.4] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added responsive scaling script so the iPad device frame always zooms to fit entirely within the user's browser vertically and horizontally.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.3] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Moved the mockup version number outside of the iPad screen depiction so it's clear it tracks the mockup itself, not the UI.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.2] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Hotfix: Changed the default UI theme back to light mode.</li>
+            </ul>
+            <h4 style="color:var(--accent-blue);">[0.0.1] - 2026-06-18</h4>
+            <ul style="padding-left:20px; margin-bottom:0; color:#ddd;">
+                <li>Created initial CHANGELOG.md.</li>
+                <li>Refactored prototype/index.html to a compressed, zero-vertical-scroll layout.</li>
+                <li>Consolidated global header to embed metrics into "Stop-Light" validation buttons.</li>
+                <li>Added a rigid "Close Flight" modal with strict hard-stop JavaScript validations for Night/NVG/IFR limits (BUG-005).</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -947,7 +947,11 @@
                         </div>
                         <div class="form-group" style="flex: 1;">
                             <label style="font-size: 0.7rem; text-align: center;">Fuel time</label>
-                            <input type="text" id="fuel-time" value="02:58" inputmode="decimal" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px;" oninput="handleOverride('fuel-time')">
+                            <div style="display: flex; gap: 2px; align-items: center; justify-content: center;">
+                                <input type="number" id="fuel-time-hours" value="02" inputmode="decimal" pattern="[0-9]*" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px; flex: 1; min-width: 0;" oninput="handleOverride('fuel-time')">
+                                <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: bold;">:</span>
+                                <input type="number" id="fuel-time-minutes" value="58" inputmode="decimal" pattern="[0-9]*" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px; flex: 1; min-width: 0;" oninput="handleOverride('fuel-time')">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2071,9 +2075,11 @@
                 
                 const padH = hours.toString().padStart(2, '0');
                 const padM = minutes.toString().padStart(2, '0');
-                document.getElementById('fuel-time').value = `${padH}:${padM}`;
+                document.getElementById('fuel-time-hours').value = padH;
+                document.getElementById('fuel-time-minutes').value = padM;
             } else {
-                document.getElementById('fuel-time').value = '--:--';
+                document.getElementById('fuel-time-hours').value = '';
+                document.getElementById('fuel-time-minutes').value = '';
             }
         }
         

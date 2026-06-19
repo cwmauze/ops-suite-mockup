@@ -465,7 +465,7 @@
                         <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
                         Edit Manifest
                     </button>
-                    <button class="btn btn-slate">
+                    <button class="btn btn-slate" onclick="openInForeFlight()">
                         <svg viewBox="0 0 24 24"><path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/></svg>
                         ForeFlight
                     </button>
@@ -595,6 +595,19 @@
         document.addEventListener('flightRequestUpdated', () => {
             updateFlightRequestView();
         });
+
+        function openInForeFlight() {
+            if (window.FlightSimulator && window.FlightSimulator.activeRoute) {
+                const route = window.FlightSimulator.activeRoute;
+                if (route.length > 0) {
+                    const waypointIds = route.map(wp => wp.id).join('+');
+                    const url = `foreflightmobile://maps/search?q=${waypointIds}`;
+                    window.location.href = url;
+                } else {
+                    alert('No active route to open in ForeFlight.');
+                }
+            }
+        }
 
         // Initialize everything
         window.onload = () => {

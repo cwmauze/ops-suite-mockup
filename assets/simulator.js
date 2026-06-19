@@ -237,8 +237,26 @@ window.FlightSimulator = {
                 #flight-request-simulator {
                     display: none !important;
                 }
+                #flight-request-simulator.mobile-visible {
+                    display: flex !important;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 9999999;
+                    background-color: rgba(34,34,34, 0.95);
+                    padding-top: calc(env(safe-area-inset-top) + 20px);
+                    padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+                }
+                #flight-request-simulator .sim-mobile-close {
+                    display: block !important;
+                }
             }
-            #flight-request-simulator h2 { color: #fff; font-size: 1.5rem; margin-bottom: 5px; }
+            #flight-request-simulator .sim-mobile-close {
+                display: none;
+            }
+            #flight-request-simulator h2 { color: #fff; font-size: 1.5rem; margin-bottom: 5px; margin-top: 0; }
             #flight-request-simulator label { font-size: 0.9rem; font-weight: bold; color: #aaa; margin-bottom: 4px; display: block; }
             #flight-request-simulator input[type="text"] {
                 width: 100%;
@@ -311,7 +329,10 @@ window.FlightSimulator = {
         const simDiv = document.createElement('div');
         simDiv.id = 'flight-request-simulator';
         simDiv.innerHTML = `
-            <h2>Comm Center Simulator</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                <h2>Comm Center Simulator</h2>
+                <button onclick="window.FlightSimulator.toggleMobile()" class="sim-mobile-close" style="background: none; border: none; color: white; font-size: 2rem; cursor: pointer;">&times;</button>
+            </div>
             <p class="sim-note">Add or remove waypoints to dynamically update the active flight request.</p>
             
             <div id="sim-route-list" style="margin-bottom: 15px;">
@@ -369,6 +390,13 @@ window.FlightSimulator = {
             </div>
             `;
         }).join('');
+    },
+
+    toggleMobile: function() {
+        const simDiv = document.getElementById('flight-request-simulator');
+        if (simDiv) {
+            simDiv.classList.toggle('mobile-visible');
+        }
     },
 
     bindEvents: function() {

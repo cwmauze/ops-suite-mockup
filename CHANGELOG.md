@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.0] - 2026-06-19
+### Added
+- Rebuilt Initial Request Receipt logic in `flightlog.html` to automatically generate only the first leg upon receiving a broadcast flight request.
+- Implemented Progressive Leg Generation in the "Save/Add Leg" workflow, dynamically pulling the next leg's origin and destination from the active Comm Center route based on the leg sequence.
+- Added Exhausted Waypoint Handling logic to automatically use the previous destination as the new origin with a blank destination field when the Comm Center route sequence is completed.
+
+
 ## [0.0.38] - 2026-06-19
 ### Added
 - Refactored the Comm Center Simulator UI from a static text input to a dynamic, live-updating list of waypoints.

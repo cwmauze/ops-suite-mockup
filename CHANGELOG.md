@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.10] - 2026-06-19
+### Added
+- Added `duty_options.html` page mockup.
+- Connected `index.html` and `home.html` to the new duty options mockup.
+
+### Changed
+- Removed the sync bar, mockup version, and theme toggle from the `index.html` login page.
+
 ## [0.1.9] - 2026-06-19
 ### Changed
 - Refactored the UI Changelog Panel to dynamically fetch and parse `CHANGELOG.md` on page load, eliminating the need to manually copy-paste changelog HTML across multiple files.

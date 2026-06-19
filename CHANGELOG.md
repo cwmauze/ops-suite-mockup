@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.28] - 2026-06-18
+### Changed
+- Removed hardcoded pilot names (Mauze, Leake) from the UI mockups and replaced them with action heroes.
+- Cleaned up the repository by permanently deleting all temporary one-off Python scripts, text dumps, and swift files.
+
 ## [0.0.27] - 2026-06-18
 ### Changed
 - Refactored the Mockup version and changelog UI to sit cleanly at the bottom of the left instructions panel instead of floating randomly.

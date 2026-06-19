@@ -746,7 +746,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.33</div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.0.34</div>
     </div>
 
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
@@ -771,6 +771,7 @@
                         <div class="team-badge" style="font-size: 0.85rem; color: var(--accent-blue); font-weight: bold; cursor: pointer; text-transform: uppercase;">👥 RWI Medical Team</div>
                     </div>
                     <div class="action-tiles" style="flex: 1; padding: 0; margin: 0; background: none; border: none;">
+                        <button class="tile blue" onclick="window.location.href='flight_request.html'">Flight Req</button>
                         <button class="tile blue" onclick="openModal('edit-modal')">Edit Flt</button>
                         <button id="risk-btn" class="tile orange" onclick="openModal('risk-modal')">Risk Assessment</button>
                         <button id="dispatch-btn" class="tile red" onclick="promptDispatch()">Dispatch #</button>
@@ -952,10 +953,10 @@
 
             <!-- Fixed Action Buttons Footer -->
             <div style="flex-shrink: 0; width: 100%; box-sizing: border-box; background-color: var(--surface-color); padding: 8px 12px; border-top: 1px solid var(--border-color); z-index: 40; display: flex; align-items: center; gap: 8px; overflow-x: auto;">
-                <button class="btn btn-primary" style="padding: 6px 10px; font-size: 0.8rem;">Save</button>
-                <button class="btn btn-primary" onclick="handleSaveAddLeg()" style="padding: 6px 10px; font-size: 0.8rem;">Save/Add Leg</button>
-                <button class="btn btn-outline" onclick="deleteCurrentLeg()" style="color:var(--accent-red); border-color:var(--accent-red); padding: 6px 10px; font-size: 0.8rem;">Delete Leg</button>
-                <button class="btn btn-danger" onclick="openModal('close-modal')" style="padding: 6px 10px; font-size: 0.8rem;">Close Flt</button>
+                <button class="btn btn-primary" style="padding: 10px; font-size: 0.85rem;">Save</button>
+                <button class="btn btn-primary" onclick="handleSaveAddLeg()" style="padding: 10px; font-size: 0.85rem;">Save/Add Leg</button>
+                <button class="btn btn-outline" onclick="deleteCurrentLeg()" style="color:var(--accent-red); border-color:var(--accent-red); padding: 10px; font-size: 0.85rem;">Delete Leg</button>
+                <button class="btn btn-danger" onclick="openModal('close-modal')" style="padding: 10px; font-size: 0.85rem;">Close Flt</button>
                 <div class="verify-wrapper" style="margin-left: auto; flex-shrink: 0;">
                     <label>Verified</label>
                     <label class="switch">

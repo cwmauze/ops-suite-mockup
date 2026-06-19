@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.34] - 2026-06-18
+### Added
+- Created `flight_request.html` mockup based on the flight request screenshot.
+- Added a "View Flight Request" link on the `home.html` dashboard.
+- Linked "Edit Manifest" from the flight request view to `flightlog.html`.
+- Added a "Flight Req" button in `flightlog.html` to return to the request view.
+- Added global sync bar and bottom navigation bar to `flight_request.html`.
+
+### Changed
+- Increased vertical padding of bottom action buttons in `flightlog.html` to improve touch target size.
+- Compressed map height and component padding in `flight_request.html` to fit content on a single screen seamlessly.
+
 ## [0.0.33] - 2026-06-18
 ### Fixed
 - Fixed an overlapping layout bug where the simulated text keyboard clipped beneath the simulated numpad. This was caused by the browser's native `scrollIntoView()` scrolling the hidden boundaries of the app screen. Replaced with an isolated `scrollBy` method and strict visibility transitions.

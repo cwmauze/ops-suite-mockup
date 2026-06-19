@@ -17,7 +17,7 @@
     <script>
         function scaleDevice() {
             const frame = document.querySelector('.device-frame');
-            const container = document.querySelector('.container');
+            const container = document.getElementById('main-view') || document.body;
             if(frame && container) {
                 if (document.body.classList.contains('native-mode')) {
                     frame.style.transform = 'none';
@@ -452,35 +452,8 @@
                     <!-- Route Card -->
                     <div class="card">
                         <div class="card-title">Route</div>
-                        <div class="details-list">
-                            <div class="route-row">
-                                <div class="waypoint-info">
-                                    <span class="waypoint-id">KRWI</span>
-                                    <span class="waypoint-stats"><span>63.5 nm</span> <span>78&deg;</span></span>
-                                </div>
-                                <span class="waypoint-eta">ETA: 10:26 AM</span>
-                            </div>
-                            <div class="route-row">
-                                <div class="waypoint-info">
-                                    <span class="waypoint-id">1NR1</span>
-                                    <span class="waypoint-stats"><span>47.4 nm</span> <span>234&deg;</span> <span class="ground-time">30m ground</span></span>
-                                </div>
-                                <span class="waypoint-eta">ETA: 11:06 AM</span>
-                            </div>
-                            <div class="route-row">
-                                <div class="waypoint-info">
-                                    <span class="waypoint-id">NC91</span>
-                                    <span class="waypoint-stats"><span>28.1 nm</span> <span>302&deg;</span> <span class="ground-time">30m ground</span></span>
-                                </div>
-                                <span class="waypoint-eta">ETA: 12:07 PM</span>
-                            </div>
-                            <div class="route-row">
-                                <div class="waypoint-info">
-                                    <span class="waypoint-id">KRWI</span>
-                                    <span class="waypoint-stats"><span class="ground-time">30m ground</span></span>
-                                </div>
-                                <span class="waypoint-eta">ETA: 12:58 PM</span>
-                            </div>
+                        <div class="details-list" id="flight-request-route-list">
+                            <!-- Injected dynamically -->
                         </div>
                     </div>
 
@@ -541,50 +514,87 @@
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(leafletMap);
 
-            // Mock route points based on KRWI -> 1NR1 -> NC91 -> KRWI
-            // RWI (Rocky Mount) approx 35.85, -77.89
-            const waypoints = [
-                [35.8563, -77.8918], // KRWI
-                [35.95, -76.5],     // 1NR1 approx
-                [35.5, -77.2],      // NC91 approx
-                [35.8563, -77.8918]  // KRWI
-            ];
-
-            const markers = [];
-
-            waypoints.forEach((latLng, index) => {
-                // Determine marker color based on index or logic from mockup
-                let colorClass = 'var(--accent-green)'; // Default green
-                if(index === 1) colorClass = 'var(--accent-orange)'; // 2 is orange in mockup
-                if(index === 2) colorClass = 'var(--accent-red)'; // 3 is red in mockup
-                
-                // For the last point (KRWI again), we can just skip adding a new numbered marker, 
-                // or add one. The mockup shows 1, 2, 3 and then returning to 1.
-                if (index < 3) {
-                    const markerHtml = `<div style="background-color: ${colorClass}; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${index + 1}</div>`;
-                    const customIcon = L.divIcon({
-                        html: markerHtml,
-                        className: 'custom-div-icon',
-                        iconSize: [24, 24],
-                        iconAnchor: [12, 12]
-                    });
-                    
-                    const m = L.marker(latLng, {icon: customIcon}).addTo(leafletMap);
-                    markers.push(m);
-                }
-            });
-
-            // Draw polyline
-            const routeLine = L.polyline(waypoints, {
-                color: '#181c20',
-                weight: 3,
-                opacity: 0.8,
-                dashArray: null // Solid line in mockup
-            }).addTo(leafletMap);
-
-            // Fit bounds to show the whole route
-            leafletMap.fitBounds(routeLine.getBounds(), {padding: [30, 30]});
+            updateFlightRequestView();
         }
+
+        function updateFlightRequestView() {
+            if (window.FlightSimulator && window.FlightSimulator.activeRoute) {
+                const route = window.FlightSimulator.activeRoute;
+                
+                // Update Route List
+                const routeList = document.getElementById('flight-request-route-list');
+                if (routeList) {
+                    if (route.length === 0) {
+                        routeList.innerHTML = '<div style="padding: 10px; color: var(--text-muted); text-align: center;">No active route.</div>';
+                    } else {
+                        routeList.innerHTML = route.map((wp, index) => {
+                            let statsHtml = '';
+                            if (index > 0) {
+                                statsHtml = `<span>${wp.legDistance} nm</span> <span>${wp.heading}&deg;</span>`;
+                            }
+                            
+                            // Mock ETA just for display
+                            const etaOffset = wp.etaOffset || 0;
+                            const d = new Date();
+                            d.setMinutes(d.getMinutes() + etaOffset);
+                            const etaStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            
+                            return `
+                            <div class="route-row">
+                                <div class="waypoint-info">
+                                    <span class="waypoint-id">${wp.id}</span>
+                                    <span class="waypoint-stats">${statsHtml}</span>
+                                </div>
+                                <span class="waypoint-eta">ETA: ${etaStr}</span>
+                            </div>`;
+                        }).join('');
+                    }
+                }
+
+                // Update Map
+                if (leafletMap && route.length > 0) {
+                    // Clear previous layers
+                    leafletMap.eachLayer((layer) => {
+                        if (layer instanceof L.Marker || layer instanceof L.Polyline) {
+                            leafletMap.removeLayer(layer);
+                        }
+                    });
+
+                    const waypoints = [];
+                    route.forEach((wp, index) => {
+                        const latLng = [wp.lat, wp.lon];
+                        waypoints.push(latLng);
+
+                        let colorClass = 'var(--accent-green)';
+                        if (index === 1) colorClass = 'var(--accent-orange)';
+                        if (index === 2) colorClass = 'var(--accent-red)';
+
+                        const markerHtml = `<div style="background-color: ${colorClass}; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${index + 1}</div>`;
+                        const customIcon = L.divIcon({
+                            html: markerHtml,
+                            className: 'custom-div-icon',
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                        });
+
+                        L.marker(latLng, {icon: customIcon}).addTo(leafletMap);
+                    });
+
+                    const routeLine = L.polyline(waypoints, {
+                        color: '#181c20',
+                        weight: 3,
+                        opacity: 0.8,
+                        dashArray: null
+                    }).addTo(leafletMap);
+
+                    leafletMap.fitBounds(routeLine.getBounds(), {padding: [30, 30]});
+                }
+            }
+        }
+
+        document.addEventListener('flightRequestUpdated', () => {
+            updateFlightRequestView();
+        });
 
         // Initialize everything
         window.onload = () => {

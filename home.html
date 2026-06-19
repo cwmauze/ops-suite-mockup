@@ -1162,7 +1162,7 @@
                                 06/18/2026, 10:26 AM EDT<br>
                                 Pilot: <strong>Norris, Chuck</strong><br>
                                 Aircraft: <strong>N850BU</strong><br>
-                                KRWI &rarr; KRWI (2 stops)
+                                <span id="home-flight-route-text">KRWI &rarr; KRWI (2 stops)</span>
                             </div>
                             
                             <button class="btn-green-outline" onclick="window.location.href='flight_request.html'">
@@ -1341,9 +1341,10 @@
         let leafletMap = null;
         let layers = {};
         let activeBase = 'street';
+        let routeLine = null;
+        let routeMarkers = [];
 
         async function initMap() {
-            // Initialize map with padding disabled on zoom controls to fit the card well
             leafletMap = L.map('leaflet-map', { 
                 zoomControl: false, 
                 attributionControl: false 
@@ -1355,23 +1356,40 @@
                 vfr: L.tileLayer('https://tiles.arcgis.com/tiles/ssFJjBXIUyZDrSYZ/arcgis/rest/services/VFR_Sectional/MapServer/tile/{z}/{y}/{x}', {maxZoom: 12})
             };
 
-            try {
-                // Fetch FAA Database from assets
-                const response = await fetch('assets/airports.json');
-                const airportsDB = await response.json();
+            updateFlightRequestCard();
+        }
+        
+        function updateFlightRequestCard() {
+            const reqCard = document.getElementById('home-flight-request-card');
+            if (!reqCard) return;
+            
+            if (localStorage.getItem('ops_suite_flight_sent') === 'true' && window.FlightSimulator && window.FlightSimulator.activeRoute) {
+                reqCard.style.display = 'block';
+                const route = window.FlightSimulator.activeRoute;
+                
+                // Update text
+                const textSpan = document.getElementById('home-flight-route-text');
+                if (textSpan && route.length > 0) {
+                    const origin = route[0].id;
+                    const dest = route[route.length - 1].id;
+                    const stops = route.length > 2 ? route.length - 2 : 0;
+                    textSpan.innerHTML = `${origin} &rarr; ${dest} (${stops} stops)`;
+                }
 
-                // Define our mock route: KRWI -> PGV -> MCZ -> KRWI
-                const routeCodes = ["RWI", "PGV", "MCZ"];
-                const waypoints = [];
-                const markers = [];
-
-                routeCodes.forEach((code, index) => {
-                    const apt = airportsDB[code];
-                    if (apt) {
-                        const latLng = [apt.lat, apt.lon];
+                // Invalidate size to ensure Leaflet renders in newly visible container
+                if (leafletMap) {
+                    setTimeout(() => leafletMap.invalidateSize(), 50);
+                    
+                    // Clear previous
+                    if (routeLine) leafletMap.removeLayer(routeLine);
+                    routeMarkers.forEach(m => leafletMap.removeLayer(m));
+                    routeMarkers = [];
+                    
+                    const waypoints = [];
+                    route.forEach((wp, index) => {
+                        const latLng = [wp.lat, wp.lon];
                         waypoints.push(latLng);
                         
-                        // Add marker with number
                         const markerHtml = `<div style="background-color: var(--accent-orange); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${index + 1}</div>`;
                         const customIcon = L.divIcon({
                             html: markerHtml,
@@ -1381,32 +1399,24 @@
                         });
                         
                         const m = L.marker(latLng, {icon: customIcon}).addTo(leafletMap);
-                        markers.push(m);
+                        routeMarkers.push(m);
+                    });
+                    
+                    if (waypoints.length > 0) {
+                        routeLine = L.polyline(waypoints, {
+                            color: '#181c20',
+                            weight: 3,
+                            opacity: 0.8,
+                            dashArray: '5, 10'
+                        }).addTo(leafletMap);
+                        
+                        leafletMap.fitBounds(routeLine.getBounds(), {padding: [30, 30]});
+                    } else {
+                        leafletMap.setView([35.85, -77.89], 9);
                     }
-                });
-
-                if (waypoints.length > 0) {
-                    // Close the loop
-                    waypoints.push(waypoints[0]);
-
-                    // Draw polyline
-                    const routeLine = L.polyline(waypoints, {
-                        color: '#181c20',
-                        weight: 3,
-                        opacity: 0.8,
-                        dashArray: '5, 10'
-                    }).addTo(leafletMap);
-
-                    // Fit bounds to show the whole route
-                    leafletMap.fitBounds(routeLine.getBounds(), {padding: [30, 30]});
-                } else {
-                    // Fallback to center US if db lookup fails
-                    leafletMap.setView([39.8, -98.5], 4);
                 }
-
-            } catch (err) {
-                console.error("Error loading map or airports DB:", err);
-                leafletMap.setView([35.85, -77.89], 9); // Fallback to NC
+            } else {
+                reqCard.style.display = 'none';
             }
         }
 
@@ -1469,25 +1479,11 @@
             const initialSyncText = document.querySelector('.sync-text');
             if (initialSyncText) initialSyncText.innerHTML = `Last sync: ${formatSyncTime()}`;
             
-            const reqCard = document.getElementById('home-flight-request-card');
-            if (reqCard) {
-                if (localStorage.getItem('ops_suite_flight_sent') === 'true') {
-                    reqCard.style.display = 'block';
-                } else {
-                    reqCard.style.display = 'none';
-                }
-            }
+            updateFlightRequestCard();
         });
 
         document.addEventListener('flightRequestUpdated', () => {
-            const reqCard = document.getElementById('home-flight-request-card');
-            if (reqCard) {
-                if (localStorage.getItem('ops_suite_flight_sent') === 'true') {
-                    reqCard.style.display = 'block';
-                } else {
-                    reqCard.style.display = 'none';
-                }
-            }
+            updateFlightRequestCard();
         });
 </script>
 

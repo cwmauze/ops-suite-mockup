@@ -253,6 +253,24 @@ window.FlightSimulator = {
                     display: block !important;
                 }
             }
+            body.native-mode #flight-request-simulator {
+                display: none !important;
+            }
+            body.native-mode #flight-request-simulator.mobile-visible {
+                display: flex !important;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 9999999;
+                background-color: rgba(34,34,34, 0.95);
+                padding-top: calc(env(safe-area-inset-top) + 20px);
+                padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+            }
+            body.native-mode #flight-request-simulator .sim-mobile-close {
+                display: block !important;
+            }
             #flight-request-simulator .sim-mobile-close {
                 display: none;
             }

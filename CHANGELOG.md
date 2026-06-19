@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-06-19
+### Fixed
+- Fixed an issue where the Comm Center Simulator would not appear when tapping the Chat button on large screens running in native PWA mode (e.g. iPad Pro landscape) due to CSS media query limitations.
+
 ## [0.1.2] - 2026-06-19
 ### Fixed
 - Fixed an issue where the changelog UI was cut off by an unescaped `<script>` tag within historic release notes.

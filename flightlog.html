@@ -1883,10 +1883,7 @@
 
     <script>
         const AppState = {
-            legs: [
-                { id: 1, origin: 'RWI', dest: 'NC91', isIfr: false, active: true, supply: '33', main: '160', burn: '74', hours: '02', minutes: '58', fuelTimeOverridden: false },
-                { id: 2, origin: 'NC91', dest: 'RWI', isIfr: false, active: false, supply: '33', main: '160', burn: '74', hours: '02', minutes: '58', fuelTimeOverridden: false }
-            ]
+            legs: []
         };
 
         const DummyPersonnel = [
@@ -2272,9 +2269,24 @@
         }
 
         function addLeg() {
+            updateCurrentLeg(); // ensure current is saved before adding new
             const newId = AppState.legs.length ? Math.max(...AppState.legs.map(l=>l.id)) + 1 : 1;
-            const origin = AppState.legs.length ? AppState.legs[AppState.legs.length-1].dest : '???';
             const prevLeg = AppState.legs.length ? AppState.legs[AppState.legs.length-1] : null;
+            let origin = prevLeg ? prevLeg.dest : '';
+            let dest = '';
+
+            if (localStorage.getItem('ops_suite_flight_sent') === 'true' && window.FlightSimulator && window.FlightSimulator.activeRoute) {
+                const route = window.FlightSimulator.activeRoute;
+                const routeIndex = newId - 1; 
+                if (routeIndex < route.length - 1) {
+                    origin = route[routeIndex].id;
+                    dest = route[routeIndex + 1].id;
+                } else if (route.length > 0) {
+                    origin = prevLeg ? prevLeg.dest : route[route.length - 1].id;
+                    dest = '';
+                }
+            }
+
             const supply = prevLeg ? prevLeg.supply : '33';
             const main = prevLeg ? prevLeg.main : '160';
             const burn = prevLeg ? prevLeg.burn : '74';
@@ -2283,7 +2295,7 @@
             const fto = prevLeg ? prevLeg.fuelTimeOverridden : false;
             
             AppState.legs.push({ 
-                id: newId, origin: origin, dest: '???', isIfr: false, active: false,
+                id: newId, origin: origin, dest: dest, isIfr: false, active: false,
                 supply: supply, main: main, burn: burn, hours: hours, minutes: minutes, fuelTimeOverridden: fto
             });
             activateLeg(newId);
@@ -2393,7 +2405,33 @@
         }
 
         // Initialize
-        renderTabs();
+        function initInitialLegs() {
+            if (AppState.legs.length === 0) {
+                if (localStorage.getItem('ops_suite_flight_sent') === 'true' && window.FlightSimulator && window.FlightSimulator.activeRoute) {
+                    const route = window.FlightSimulator.activeRoute;
+                    if (route.length > 0) {
+                        const origin = route[0].id;
+                        const dest = route.length > 1 ? route[1].id : '';
+                        AppState.legs.push({ id: 1, origin: origin, dest: dest, isIfr: false, active: true, supply: '33', main: '160', burn: '74', hours: '02', minutes: '58', fuelTimeOverridden: false });
+                    } else {
+                        AppState.legs.push({ id: 1, origin: '', dest: '', isIfr: false, active: true, supply: '33', main: '160', burn: '74', hours: '02', minutes: '58', fuelTimeOverridden: false });
+                    }
+                } else {
+                    AppState.legs.push({ id: 1, origin: '', dest: '', isIfr: false, active: true, supply: '33', main: '160', burn: '74', hours: '02', minutes: '58', fuelTimeOverridden: false });
+                }
+            }
+            renderTabs();
+            if (AppState.legs.length > 0) {
+                updateFormFromState();
+            }
+        }
+
+        document.addEventListener('flightRequestUpdated', () => {
+            AppState.legs.length = 0; 
+            initInitialLegs();
+        });
+
+        initInitialLegs();
         calculateRisk();
         const initialSyncText = document.querySelector('.sync-text');
         if (initialSyncText) initialSyncText.innerHTML = `Last sync: ${formatSyncTime()}`;

@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.37] - 2026-06-19
+### Changed
+- Refined route header flex proportions in `flightlog.html` to widen "Origin", "Destination", "Time", and "NOW" button inputs while perfectly right-sizing "Date" inputs.
+- Centered route header labels (Departure Date, Arrival Date, Time) over their respective inputs.
+- Swapped out the emoji theme toggle for a native-looking scalable SVG icon.
+
+### Fixed
+- Fixed bug where fuel field entries (tanks, burn rate, calculated time) were globally applied; they now correctly save per leg and dynamically inherit values when adding new legs.
+
 ## [0.0.36] - 2026-06-19
 ### Changed
 - Split Fuel Time input into separate Hours and Minutes fields with 'H' and 'M' annotations.

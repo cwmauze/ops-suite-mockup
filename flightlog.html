@@ -386,7 +386,7 @@
         .section-title { font-size: 1rem; color: var(--text-secondary); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; font-weight: bold; }
 
         .form-row { display: flex; gap: 12px; margin-bottom: 4px; }
-        .form-group { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .form-group { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
         label { font-size: 0.85rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; margin: 0; }
         input[type="text"], input[type="number"], input[type="time"], select {
             background-color: var(--input-bg); border: 2px solid var(--border-color);
@@ -756,7 +756,12 @@
         <div class="device-screen">
             
             <div class="sync-bar">
-                <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1rem;">🌓</button>
+                <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
+                    </svg>
+                </button>
                 <div style="cursor: pointer; display: flex; align-items: center; gap: 4px;" onclick="triggerManualSync(this)">
                     <span class="sync-icon">✔</span> <span class="sync-text">Last sync: Just now</span>
                 </div>
@@ -817,27 +822,33 @@
                 <!-- Route & Times -->
                 <div class="section">
                     <div class="form-row" style="margin-bottom: 8px;">
-                        <div class="form-group" style="flex: 1;">
-                            <label>HIGHEST OBSTACLE</label>
+                        <div class="form-group" style="flex: 0.6;">
+                            <label style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="HIGHEST OBST">HIGHEST OBST</label>
                             <input type="number" value="759">
                         </div>
-                        <div class="form-group" style="flex: 1;">
+                        <div class="form-group" style="flex: 1.3;">
                             <label>Origin</label>
                             <input type="text" id="leg-origin" value="RWI" oninput="updateCurrentLeg()">
                         </div>
-                        <div class="form-group" style="flex: 1.3;">
-                            <label>Departure Date/Time</label>
-                            <div style="display: flex; gap: 4px; align-items: stretch; height: 100%;">
-                                <input type="text" id="depart-date" class="datetime-sim" value="2026-06-18" inputmode="decimal" style="flex: 1; text-align:center; padding: 12px 2px;">
-                                <input type="text" id="depart-time" class="datetime-sim" value="19:12" inputmode="decimal" style="flex: 0.7; text-align:center; padding: 12px 2px;">
-                                <button onclick="setNow('depart')" style="background: var(--accent-blue); color: white; border: none; border-radius: 4px; padding: 0 12px; font-weight: bold; font-size: 0.8rem; cursor: pointer;">NOW</button>
+                        <div style="flex: 1.4; display: flex; gap: 4px; min-width: 0;">
+                            <div class="form-group" style="flex: 0.8;">
+                                <label style="text-align: center;">Departure Date</label>
+                                <input type="text" id="depart-date" class="datetime-sim" value="2026-06-18" inputmode="decimal" style="text-align:center; padding: 12px 2px;">
+                            </div>
+                            <div class="form-group" style="flex: 0.5;">
+                                <label style="text-align: center;">Time</label>
+                                <input type="text" id="depart-time" class="datetime-sim" value="19:12" inputmode="decimal" style="text-align:center; padding: 12px 2px;">
+                            </div>
+                            <div class="form-group" style="flex: 0.4; min-width: auto;">
+                                <label style="visibility: hidden;">N</label>
+                                <button onclick="setNow('depart')" style="background: var(--accent-blue); color: white; border: none; border-radius: 4px; padding: 0; width: 100%; font-weight: bold; font-size: 0.8rem; cursor: pointer; flex: 1;">NOW</button>
                             </div>
                         </div>
                     </div>
                     <div class="form-row" style="margin-bottom: 8px;">
-                        <div class="form-group" style="flex: 1;">
+                        <div class="form-group" style="flex: 0.6;">
                             <label>Flight Rules</label>
-                            <div style="display: flex; align-items: center; justify-content: space-between; background-color: var(--input-bg); border: 2px solid var(--border-color); padding: 0 10px; border-radius: 4px; box-sizing: border-box; min-height: 48px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; background-color: var(--input-bg); border: 2px solid var(--border-color); padding: 0 6px; border-radius: 4px; box-sizing: border-box; min-height: 48px;">
                                 <span style="font-weight:bold; font-size:0.9rem; color:var(--text-secondary); text-transform:uppercase;">IFR</span>
                                 <label class="switch" style="transform: scale(0.8); transform-origin: right center; margin-right: -4px;">
                                     <input type="checkbox" id="ifr-toggle" onchange="updateCurrentLeg()">
@@ -845,16 +856,22 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="form-group" style="flex: 1;">
+                        <div class="form-group" style="flex: 1.3;">
                             <label>Destination</label>
                             <input type="text" id="leg-dest" value="NC91" oninput="updateCurrentLeg()">
                         </div>
-                        <div class="form-group" style="flex: 1.3;">
-                            <label>Arrival Date/Time</label>
-                            <div style="display: flex; gap: 4px; align-items: stretch; height: 100%;">
-                                <input type="text" id="arrive-date" class="datetime-sim" value="" inputmode="decimal" style="flex: 1; text-align:center; padding: 12px 2px;">
-                                <input type="text" id="arrive-time" class="datetime-sim" value="" inputmode="decimal" style="flex: 0.7; text-align:center; padding: 12px 2px;">
-                                <button onclick="setNow('arrive')" style="background: var(--accent-blue); color: white; border: none; border-radius: 4px; padding: 0 12px; font-weight: bold; font-size: 0.8rem; cursor: pointer;">NOW</button>
+                        <div style="flex: 1.4; display: flex; gap: 4px; min-width: 0;">
+                            <div class="form-group" style="flex: 0.8;">
+                                <label style="text-align: center;">Arrival Date</label>
+                                <input type="text" id="arrive-date" class="datetime-sim" value="" inputmode="decimal" style="text-align:center; padding: 12px 2px;">
+                            </div>
+                            <div class="form-group" style="flex: 0.5;">
+                                <label style="text-align: center;">Time</label>
+                                <input type="text" id="arrive-time" class="datetime-sim" value="" inputmode="decimal" style="text-align:center; padding: 12px 2px;">
+                            </div>
+                            <div class="form-group" style="flex: 0.4; min-width: auto;">
+                                <label style="visibility: hidden;">N</label>
+                                <button onclick="setNow('arrive')" style="background: var(--accent-blue); color: white; border: none; border-radius: 4px; padding: 0; width: 100%; font-weight: bold; font-size: 0.8rem; cursor: pointer; flex: 1;">NOW</button>
                             </div>
                         </div>
                     </div>
@@ -937,25 +954,25 @@
                     <div class="form-row" style="gap: 5px;">
                         <div class="form-group" style="flex: 1;">
                             <label style="font-size: 0.7rem; text-align: center;">Supply Tanks <span style="color:var(--text-secondary)">(GAL)</span></label>
-                            <input type="number" id="supply-tank" value="33" inputmode="decimal" pattern="[0-9]*" style="text-align:center; padding: 6px;" oninput="calculateFuelTime()">
+                            <input type="number" id="supply-tank" value="33" inputmode="decimal" pattern="[0-9]*" style="text-align:center; padding: 6px;" oninput="calculateFuelTime(); updateCurrentLeg()">
                         </div>
                         <div class="form-group" style="flex: 1;">
                             <label style="font-size: 0.7rem; text-align: center;">Main tanks <span style="color:var(--text-secondary)">(GAL)</span></label>
-                            <input type="number" id="main-tank" value="160" inputmode="decimal" pattern="[0-9]*" style="text-align:center; padding: 6px;" oninput="calculateFuelTime()">
+                            <input type="number" id="main-tank" value="160" inputmode="decimal" pattern="[0-9]*" style="text-align:center; padding: 6px;" oninput="calculateFuelTime(); updateCurrentLeg()">
                         </div>
                         <div class="form-group" style="flex: 1;">
                             <label style="font-size: 0.7rem; text-align: center;">Burn Rate <span style="color:var(--text-secondary)">(GPH)</span></label>
-                            <input type="number" id="burn-rate" value="74" inputmode="decimal" pattern="[0-9]*" style="text-align:center; padding: 6px;" oninput="calculateFuelTime()">
+                            <input type="number" id="burn-rate" value="74" inputmode="decimal" pattern="[0-9]*" style="text-align:center; padding: 6px;" oninput="calculateFuelTime(); updateCurrentLeg()">
                         </div>
                         <div class="form-group" style="flex: 1;">
                             <label style="font-size: 0.7rem; text-align: center;">Fuel time</label>
                             <div style="display: flex; gap: 6px; align-items: center; justify-content: center;">
                                 <div style="display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0;">
-                                    <input type="number" id="fuel-time-hours" value="02" inputmode="decimal" pattern="[0-9]*" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px; width: 100%; box-sizing: border-box;" oninput="handleOverride('fuel-time')">
+                                    <input type="number" id="fuel-time-hours" value="02" inputmode="decimal" pattern="[0-9]*" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px; width: 100%; box-sizing: border-box;" oninput="handleOverride('fuel-time'); updateCurrentLeg()">
                                     <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: bold;">H</span>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0;">
-                                    <input type="number" id="fuel-time-minutes" value="58" inputmode="decimal" pattern="[0-9]*" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px; width: 100%; box-sizing: border-box;" oninput="handleOverride('fuel-time')">
+                                    <input type="number" id="fuel-time-minutes" value="58" inputmode="decimal" pattern="[0-9]*" style="text-align:center; font-weight:bold; color:var(--accent-blue); padding: 6px; width: 100%; box-sizing: border-box;" oninput="handleOverride('fuel-time'); updateCurrentLeg()">
                                     <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: bold;">M</span>
                                 </div>
                             </div>
@@ -1869,8 +1886,8 @@
     <script>
         const AppState = {
             legs: [
-                { id: 1, origin: 'RWI', dest: 'NC91', isIfr: false, active: true },
-                { id: 2, origin: 'NC91', dest: 'RWI', isIfr: false, active: false }
+                { id: 1, origin: 'RWI', dest: 'NC91', isIfr: false, active: true, supply: '33', main: '160', burn: '74', hours: '02', minutes: '58', fuelTimeOverridden: false },
+                { id: 2, origin: 'NC91', dest: 'RWI', isIfr: false, active: false, supply: '33', main: '160', burn: '74', hours: '02', minutes: '58', fuelTimeOverridden: false }
             ]
         };
 
@@ -2259,7 +2276,18 @@
         function addLeg() {
             const newId = AppState.legs.length ? Math.max(...AppState.legs.map(l=>l.id)) + 1 : 1;
             const origin = AppState.legs.length ? AppState.legs[AppState.legs.length-1].dest : '???';
-            AppState.legs.push({ id: newId, origin: origin, dest: '???', isIfr: false, active: false });
+            const prevLeg = AppState.legs.length ? AppState.legs[AppState.legs.length-1] : null;
+            const supply = prevLeg ? prevLeg.supply : '33';
+            const main = prevLeg ? prevLeg.main : '160';
+            const burn = prevLeg ? prevLeg.burn : '74';
+            const hours = prevLeg ? prevLeg.hours : '02';
+            const minutes = prevLeg ? prevLeg.minutes : '58';
+            const fto = prevLeg ? prevLeg.fuelTimeOverridden : false;
+            
+            AppState.legs.push({ 
+                id: newId, origin: origin, dest: '???', isIfr: false, active: false,
+                supply: supply, main: main, burn: burn, hours: hours, minutes: minutes, fuelTimeOverridden: fto
+            });
             activateLeg(newId);
         }
 
@@ -2280,10 +2308,17 @@
         function updateFormFromState() {
             const activeLeg = AppState.legs.find(l => l.active);
             if(activeLeg) {
-                document.getElementById('leg-origin').value = activeLeg.origin;
-                document.getElementById('leg-dest').value = activeLeg.dest;
+                document.getElementById('leg-origin').value = activeLeg.origin || '';
+                document.getElementById('leg-dest').value = activeLeg.dest || '';
                 const toggle = document.getElementById('ifr-toggle');
                 if (toggle) toggle.checked = activeLeg.isIfr || false;
+                
+                document.getElementById('supply-tank').value = activeLeg.supply !== undefined ? activeLeg.supply : '33';
+                document.getElementById('main-tank').value = activeLeg.main !== undefined ? activeLeg.main : '160';
+                document.getElementById('burn-rate').value = activeLeg.burn !== undefined ? activeLeg.burn : '74';
+                document.getElementById('fuel-time-hours').value = activeLeg.hours !== undefined ? activeLeg.hours : '02';
+                document.getElementById('fuel-time-minutes').value = activeLeg.minutes !== undefined ? activeLeg.minutes : '58';
+                fuelTimeOverridden = activeLeg.fuelTimeOverridden || false;
             } else {
                 document.getElementById('leg-origin').value = '';
                 document.getElementById('leg-dest').value = '';
@@ -2299,6 +2334,13 @@
                 activeLeg.dest = document.getElementById('leg-dest').value;
                 const toggle = document.getElementById('ifr-toggle');
                 if (toggle) activeLeg.isIfr = toggle.checked;
+
+                activeLeg.supply = document.getElementById('supply-tank').value;
+                activeLeg.main = document.getElementById('main-tank').value;
+                activeLeg.burn = document.getElementById('burn-rate').value;
+                activeLeg.hours = document.getElementById('fuel-time-hours').value;
+                activeLeg.minutes = document.getElementById('fuel-time-minutes').value;
+                activeLeg.fuelTimeOverridden = fuelTimeOverridden;
                 
                 // re-render just the tabs to show updated text
                 renderTabs();

@@ -300,8 +300,8 @@
         /* --- LEG TABS --- */
         .leg-tabs {
             display: flex;
-            gap: 12px;
-            padding: 6px 10px;
+            gap: 4px;
+            padding: 2px 6px;
             background-color: var(--surface-color);
             border-bottom: 1px solid var(--border-color);
             overflow-x: auto;
@@ -309,13 +309,13 @@
         .leg-tabs::-webkit-scrollbar { display: none; }
 
         .leg-tab {
-            padding: 10px 16px;
+            padding: 4px 8px;
             background-color: var(--surface-color-light);
             border: 2px solid var(--border-color);
             border-radius: 12px;
             color: var(--text-primary);
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
             white-space: nowrap;
             display: flex;
@@ -337,7 +337,7 @@
 
         /* --- ACTION SECTIONS --- */
         .action-section {
-            padding: 8px 12px;
+            padding: 15px 20px;
             background-color: var(--surface-color);
             border-bottom: 2px solid var(--border-color);
         }
@@ -352,7 +352,7 @@
 
         .action-tiles {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             overflow-x: auto;
         }
         .action-tiles::-webkit-scrollbar { display: none; }
@@ -360,10 +360,9 @@
         .tile {
             flex: 1;
             padding: 10px;
-            min-height: 54px;
             border-radius: 8px;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.95rem;
             text-align: center;
             color: white;
             border: none;
@@ -381,52 +380,52 @@
 
 
         /* --- MAIN CONTENT --- */
-        .container { padding: 4px; display: flex; flex-direction: column; gap: 8px; }
-        .section { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; }
-        .section-title { font-size: 1rem; color: var(--text-secondary); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; font-weight: bold; }
+        .container { padding: 4px; display: flex; flex-direction: column; gap: 4px; }
+        .section { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; padding: 4px; }
+        .section-title { font-size: 1rem; color: var(--text-secondary); margin-bottom: 4px; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; font-weight: bold; }
 
-        .form-row { display: flex; gap: 12px; margin-bottom: 4px; }
-        .form-group { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-        label { font-size: 0.85rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; margin: 0; }
+        .form-row { display: flex; gap: 4px; margin-bottom: 4px; }
+        .form-group { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+        label { font-size: 0.8rem; color: var(--text-secondary); font-weight: bold; text-transform: uppercase; margin: 0; }
         input[type="text"], input[type="number"], input[type="time"], select {
             background-color: var(--input-bg); border: 2px solid var(--border-color);
-            color: var(--text-primary); padding: 12px 10px; border-radius: 4px; font-size: 1rem; font-weight: bold; width: 100%; box-sizing: border-box; margin: 0; min-height: 48px;
+            color: var(--text-primary); padding: 4px 6px; border-radius: 4px; font-size: 0.95rem; font-weight: bold; width: 100%; box-sizing: border-box; margin: 0;
         }
         input:focus, select:focus { outline: none; border-color: var(--accent-blue); }
         
-        .toggle-row { display: flex; align-items: center; justify-content: space-between; background-color: var(--input-bg); border: 2px solid var(--border-color); padding: 10px 15px; border-radius: 8px; min-height: 54px; }
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; background-color: var(--input-bg); border: 2px solid var(--border-color); padding: 10px 15px; border-radius: 8px; }
         
-        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--toggle-off); transition: .4s; border-radius: 34px; border: 2px solid var(--border-color); }
-        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--toggle-on); border-color: var(--toggle-on); }
-        input:checked + .slider:before { transform: translateX(26px); }
+        input:checked + .slider:before { transform: translateX(22px); }
 
-        .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background-color: var(--surface-color-light); padding: 8px; border-radius: 6px; border: 2px dashed var(--border-color); }
+        .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background-color: var(--surface-color-light); padding: 4px; border-radius: 6px; border: 2px dashed var(--border-color); }
         .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 6px; padding: 4px; display: flex; flex-direction: column; gap: 2px; cursor: pointer; position: relative; transition: all 0.2s; }
         .seat-card.active { border-color: var(--accent-blue); }
         .seat-card:has(.seat-occupant-input:not(:placeholder-shown)) { background-color: rgba(39, 174, 96, 0.1); border-color: var(--accent-green); }
-        .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; }
-        .seat-title { font-size: 0.9rem; color: var(--text-secondary); text-align: left; text-transform: uppercase; font-weight: bold; margin: 0; }
-        .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 8px 10px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 1rem; min-height: 40px; display: flex; align-items: center; justify-content: center; }
-        .seat-occupant-input { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 8px 10px; padding-right: 36px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 1rem; width: 100%; box-sizing: border-box; color: var(--text-primary); outline: none; margin: 0; min-height: 40px; }
+        .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+        .seat-title { font-size: 0.75rem; color: var(--text-secondary); text-align: left; text-transform: uppercase; font-weight: bold; margin: 0; }
+        .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 4px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; min-height: 28px; display: flex; align-items: center; justify-content: center; }
+        .seat-occupant-input { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 4px; padding-right: 24px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; width: 100%; box-sizing: border-box; color: var(--text-primary); outline: none; margin: 0; }
         .seat-occupant-input::placeholder { color: var(--text-secondary); font-weight: normal; }
         .seat-occupant-input:focus { border-color: var(--accent-blue); }
-        .clear-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 1.4rem; font-weight: bold; line-height: 1; padding: 10px; width: 44px; text-align: center; box-sizing: border-box; }
+        .clear-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 1.2rem; font-weight: bold; line-height: 1; }
         .seat-occupant-input:placeholder-shown + .clear-btn { display: none; }
         .clear-btn:hover { color: var(--accent-red); }
         .autocomplete-dropdown { position: absolute; top: calc(100% - 10px); left: 12px; right: 12px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; max-height: 150px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
         .autocomplete-item { padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; display: flex; justify-content: space-between; cursor: pointer; color: var(--text-primary); }
         .autocomplete-item:last-child { border-bottom: none; }
         .autocomplete-item:hover { background-color: var(--input-bg); }
-        .seat-weight { display: flex; align-items: center; gap: 2px; font-size: 0.95rem; font-weight: bold; color: var(--accent-blue); margin: 0; }
-        .seat-weight input { width: 44px; padding: 0; text-align: right; background: transparent; border: none; color: var(--accent-blue); font-weight: bold; font-size: 0.95rem; }
+        .seat-weight { display: flex; align-items: center; gap: 2px; font-size: 0.85rem; font-weight: bold; color: var(--accent-blue); margin: 0; }
+        .seat-weight input { width: 40px; padding: 0; text-align: right; background: transparent; border: none; color: var(--accent-blue); font-weight: bold; font-size: 0.85rem; }
         .seat-weight input:focus { outline: none; border-bottom: 1px solid var(--accent-blue); }
         .full-width { grid-column: 1 / -1; }
         
         /* --- ACTION BUTTONS --- */
-        .btn { flex: 1; padding: 6px; min-height: 54px; font-size: 1rem; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; color: white; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn { flex: 1; padding: 6px; font-size: 0.95rem; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; color: white; text-align: center; }
         .btn-primary { background-color: var(--accent-blue); }
         .btn-danger { background-color: var(--accent-red); }
         .btn-outline { background-color: transparent; border: 2px solid var(--border-color); color: var(--text-primary); }
@@ -815,43 +814,46 @@
 
             <div class="container" id="main-content" style="flex: 1; overflow-y: auto; padding-bottom: 20px; box-sizing: border-box;">
                 <!-- Route & Times -->
-                <div class="section">
-                    <div class="form-row" style="margin-bottom: 8px;">
+                <div class="section" style="padding-top: 20px;">
+                    <div class="form-row" style="gap: 5px; margin-bottom: 8px;">
                         <div class="form-group" style="flex: 1;">
                             <label>HIGHEST OBSTACLE</label>
-                            <input type="number" value="759">
+                            <input type="number" value="759" style="padding: 6px;">
                         </div>
-                        <div class="form-group" style="flex: 1;">
-                            <label>Origin</label>
-                            <input type="text" id="leg-origin" value="RWI" oninput="updateCurrentLeg()">
-                        </div>
-                        <div class="form-group" style="flex: 1.3;">
-                            <label>Departed</label>
-                            <div style="display: flex; gap: 8px; align-items: stretch; height: 100%;">
-                                <input type="text" id="depart-time" class="datetime-sim" value="2026-06-18 19:12" inputmode="decimal" style="flex: 1; text-align:center; padding: 12px 2px;">
-                                <button onclick="setNow('depart-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 4px; padding: 0 12px; font-weight: bold; font-size: 0.8rem; cursor: pointer;">NOW</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row" style="margin-bottom: 8px;">
                         <div class="form-group" style="flex: 1;">
                             <label>Flight Rules</label>
-                            <div style="display: flex; align-items: center; justify-content: space-between; background-color: var(--input-bg); border: 2px solid var(--border-color); padding: 0 10px; border-radius: 4px; box-sizing: border-box; min-height: 48px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; background-color: var(--input-bg); border: 2px solid var(--border-color); padding: 2px 10px; border-radius: 4px; box-sizing: border-box; height: 100%;">
                                 <span style="font-weight:bold; font-size:0.9rem; color:var(--text-secondary); text-transform:uppercase;">IFR</span>
-                                <label class="switch" style="transform: scale(0.8); transform-origin: right center; margin-right: -4px;">
+                                <label class="switch">
                                     <input type="checkbox" id="ifr-toggle" onchange="updateCurrentLeg()">
                                     <span class="slider"></span>
                                 </label>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="form-row" style="gap: 5px; margin-bottom: 8px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Origin</label>
+                            <input type="text" id="leg-origin" value="RWI" oninput="updateCurrentLeg()" style="padding: 6px; font-weight: bold; box-sizing: border-box;">
+                        </div>
+                        <div class="form-group" style="flex: 1.5;">
+                            <label>Departed</label>
+                            <div style="display: flex; gap: 5px; align-items: stretch;">
+                                <input type="text" id="depart-time" class="datetime-sim" value="2026-06-18 19:12" inputmode="decimal" style="padding: 6px; flex: 1; text-align:center; font-weight:bold; font-size:0.95rem; box-sizing: border-box;">
+                                <button onclick="setNow('depart-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 4px; padding: 0 12px; font-weight: bold; font-size: 0.8rem; cursor: pointer;">NOW</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row" style="gap: 5px; margin-bottom: 8px;">
                         <div class="form-group" style="flex: 1;">
                             <label>Destination</label>
-                            <input type="text" id="leg-dest" value="NC91" oninput="updateCurrentLeg()">
+                            <input type="text" id="leg-dest" value="NC91" oninput="updateCurrentLeg()" style="padding: 6px; font-weight: bold; box-sizing: border-box;">
                         </div>
-                        <div class="form-group" style="flex: 1.3;">
+                        <div class="form-group" style="flex: 1.5;">
                             <label>Arrived</label>
-                            <div style="display: flex; gap: 8px; align-items: stretch; height: 100%;">
-                                <input type="text" id="arrive-time" class="datetime-sim" value="" inputmode="decimal" placeholder="YYYY-MM-DD HH:MM" style="flex: 1; text-align:center; padding: 12px 2px;">
+                            <div style="display: flex; gap: 5px; align-items: stretch;">
+                                <input type="text" id="arrive-time" class="datetime-sim" value="" inputmode="decimal" placeholder="YYYY-MM-DD HH:MM" style="padding: 6px; flex: 1; text-align:center; font-weight:bold; font-size:0.95rem; box-sizing: border-box;">
                                 <button onclick="setNow('arrive-time')" style="background: var(--accent-blue); color: white; border: none; border-radius: 4px; padding: 0 12px; font-weight: bold; font-size: 0.8rem; cursor: pointer;">NOW</button>
                             </div>
                         </div>
@@ -1089,243 +1091,243 @@
                         <div class="risk-item">
                             <div class="risk-text">1- Consecutive shifts > 7</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">2- Consecutive night shifts > 4</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">3- PIC < 1 YR or 100 flights at program</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">4- Scene Flight w/ Medcrew Member(s) <6 mos @ Program</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">5- PIC < 100 hours in type</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">6- Last flight > 30 days</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">7- Last Night and/or HNVGO flight > 30 days (Only applicable when conducting Night Flight)</div>
                             <div class="risk-pts">4 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="4" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="4" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">8- Last instrument approach > 30 days</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">9- Relief Pilot new to local area and operating with an approved LBO Waiver</div>
                             <div class="risk-pts">3 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
 <div class="risk-item">
                             <div class="risk-text">10- In differently equipped or different model aircraft</div>
                             <div class="risk-pts">3 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">11- Instruments or Equipment MEL "Restrictive to this Flight"</div>
                             <div class="risk-pts">3 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div style="background-color: var(--border-color); padding: 4px 12px; font-size:0.8rem; font-weight:bold; color:var(--text-secondary); text-transform:uppercase;">DYNAMIC SCORE</div>
                         <div class="risk-item">
                             <div class="risk-text">12- More than four (4) hours of flight time during a duty period</div>
                             <div class="risk-pts">3 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">13- Flight ending greater than twelve (12) hours of duty time but less than fourteen (14) hours of duty time</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">14- Flight ending greater than fourteen (14) hours of duty time (Added by OCC after consultation with Pilot)</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">15- Flight occurring between official sunset and sunrise (Use caution Dusk to Dawn)</div>
                             <div class="risk-pts">1 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="1" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="1" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">16- NVG use not available or permitted for flight (Operations Management Approval Required)</div>
                             <div class="risk-pts">3 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">17- First flight after maintenance has been completed on aircraft</div>
                             <div class="risk-pts">3 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">18- Scene Flight</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">18a- First Responder at Night (H114)</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">19- Previous WX Turndown/Abort; Applicable to route and flight type (VFR/IFR)</div>
                             <div class="risk-pts">3 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">20- VFR Flight Plan- Temp/Dew Point within 2 degrees C & Less Than 5 Knots Wind (Departure/Enroute/Destination)</div>
                             <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="0" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="0" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">21- VFR Flight Plan- Ceilings (Enroute/Destination) "SELECTION REQUIRED"</div>
                             <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="0" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="0" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">22- VFR Flight Plan- Visibility (Enroute/Destination) "SELECTION REQUIRED"</div>
                             <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="0" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="0" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">23- VFR Flight Plan- Forecasted IFR Conditions (Enroute/Destination- FM/TEMPO)</div>
                             <div class="risk-pts">3 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">24- IFR Flight Plan- Ceilings (Departure and Destination) "SELECTION REQUIRED"</div>
                             <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="0" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="0" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">25- IFR Flight Plan- Visibility (Departure and Destination) "SELECTION REQUIRED"</div>
                             <div class="risk-pts" style="color:var(--accent-blue); font-weight:normal;">Select...</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="0" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="0" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">26- Fog, Snow, or Ground Ice Reported or Forecasted Along Route</div>
                             <div class="risk-pts">4 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="4" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="4" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">27- Convective Activity within 20 NM of Route</div>
                             <div class="risk-pts">3 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">28- Lightning Reported within 20 NM of Route</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">29- Surface Winds > 30 KTS or Gust Spread > 10 KTS</div>
                             <div class="risk-pts">3 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">30- Mountainous, Offshore or Hazardous Terrain Along Route</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">31- Moderate or Greater Turbulence Below 030' AGL Reported or Forecasted Along Route</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">32- Less Than 10 Minutes of Fuel Above Required Minimums</div>
                             <div class="risk-pts">3 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">33- Off Airport Operations within 5% of MGTOW or HOGE not assured</div>
                             <div class="risk-pts">3 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="3" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="3" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">34- Flight Operations when OAT > 85*F (29*C) or <32*F (0*C)</div>
                             <div class="risk-pts">2 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="2" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="2" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">35- Passengers / Ride- Along</div>
                             <div class="risk-pts">0 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="0" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="0" onchange="calculateRisk()">
                         </div>
                         <div style="background-color: var(--border-color); padding: 4px 12px; font-size:0.8rem; font-weight:bold; color:var(--text-secondary); text-transform:uppercase;">CONTROL MEASURES</div>
                         <div class="risk-item">
                             <div class="risk-text">36- Aircraft equipped with functioning AFCS</div>
                             <div class="risk-pts">-1 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="-1" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="-1" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">37- IFR Qualified Pilot in an IFR Capable Aircraft</div>
                             <div class="risk-pts">-1 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="-1" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="-1" onchange="calculateRisk()">
                         </div>
 
                     
                         <div class="risk-item">
                             <div class="risk-text">38- Use of a pre-designated LZ at a scene</div>
                             <div class="risk-pts">-1 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="-1" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="-1" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">39- Add extra fuel stop</div>
                             <div class="risk-pts">-1 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="-1" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="-1" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">40- Change route to avoid hazardous terrain or weather</div>
                             <div class="risk-pts">-1 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="-1" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="-1" onchange="calculateRisk()">
                         </div>
                         
                         <div style="background-color: var(--border-color); padding: 4px 12px; font-size:0.8rem; font-weight:bold; color:var(--text-secondary); text-transform:uppercase; margin-top: 15px;">TURNDOWN</div>
                         <div class="risk-item">
                             <div class="risk-text">41- Weather Conditions are Unacceptable</div>
                             <div class="risk-pts">35 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="35" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="35" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">42- Medical Crew Declined Flight Request</div>
                             <div class="risk-pts">35 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="35" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="35" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">43- Insufficient Duty Time available</div>
                             <div class="risk-pts">35 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="35" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="35" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">44- Aircraft Range Inadequate</div>
                             <div class="risk-pts">35 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="35" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="35" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">45- Aircraft Performance or Equipment Inadequate</div>
                             <div class="risk-pts">35 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="35" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="35" onchange="calculateRisk()">
                         </div>
                         <div class="risk-item">
                             <div class="risk-text">46- Other (explain briefly in comments)</div>
                             <div class="risk-pts">35 pts</div>
-                            <input type="checkbox" class="risk-checkbox" style="width:32px; height:32px;" data-pts="35" onchange="calculateRisk()">
+                            <input type="checkbox" class="risk-checkbox" style="width:24px; height:24px;" data-pts="35" onchange="calculateRisk()">
                         </div>
 </div>
                     <div style="background-color: var(--surface-color); padding: 15px; margin-top: 15px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">

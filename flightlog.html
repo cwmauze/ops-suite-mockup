@@ -911,7 +911,8 @@
                                 <div class="seat-title">Left Hand Litter (Patient)</div>
                             </div>
                             <div style="position: relative;">
-                                <input type="number" class="seat-occupant-input" id="wt-5" value="" placeholder="Enter Patient Weight (KG)" inputmode="decimal" pattern="[0-9]*">
+                                <input type="number" class="seat-occupant-input" id="wt-5" value="" placeholder="Patient Weight" inputmode="decimal" pattern="[0-9]*">
+                                <span class="clear-btn" onclick="document.getElementById('wt-5').value=''; event.stopPropagation();">&times;</span>
                             </div>
                         </div>
                         <div class="seat-card">

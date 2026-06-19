@@ -114,11 +114,8 @@
             border-radius: 24px;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
-            overflow-x: hidden;
+            overflow: hidden;
             position: relative;
-            padding-bottom: 80px; /* Space for bottom nav */
-            -webkit-overflow-scrolling: touch;
         }
 
         /* --- NATIVE APP SIMULATION (IPAD) --- */
@@ -1202,21 +1199,7 @@
                 </div>
             </div>
 
-            
-            <!-- Sync Bar -->
-            <div class="global-header">
-                <div class="app-icon">
-                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M15,10.5V13.5A1.5,1.5 0 0,1 13.5,15H10.5A1.5,1.5 0 0,1 9,13.5V10.5A1.5,1.5 0 0,1 10.5,9H13.5A1.5,1.5 0 0,1 15,10.5Z"/></svg>
-                </div>
-                <div class="sync-info">
-                    <span class="version-badge">258a6f20</span>
-                    <span>- cmauze - EDT</span>
-                    <div class="sync-status">
-                        <span>Last sync: Just now</span>
-                        <div class="sync-indicator"></div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Content Area -->
             <div class="content-container">
@@ -1372,7 +1355,7 @@
         
             <!-- Bottom Navigation -->
             <div class="bottom-nav">
-                <div class="nav-item active" onclick="window.location.href='home.html'" style="cursor:pointer;">
+                <div class="nav-item" onclick="window.location.href='home.html'" style="cursor:pointer;">
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     <span>Home</span>
                 </div>
@@ -1380,7 +1363,7 @@
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                     <span>Map</span>
                 </div>
-                <div class="nav-item " onclick="window.location.href='manifest.html'" style="cursor:pointer;">
+                <div class="nav-item active" onclick="window.location.href='manifest.html'" style="cursor:pointer;">
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     <span>Manifest</span>
                 </div>
@@ -1403,8 +1386,6 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script>
-    <script>
     <script>
         // Map Implementation
         let leafletMap = null;

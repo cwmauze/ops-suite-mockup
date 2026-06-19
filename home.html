@@ -114,11 +114,8 @@
             border-radius: 24px;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
-            overflow-x: hidden;
+            overflow: hidden;
             position: relative;
-            padding-bottom: 80px; /* Space for bottom nav */
-            -webkit-overflow-scrolling: touch;
         }
 
         /* --- NATIVE APP SIMULATION (IPAD) --- */
@@ -1045,20 +1042,7 @@
             </div>
 
             
-            <!-- Sync Bar -->
-            <div class="global-header">
-                <div class="app-icon">
-                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M15,10.5V13.5A1.5,1.5 0 0,1 13.5,15H10.5A1.5,1.5 0 0,1 9,13.5V10.5A1.5,1.5 0 0,1 10.5,9H13.5A1.5,1.5 0 0,1 15,10.5Z"/></svg>
-                </div>
-                <div class="sync-info">
-                    <span class="version-badge">258a6f20</span>
-                    <span>- cmauze - EDT</span>
-                    <div class="sync-status">
-                        <span>Last sync: Just now</span>
-                        <div class="sync-indicator"></div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Content Area -->
             <div class="content-container">
@@ -1269,8 +1253,6 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script>
-    <script>
     <script>
         // Map Implementation
         let leafletMap = null;

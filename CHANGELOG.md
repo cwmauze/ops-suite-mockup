@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2026-06-19
+### Added
+- Added the ability for users to enter GPS coordinates directly into the Comm Center Simulator to generate unidentifiable "SCENE" locations.
+- Supported multiple coordinate input formats including Decimal Degrees (e.g. `35.85,-77.89`) and Degrees Decimal Minutes (e.g. `3551.38N/07753.51W`).
+- Formatted entered coordinates securely for the ForeFlight URL scheme so they map seamlessly to ForeFlight natively.
+
 ## [0.1.4] - 2026-06-19
 ### Fixed
 - Fixed an issue where iOS devices aggressively cached an outdated Comm Center Simulator script by standardizing a cache-busting query parameter across all HTML pages.

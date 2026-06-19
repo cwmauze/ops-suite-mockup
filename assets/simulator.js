@@ -190,15 +190,88 @@ window.FlightSimulator = {
         if (this.waypointsData[token]) {
             this.activeRoute.push({...this.waypointsData[token]});
         } else {
-            // Unknown waypoint fallback
-            this.activeRoute.push({
-                id: token,
-                name: 'Unknown Waypoint',
-                lat: 35.8563 + (Math.random() * 0.1 - 0.05),
-                lon: -77.8918 + (Math.random() * 0.1 - 0.05)
-            });
+            let coords = this.parseCoordinates(token);
+            if (coords) {
+                // Decimal coordinate format compatible with ForeFlight route strings
+                let coordId = `${coords.lat.toFixed(5)},${coords.lon.toFixed(5)}`;
+                this.activeRoute.push({
+                    id: coordId,
+                    name: 'SCENE',
+                    lat: coords.lat,
+                    lon: coords.lon
+                });
+            } else {
+                // Unknown waypoint fallback
+                this.activeRoute.push({
+                    id: token,
+                    name: 'Unknown Waypoint',
+                    lat: 35.8563 + (Math.random() * 0.1 - 0.05),
+                    lon: -77.8918 + (Math.random() * 0.1 - 0.05)
+                });
+            }
         }
         this.recalculateRouteMath();
+    },
+
+    parseCoordinates: function(input) {
+        let str = input.trim().toUpperCase();
+        
+        // Replace commas and slashes with spaces to normalize
+        let clean = str.replace(/[,/]/g, ' ').replace(/\s+/g, ' ').trim();
+        
+        // 1. Try pure decimal: "35.8563 -77.8918"
+        const decimalRegex = /^(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)$/;
+        let m = clean.match(decimalRegex);
+        if (m) {
+            let lat = parseFloat(m[1]);
+            let lon = parseFloat(m[2]);
+            if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                return {lat, lon};
+            }
+        }
+
+        // 2. Try format with N/S and E/W identifiers
+        const nsRegex = /^([\d\.\s]+[NS])\s*([\d\.\s]+[EW])$/;
+        m = clean.match(nsRegex);
+        if (m) {
+            let latStr = m[1];
+            let lonStr = m[2];
+            let lat = this.parseCoordPart(latStr, true);
+            let lon = this.parseCoordPart(lonStr, false);
+            if (lat !== null && lon !== null && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                return {lat, lon};
+            }
+        }
+        
+        return null;
+    },
+
+    parseCoordPart: function(part, isLat) {
+        let dir = part.slice(-1);
+        let numStr = part.slice(0, -1).trim();
+        let sign = (dir === 'S' || dir === 'W') ? -1 : 1;
+        
+        let parts = numStr.split(' ').filter(p => p.length > 0);
+        if (parts.length === 1) {
+            let n = parts[0];
+            if (n.includes('.')) {
+                let val = parseFloat(n);
+                if ((isLat && val > 90) || (!isLat && val > 180)) {
+                    // Treat as DDMM.MM or DDDMM.MM
+                    let idx = n.indexOf('.');
+                    let mmStr = n.substring(idx - 2);
+                    let ddStr = n.substring(0, idx - 2);
+                    if (!ddStr) ddStr = '0';
+                    return sign * (parseInt(ddStr, 10) + parseFloat(mmStr)/60.0);
+                } else {
+                    return sign * val;
+                }
+            }
+        } else if (parts.length === 2) {
+            // DD MM.MM
+            return sign * (parseInt(parts[0], 10) + parseFloat(parts[1])/60.0);
+        }
+        return null;
     },
 
     removeWaypointFromRoute: function(index) {
@@ -369,10 +442,8 @@ window.FlightSimulator = {
             <div class="sim-note" style="margin-top: 20px;">
                 <strong>Sample Identifiers:</strong><br>
                 03NR - Johnston Health<br>
-                04NC - WakeMed Cary<br>
-                KRWI - Rocky Mount<br>
                 NC91 - ECU Health Medical Center<br>
-                1NR1 - ECU Health Chowan
+                35.85,-77.89 or 3551.38N/07753.51W - SCENE
             </div>
         `;
         document.body.appendChild(simDiv);
@@ -395,12 +466,14 @@ window.FlightSimulator = {
             } else {
                 info = `<div style="font-size:0.75rem; color:#888; margin-top: 4px;">Origin</div>`;
             }
+            let displayId = wp.name === 'SCENE' ? 'SCENE' : wp.id;
+            let displayName = wp.name === 'SCENE' ? wp.id : (wp.name || 'Unknown');
             return `
             <div class="sim-route-row" draggable="true" data-index="${i}" style="cursor: grab;">
                 <div style="pointer-events: none; flex: 1; overflow: hidden;">
                     <div style="display:flex; align-items:baseline; gap:10px;">
-                        <span class="id">${wp.id}</span>
-                        <span class="name" title="${wp.name || 'Unknown'}">${wp.name || 'Unknown'}</span>
+                        <span class="id">${displayId}</span>
+                        <span class="name" title="${displayName}">${displayName}</span>
                     </div>
                     ${info}
                 </div>

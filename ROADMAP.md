@@ -16,6 +16,8 @@ This roadmap tracks feature requests, outstanding bugs, and architectural change
 - [ ] Lock down exact styling parameters for high-contrast accessibility modes based on web accessibility guidelines.
 - [ ] **Souls on Board (SOB) auto-calculation**: Automate the SOB field to dynamically calculate based on the entries in the personnel stations area.
 - [ ] **Quick Offload/Onload**: Add "Offload crew and patient" and "Onload Crew" buttons to speed creating new flight legs.
+- [ ] **Obstacle Detection**: Add obstacle detection to the flight request page using the engine from kml-obstacle-tool. Allow users to send their route to ForeFlight along with a customized KML of obstacles and obstacle NOTAMs.
+- [ ] **Auto-Generated Route Altitudes**: Auto-generate route MSA (Minimum Safe Altitude) and ESA (Emergency Safe Altitude) using the engine from the KML obstacle tool. Display this data on the flight request page and auto-push it to the manifest/flight log page.
 
 ---
 *Note: This document is a living artifact and will be updated as new requirements are discovered.*

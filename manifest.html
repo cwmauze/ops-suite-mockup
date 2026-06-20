@@ -1373,7 +1373,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.2.4</div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.3.0</div>
     </div>
     </div>
 
@@ -1383,7 +1383,7 @@
 
             <!-- Sync Bar -->
             <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.2.4</span>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.3.0</span>
                 <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1558,7 +1558,7 @@
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     <span>Home</span>
                 </div>
-                <div class="nav-item" style="cursor:pointer;">
+                <div class="nav-item" onclick="window.location.href='map.html'" style="cursor:pointer;">
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                     <span>Map</span>
                 </div>
@@ -1734,6 +1734,13 @@
             <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
         </div>
         <div style="padding:20px; line-height:1.5; font-size: 0.95rem;">
+            <h4 style="margin-top:0; color:var(--accent-blue);">[0.3.0] - 2026-06-20</h4>
+            <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
+                <li>Added dynamic map theme support for dashboard mini map.</li>
+                <li>Added IFR HI/LO and live METAR/NEXRAD overlays to flight request map.</li>
+                <li>Created full-screen map view (`map.html`).</li>
+                <li>Made flight crewmembers leg-specific instead of global across all legs.</li>
+            </ul>
             <h4 style="margin-top:0; color:var(--accent-blue);">[0.2.4] - 2026-06-19</h4>
             <ul style="padding-left:20px; margin-bottom:15px; color:#ddd;">
                 <li>Fixed UI positioning and styling for the Duty-In Risk Modal to eliminate scrollbars and fit within the app container.</li>

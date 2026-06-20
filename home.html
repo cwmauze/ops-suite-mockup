@@ -1120,7 +1120,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.2.4</div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.3.0</div>
     </div>
     </div>
 
@@ -1130,7 +1130,7 @@
 
             <!-- Sync Bar -->
             <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.2.4</span>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.3.0</span>
                 <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1191,11 +1191,6 @@
                         </div>
                         <div class="flight-map">
                             <div id="leaflet-map"></div>
-                            <div class="map-layer-control">
-                                <button class="map-layer-btn active" onclick="setBaseView('street')" id="b-street">Street</button>
-                                <button class="map-layer-btn" onclick="setBaseView('sat')" id="b-sat">Sat</button>
-                                <button class="map-layer-btn" onclick="setBaseView('vfr')" id="b-vfr">VFR</button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1328,7 +1323,7 @@
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     <span>Home</span>
                 </div>
-                <div class="nav-item" style="cursor:pointer;">
+                <div class="nav-item" onclick="window.location.href='map.html'" style="cursor:pointer;">
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                     <span>Map</span>
                 </div>
@@ -1358,10 +1353,17 @@
     <script>
         // Map Implementation
         let leafletMap = null;
-        let layers = {};
-        let activeBase = 'street';
         let routeLine = null;
         let routeMarkers = [];
+        let currentBasemap = null;
+
+        function getMapLayerForTheme(theme) {
+            if (['dark', 'hc-dark', 'neutral', 'mid'].includes(theme)) {
+                return L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 20 });
+            } else {
+                return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 20 });
+            }
+        }
 
         async function initMap() {
             leafletMap = L.map('leaflet-map', { 
@@ -1369,11 +1371,8 @@
                 attributionControl: false 
             });
             
-            layers = {
-                street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(leafletMap),
-                sat: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
-                vfr: L.tileLayer('https://tiles.arcgis.com/tiles/ssFJjBXIUyZDrSYZ/arcgis/rest/services/VFR_Sectional/MapServer/tile/{z}/{y}/{x}', {maxZoom: 12})
-            };
+            const theme = document.documentElement.getAttribute('data-theme') || 'mid';
+            currentBasemap = getMapLayerForTheme(theme).addTo(leafletMap);
 
             updateFlightRequestCard();
         }
@@ -1448,14 +1447,7 @@
             }
         }
 
-        function setBaseView(type) {
-            if (layers[activeBase]) leafletMap.removeLayer(layers[activeBase]);
-            layers[type].addTo(leafletMap);
-            activeBase = type;
 
-            document.querySelectorAll('.map-layer-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('b-' + type).classList.add('active');
-        }
 
         // Initialize everything
         window.onload = () => {
@@ -1471,6 +1463,12 @@
             let nextTheme = themes[nextIndex];
             html.setAttribute('data-theme', nextTheme);
             localStorage.setItem('ops_suite_theme', nextTheme);
+            
+            if (leafletMap && currentBasemap) {
+                leafletMap.removeLayer(currentBasemap);
+                currentBasemap = getMapLayerForTheme(nextTheme).addTo(leafletMap);
+                currentBasemap.bringToBack();
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -1482,6 +1480,11 @@
         window.addEventListener('storage', (e) => {
             if (e.key === 'ops_suite_theme' && e.newValue) {
                 document.documentElement.setAttribute('data-theme', e.newValue);
+                if (leafletMap && currentBasemap) {
+                    leafletMap.removeLayer(currentBasemap);
+                    currentBasemap = getMapLayerForTheme(e.newValue).addTo(leafletMap);
+                    currentBasemap.bringToBack();
+                }
             }
         });
 

@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-06-20
+### Added
+- Added dynamic map theme support for dashboard mini map.
+- Added IFR HI/LO and live METAR/NEXRAD overlays to flight request map.
+- Created full-screen map view (`map.html`).
+
+### Changed
+- Made flight crewmembers leg-specific instead of global across all legs.
+
 ## [0.2.4] - 2026-06-19
 ### Changed
 - Fixed UI positioning and styling for the Duty-In Risk Modal to eliminate scrollbars and fit within the app container.

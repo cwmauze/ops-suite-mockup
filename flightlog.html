@@ -758,7 +758,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.2.4</div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.3.0</div>
     </div>
 
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
@@ -766,7 +766,7 @@
         <div class="device-screen">
             
             <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.2.4</span>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.3.0</span>
                 <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1015,7 +1015,7 @@
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                 <span>Home</span>
             </div>
-            <div class="nav-item" style="cursor:pointer;">
+            <div class="nav-item" onclick=\"window.location.href='map.html'\" style="cursor:pointer;">
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                 <span>Map</span>
             </div>
@@ -2339,9 +2339,15 @@
             const minutes = prevLeg ? prevLeg.minutes : '58';
             const fto = prevLeg ? prevLeg.fuelTimeOverridden : false;
             
+            let newCrew = null;
+            if (prevLeg && prevLeg.crew) {
+                newCrew = JSON.parse(JSON.stringify(prevLeg.crew));
+            }
+            
             AppState.legs.push({ 
                 id: newId, origin: origin, dest: dest, isIfr: false, active: false,
-                supply: supply, main: main, burn: burn, hours: hours, minutes: minutes, fuelTimeOverridden: fto
+                supply: supply, main: main, burn: burn, hours: hours, minutes: minutes, fuelTimeOverridden: fto,
+                crew: newCrew
             });
             activateLeg(newId);
         }
@@ -2356,6 +2362,10 @@
         }
 
         function activateLeg(id) {
+            const currentActive = AppState.legs.find(l => l.active);
+            if (currentActive && currentActive.id !== id) {
+                updateCurrentLeg();
+            }
             AppState.legs.forEach(l => l.active = (l.id === id));
             renderTabs();
         }
@@ -2374,6 +2384,34 @@
                 document.getElementById('fuel-time-hours').value = activeLeg.hours !== undefined ? activeLeg.hours : '02';
                 document.getElementById('fuel-time-minutes').value = activeLeg.minutes !== undefined ? activeLeg.minutes : '58';
                 fuelTimeOverridden = activeLeg.fuelTimeOverridden || false;
+
+                if (activeLeg.crew) {
+                    for(let i=1; i<=6; i++) {
+                        if (i === 5) {
+                            const wt = document.getElementById(`wt-5`);
+                            if (wt && document.activeElement !== wt) wt.value = activeLeg.crew[i]?.wt || '';
+                        } else {
+                            const occ = document.getElementById(`occ-${i}`);
+                            const wt = document.getElementById(`wt-${i}`);
+                            if (occ && document.activeElement !== occ) occ.value = activeLeg.crew[i]?.occ || '';
+                            if (wt && document.activeElement !== wt) wt.value = activeLeg.crew[i]?.wt || '0';
+                        }
+                    }
+                    calculateSob();
+                } else {
+                    for(let i=1; i<=6; i++) {
+                        if (i === 5) {
+                            const wt = document.getElementById(`wt-5`);
+                            if (wt && document.activeElement !== wt) wt.value = '';
+                        } else {
+                            const occ = document.getElementById(`occ-${i}`);
+                            const wt = document.getElementById(`wt-${i}`);
+                            if (occ && document.activeElement !== occ) occ.value = '';
+                            if (wt && document.activeElement !== wt) wt.value = '0';
+                        }
+                    }
+                    calculateSob();
+                }
             } else {
                 document.getElementById('leg-origin').value = '';
                 document.getElementById('leg-dest').value = '';
@@ -2396,6 +2434,21 @@
                 activeLeg.hours = document.getElementById('fuel-time-hours').value;
                 activeLeg.minutes = document.getElementById('fuel-time-minutes').value;
                 activeLeg.fuelTimeOverridden = fuelTimeOverridden;
+                
+                activeLeg.crew = {};
+                for(let i=1; i<=6; i++) {
+                    if (i === 5) {
+                        const wt = document.getElementById(`wt-5`);
+                        activeLeg.crew[i] = { wt: wt ? wt.value : '' };
+                    } else {
+                        const occ = document.getElementById(`occ-${i}`);
+                        const wt = document.getElementById(`wt-${i}`);
+                        activeLeg.crew[i] = {
+                            occ: occ ? occ.value : '',
+                            wt: wt ? wt.value : '0'
+                        };
+                    }
+                }
                 
                 // re-render just the tabs to show updated text
                 renderTabs();
@@ -2464,6 +2517,7 @@
                 } else {
                     AppState.legs.push({ id: 1, origin: '', dest: '', isIfr: false, active: true, supply: '33', main: '160', burn: '74', hours: '02', minutes: '58', fuelTimeOverridden: false });
                 }
+                setTimeout(() => { updateCurrentLeg(); }, 150); // Capture initial DOM state for the first leg after load
             }
             renderTabs();
             if (AppState.legs.length > 0) {

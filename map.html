@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Ops Suite">
     
-    <title>Ops Suite - Flight Request #5BD7F540</title>
+    <title>Ops Suite - Map</title>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -174,7 +174,8 @@
 
         /* Map Section */
         .map-section {
-            height: 220px;
+            flex: 1;
+            height: 100%;
             background-color: #e0e0e0;
             position: relative;
             flex-shrink: 0;
@@ -443,7 +444,7 @@
                     <div class="header-back" onclick="window.history.back()">
                         <svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/></svg>
                     </div>
-                    <div class="header-title">Flight Request #5BD7F540</div>
+                    <div class="header-title">Map</div>
                 </div>
 
                 <!-- Map Section -->
@@ -460,73 +461,13 @@
                     </div>
                 </div>
 
-                <!-- Scrollable Content -->
-                <div class="content-scroll">
-                    
-                    <!-- Flight Details Card -->
-                    <div class="card">
-                        <div class="card-title">Flight Details</div>
-                        <div class="details-list">
-                            <div class="detail-row">
-                                <span class="detail-label">Aircraft</span>
-                                <span class="detail-value">N850BU</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Flight Type</span>
-                                <span class="detail-value">Inter-Facility Transfer</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Dispatch Number</span>
-                                <span class="detail-value">N/A</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">CC Number</span>
-                                <span class="detail-value">N/A</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Created At</span>
-                                <span class="detail-value" id="req-date-text">6/18/2026, 10:26</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Distance</span>
-                                <span class="detail-value">139.0 nm</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Estimated Time</span>
-                                <span class="detail-value">76 min</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Route Card -->
-                    <div class="card">
-                        <div class="card-title">Route</div>
-                        <div class="details-list" id="flight-request-route-list">
-                            <!-- Injected dynamically -->
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Bottom Navigation / Actions -->
-                <div class="bottom-bar">
-                    <button class="btn btn-orange" onclick="window.location.href='flightlog.html'">
-                        <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
-                        Edit Manifest
-                    </button>
-                    <button class="btn btn-slate" onclick="openInForeFlight()">
-                        <svg viewBox="0 0 24 24"><path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/></svg>
-                        ForeFlight
-                    </button>
-                </div>
-
                 <!-- Bottom Navigation -->
                 <div class="bottom-nav">
                     <div class="nav-item" onclick="window.location.href='home.html'" style="cursor:pointer;">
                         <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                         <span>Home</span>
                     </div>
-                    <div class="nav-item" onclick="window.location.href='map.html'" style="cursor:pointer;">
+                    <div class="nav-item" style="cursor:pointer;">
                         <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                         <span>Map</span>
                     </div>

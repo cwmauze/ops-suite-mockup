@@ -1334,6 +1334,13 @@
             if (savedTheme) {
                 document.documentElement.setAttribute('data-theme', savedTheme);
             }
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'ops_suite_theme' && e.newValue) {
+                document.documentElement.setAttribute('data-theme', e.newValue);
+            }
+        });
+
         });
 
         function formatSyncTime() {

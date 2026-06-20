@@ -805,19 +805,19 @@
             </div>
             
             <!-- Modal Content -->
-            <div style="flex: 1; overflow-y: auto; padding: 16px;">
+            <div style="flex: 1; overflow-y: auto; padding: 12px;">
                 <div style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 16px; letter-spacing: 0.5px;">HEALTH & WELLNESS - SELECT ALL THAT APPLY.</div>
                 
-                <div id="duty-in-risk-list" style="display: flex; flex-direction: column;">
+                <div id="duty-in-risk-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px;">
                     <!-- Risk items will be generated here -->
                 </div>
 
-                <div style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 16px;">
+                <div style="margin-top: 12px; border-top: 1px solid var(--border-color); padding-top: 12px;">
                     <label style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; display: block;">Pilot Comments</label>
-                    <textarea id="duty-in-pilot-comments" placeholder="Enter comments..." style="width: 100%; height: 100px; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-family: inherit; resize: none; background-color: var(--bg-body); box-sizing: border-box;"></textarea>
+                    <textarea id="duty-in-pilot-comments" placeholder="Enter comments..." style="width: 100%; height: 50px; padding: 8px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-family: inherit; resize: none; background-color: var(--bg-body); box-sizing: border-box;"></textarea>
                 </div>
 
-                <div style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="margin-top: 12px; border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; justify-content: space-between; align-items: center;">
                     <label style="font-size: 14px; color: var(--text-main);">Sign this form</label>
                     <!-- Toggle Switch -->
                     <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
@@ -1093,11 +1093,11 @@
                     const isLast = index === dutyInRisksData.length - 1;
                     const borderStyle = isLast ? '' : 'border-bottom: 1px solid var(--border-color);';
                     list.innerHTML += `
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; ${borderStyle}">
-                            <div style="font-size: 14px; color: var(--text-main); flex: 1; padding-right: 16px; line-height: 1.4;">${risk.text}</div>
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <span style="font-size: 14px; color: var(--text-muted);">${risk.pts} pts</span>
-                                <input type="checkbox" id="${risk.id}" style="width: 20px; height: 20px; border: 1px solid var(--border-color); border-radius: 4px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
+                            <div style="font-size: 12px; color: var(--text-main); flex: 1; padding-right: 8px; line-height: 1.2;">${risk.text}</div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 12px; color: var(--text-muted);">${risk.pts}</span>
+                                <input type="checkbox" id="${risk.id}" style="width: 16px; height: 16px; border: 1px solid var(--border-color); border-radius: 4px;">
                             </div>
                         </div>
                     `;

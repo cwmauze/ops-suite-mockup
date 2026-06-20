@@ -39,7 +39,7 @@
         });
     </script>
     <style>
-        :root {
+                :root {
             /* Colors */
             --bg-body: #f1f2f5;
             --bg-card: #ffffff;
@@ -52,7 +52,6 @@
             --accent-green: #34a853;
             --accent-yellow: #fbbc04;
             --accent-orange: #f9ab00;
-            --slate-blue: #607d8b; /* For ForeFlight button */
             
             /* UI Elements */
             --border-radius: 12px;
@@ -70,12 +69,48 @@
             --surface-color-light: #f8f9fa;
             --text-primary: #111111;
             --text-secondary: #666666;
-            --border-color: #e4e6eb;
+            --border-color: #dddddd;
+            --input-bg: #ffffff;
+            --toggle-off: #cccccc;
             --bg-body: #f1f2f5;
             --bg-card: #ffffff;
             --text-main: #181c20;
             --text-muted: #5e646e;
         }
+
+        [data-theme="neutral"] {
+            --bg-color: #2b2b2b;
+            --surface-color: #3b3b3b;
+            --surface-color-light: #4b4b4b;
+            --text-primary: #f0f0f0;
+            --text-secondary: #c0c0c0;
+            --border-color: #555555;
+            --input-bg: #444444;
+            --toggle-off: #666666;
+            --bg-body: #2b2b2b;
+            --bg-card: #3b3b3b;
+            --text-main: #f0f0f0;
+            --text-muted: #c0c0c0;
+        }
+        [data-theme="mid"] {
+            --bg-color: #5c6065;
+            --surface-color: #6c7075;
+            --surface-color-light: #7c858c;
+            --text-primary: #ffffff;
+            --text-secondary: #d1d5db;
+            --border-color: #888888;
+            --input-bg: #40464c;
+            --toggle-off: #888888;
+            --bg-body: #5c6065;
+            --bg-card: #6c7075;
+            --text-main: #ffffff;
+            --text-muted: #d1d5db;
+            --accent-blue: #4468a3;
+            --accent-orange: #e69138;
+            --accent-green: #7eb522;
+            --accent-red: #d9381e;
+        }
+
 
         [data-theme="dark"] {
             --bg-color: #000000;
@@ -84,11 +119,52 @@
             --text-primary: #ffffff;
             --text-secondary: #aaaaaa;
             --border-color: #333333;
+            --input-bg: #1a1a1a;
+            --toggle-off: #444444;
             --bg-body: #000000;
             --bg-card: #111111;
             --text-main: #ffffff;
             --text-muted: #aaaaaa;
         }
+
+        [data-theme="hc-dark"] {
+            --bg-color: #000000;
+            --surface-color: #000000;
+            --surface-color-light: #000000;
+            --text-primary: #ffffff;
+            --text-secondary: #dddddd;
+            --accent-blue: #55aaff;
+            --accent-orange: #ffaa55;
+            --accent-green: #55ff55;
+            --accent-red: #ff5555;
+            --border-color: #ffffff;
+            --input-bg: #000000;
+            --toggle-off: #ffffff;
+            --bg-body: #000000;
+            --bg-card: #000000;
+            --text-main: #ffffff;
+            --text-muted: #dddddd;
+        }
+
+        [data-theme="hc-light"] {
+            --bg-color: #ffffff;
+            --surface-color: #ffffff;
+            --surface-color-light: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #000000;
+            --accent-blue: #0000ee;
+            --accent-orange: #cc5500;
+            --accent-green: #008800;
+            --accent-red: #cc0000;
+            --border-color: #000000;
+            --input-bg: #ffffff;
+            --toggle-off: #000000;
+            --bg-body: #ffffff;
+            --bg-card: #ffffff;
+            --text-main: #000000;
+            --text-muted: #000000;
+        }
+
 
         * {
             box-sizing: border-box;

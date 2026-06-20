@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.3.1] - 2026-06-20
+### Changed
+- Refactored Map UI to include a new `.map-command-bar`.
+- Added FAA Charts (Terminal Area, IFR High/Low, VFR) and Live Weather overlays (NEXRAD, METAR).
+- Updated duplicate waypoint markers to stack vertically on the map.
+- Removed the "Fit Route" button from the map command bar.
+- Changed the permanent route line color to magenta (`#FF00FF`) across all views.
+
+
+## [0.3.1] - 2026-06-20
+### Changed
+- Refactored Map UI to include a new .
+- Added FAA Charts (Terminal Area, IFR High/Low, VFR) and Live Weather overlays (NEXRAD, METAR).
+- Updated duplicate waypoint markers to stack vertically on the map.
+- Removed the "Fit Route" button from the map command bar.
+- Changed the permanent route line color to magenta () across all views.
+
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

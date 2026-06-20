@@ -145,7 +145,7 @@
                     });
 
                     const routeLine = L.polyline(waypoints, {
-                        color: '#181c20',
+                        color: '#FF00FF',
                         weight: 3,
                         opacity: 0.8,
                         dashArray: null

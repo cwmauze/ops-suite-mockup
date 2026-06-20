@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.3] - 2026-06-19
 ### Added
-- Replaced the standard health and wellness list in the Duty-In Risk modal with 14 farsical "medical" conditions (e.g., "Severe Anal Glaucoma", "Terminal Vodka Sweats").
+- Added interactive Duty-In Risk Modal.
 
 ## [0.2.2] - 2026-06-19
 ### Changed

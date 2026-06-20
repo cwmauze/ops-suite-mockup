@@ -758,7 +758,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.2.2</div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.2.3</div>
     </div>
 
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
@@ -766,7 +766,7 @@
         <div class="device-screen">
             
             <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.2.2</span>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.2.3</span>
                 <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2239,6 +2239,28 @@
             if (savedTheme) {
                 document.documentElement.setAttribute('data-theme', savedTheme);
             }
+            
+            // Restore active risks
+            try {
+                const savedRisks = JSON.parse(localStorage.getItem('ops_suite_active_risks') || '[]');
+                if (savedRisks.length > 0) {
+                    document.querySelectorAll('.risk-checkbox').forEach(cb => {
+                        const itemDiv = cb.closest('.risk-item');
+                        if (itemDiv) {
+                            const textEl = itemDiv.querySelector('.risk-text');
+                            if (textEl) {
+                                const text = textEl.innerText.trim();
+                                if (savedRisks.some(r => r.text === text)) {
+                                    cb.checked = true;
+                                }
+                            }
+                        }
+                    });
+                    calculateRisk();
+                }
+            } catch (e) {
+                console.error('Error loading active risks:', e);
+            }
         });
 
         function renderTabs() {
@@ -2481,11 +2503,24 @@
 
         function calculateRisk() {
             let total = 0;
+            let activeRisks = [];
             document.querySelectorAll('.risk-checkbox').forEach(cb => {
                 if (cb.checked) {
-                    total += parseInt(cb.getAttribute('data-pts') || 0, 10);
+                    const pts = parseInt(cb.getAttribute('data-pts') || 0, 10);
+                    total += pts;
+                    const itemDiv = cb.closest('.risk-item');
+                    if (itemDiv) {
+                        const textEl = itemDiv.querySelector('.risk-text');
+                        if (textEl && textEl.innerText.trim() !== "35- Passengers / Ride- Along" && !textEl.innerText.trim().includes("Select...")) {
+                            activeRisks.push({
+                                text: textEl.innerText.trim(),
+                                pts: pts
+                            });
+                        }
+                    }
                 }
             });
+            localStorage.setItem('ops_suite_active_risks', JSON.stringify(activeRisks));
             currentRiskScore = total;
             document.getElementById('risk-pill').innerText = total;
             updateRiskTile();

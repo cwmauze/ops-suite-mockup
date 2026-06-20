@@ -12,6 +12,7 @@
     <title>Ops Suite - Duty Options</title>
     
         
+
     <script>
         function scaleDevice() {
             const frame = document.querySelector('.device-frame');
@@ -374,6 +375,18 @@
                 display: flex;
             }
         }
+    
+        .ios-switch {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #e4e6eb; transition: .4s; border-radius: 24px;
+        }
+        .ios-switch:before {
+            position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px;
+            background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        input:checked + .ios-switch { background-color: var(--accent-blue); }
+        input:checked + .ios-switch:before { transform: translateX(20px); }
+
     </style>
 </head>
 <body>
@@ -391,7 +404,7 @@
                 
                 <!-- Sync Bar -->
                 <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.2.2</span>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.2.3</span>
                     <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -409,7 +422,7 @@
                     <div class="header-back" onclick="window.history.back()">
                         <svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/></svg>
                     </div>
-                    <div class="header-title" style="flex: 1; text-align: center;">Duty In</div>
+                    <div class="header-title" style="flex: 1; text-align: center;">Duty Options</div>
                     <div style="color: var(--accent-blue); font-weight: 600; cursor: pointer;" onclick="window.location.href='home.html'">Skip</div>
                 </div>
 
@@ -417,41 +430,225 @@
                 <div class="content-scroll">
                     <div style="display: flex; flex-direction: column; gap: 16px;">
                         
-                        <!-- Duty In Time -->
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: bold;">DUTY IN TIME</label>
-                            <input type="datetime-local" value="2026-06-19T14:37" style="padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; background-color: var(--bg-card); color: var(--text-main);">
+                        <!-- Duty In / Out Times -->
+                        <div style="display: flex; gap: 12px;">
+                            <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
+                                <label style="font-size: 12px; color: var(--text-muted); font-weight: bold;">DUTY IN</label>
+                                <input type="datetime-local" value="2026-06-19T06:00" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; background-color: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
+                                <label style="font-size: 12px; color: var(--text-muted); font-weight: bold;">DUTY OUT</label>
+                                <input type="datetime-local" value="2026-06-19T18:00" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; background-color: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
+                            </div>
                         </div>
                         
-                        <!-- Location -->
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: bold;">LOCATION</label>
-                            <select style="padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; background-color: var(--bg-card); color: var(--text-main);">
-                                <option>RWI</option>
-                            </select>
+                        <!-- Location & Aircraft -->
+                        <div style="display: flex; gap: 12px;">
+                            <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
+                                <label style="font-size: 12px; color: var(--text-muted); font-weight: bold;">LOCATION</label>
+                                <select style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; background-color: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
+                                    <option value="">Select Base...</option>
+                                    <option>AEX</option>
+                                    <option>APAFW</option>
+                                    <option>APAMX</option>
+                                    <option>APARW</option>
+                                    <option>ARB</option>
+                                    <option>ARB1</option>
+                                    <option>ARBMX</option>
+                                    <option>ASH</option>
+                                    <option>ASHMX</option>
+                                    <option>ATH</option>
+                                    <option>ATL</option>
+                                    <option>ATLMX</option>
+                                    <option>AUG</option>
+                                    <option>BDNFW</option>
+                                    <option>BDNRW</option>
+                                    <option>BER</option>
+                                    <option>BES</option>
+                                    <option>BILFW</option>
+                                    <option>BILMX</option>
+                                    <option>BILRW</option>
+                                    <option>BJJ</option>
+                                    <option>BNW</option>
+                                    <option>BOZ</option>
+                                    <option>BTR</option>
+                                    <option>BTV</option>
+                                    <option>BUT</option>
+                                    <option>CBFFW</option>
+                                    <option>CBFMX</option>
+                                    <option>CBFRW</option>
+                                    <option>CHT</option>
+                                    <option>CI1</option>
+                                    <option>CI1A</option>
+                                    <option>CI2</option>
+                                    <option>CI3</option>
+                                    <option>CLA</option>
+                                    <option>CNB</option>
+                                    <option>CNO</option>
+                                    <option>COT</option>
+                                    <option>DTN</option>
+                                    <option>DUPRW</option>
+                                    <option>DUPRW2</option>
+                                    <option>DURMX</option>
+                                    <option>ECU</option>
+                                    <option>EWN</option>
+                                    <option>FDY</option>
+                                    <option>FLG</option>
+                                    <option>FLG2</option>
+                                    <option>FLGMX</option>
+                                    <option>FME</option>
+                                    <option>FMEMX</option>
+                                    <option>FMT</option>
+                                    <option>FRAN</option>
+                                    <option>FTS</option>
+                                    <option>FTWFW</option>
+                                    <option>FTWFW2</option>
+                                    <option>FTWRW</option>
+                                    <option>GIF</option>
+                                    <option>GLT</option>
+                                    <option>GTFMX</option>
+                                    <option>GTFRW</option>
+                                    <option>GVM</option>
+                                    <option>HBT</option>
+                                    <option>HDC</option>
+                                    <option>HEN</option>
+                                    <option>HMP</option>
+                                    <option>HOLMX</option>
+                                    <option>HUM</option>
+                                    <option>IDH</option>
+                                    <option>IN1</option>
+                                    <option>IN2</option>
+                                    <option>IN3</option>
+                                    <option>IN4</option>
+                                    <option>IN5</option>
+                                    <option>IND</option>
+                                    <option>IUHMX</option>
+                                    <option>JAS</option>
+                                    <option>JASMX</option>
+                                    <option>JAX</option>
+                                    <option>JVL</option>
+                                    <option>KLAFW</option>
+                                    <option>LAC</option>
+                                    <option>LAC2</option>
+                                    <option>LACMX</option>
+                                    <option>LAR</option>
+                                    <option>LAY</option>
+                                    <option>LBNFW</option>
+                                    <option>LBNMX</option>
+                                    <option>LCH</option>
+                                    <option>LEB</option>
+                                    <option>LEX</option>
+                                    <option>LFT</option>
+                                    <option>LFTMX</option>
+                                    <option>LIVFW</option>
+                                    <option>LIVRW</option>
+                                    <option>LPR</option>
+                                    <option>LRY</option>
+                                    <option>MAD</option>
+                                    <option>MADMX</option>
+                                    <option>MAR</option>
+                                    <option>MBT</option>
+                                    <option>MED</option>
+                                    <option>MF1</option>
+                                    <option>MF2</option>
+                                    <option>MF3</option>
+                                    <option>MF4</option>
+                                    <option>MF5</option>
+                                    <option>MF6</option>
+                                    <option>MF8</option>
+                                    <option>MF9</option>
+                                    <option>MHT</option>
+                                    <option>MIL</option>
+                                    <option>MIN</option>
+                                    <option>MLB</option>
+                                    <option>MON</option>
+                                    <option>MRC</option>
+                                    <option>MTO</option>
+                                    <option>NGH</option>
+                                    <option>NWC</option>
+                                    <option>OCWMX</option>
+                                    <option>ODE</option>
+                                    <option>ORL</option>
+                                    <option>ORL2</option>
+                                    <option>ORLMX</option>
+                                    <option>OSC</option>
+                                    <option>OSUMX</option>
+                                    <option>PCU</option>
+                                    <option>PGD</option>
+                                    <option>PHT</option>
+                                    <option>POR</option>
+                                    <option>PS1</option>
+                                    <option>PS6</option>
+                                    <option>QUI</option>
+                                    <option>ROG</option>
+                                    <option>RST</option>
+                                    <option>RSWRW</option>
+                                    <option>RWI</option>
+                                    <option>SEF</option>
+                                    <option>SFD</option>
+                                    <option>SHOFW</option>
+                                    <option>SHOMX</option>
+                                    <option>SHORW</option>
+                                    <option>SLCFW</option>
+                                    <option>SLCMX</option>
+                                    <option>SLCRW</option>
+                                    <option>SMC</option>
+                                    <option>SUPMX</option>
+                                    <option>TBN</option>
+                                    <option>TGH</option>
+                                    <option>THA</option>
+                                    <option>TIX</option>
+                                    <option>TOL</option>
+                                    <option>TOO</option>
+                                    <option>TUB</option>
+                                    <option>TYR</option>
+                                    <option>TYRMX</option>
+                                    <option>UVA</option>
+                                    <option>WAS</option>
+                                    <option>WIL</option>
+                                    <option>WIN</option>
+                                    <option>WIN2</option>
+                                    
+                                </select>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
+                                <label style="font-size: 12px; color: var(--text-muted); font-weight: bold;">AIRCRAFT</label>
+                                <div style="display: flex; gap: 8px; width: 100%; box-sizing: border-box;">
+                                    <div style="display: flex; align-items: center; padding: 10px 8px; border-radius: 8px; background-color: var(--bg-card); border: 1px solid var(--border-color); flex: 1; min-width: 0;">
+                                        <input type="checkbox" style="margin-right: 8px; width: 18px; height: 18px; flex-shrink: 0;">
+                                        <span style="font-size: 14px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">N850BU</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; padding: 10px 8px; border-radius: 8px; background-color: var(--bg-card); border: 1px solid var(--border-color); flex: 1; min-width: 0;">
+                                        <input type="checkbox" style="margin-right: 8px; width: 18px; height: 18px; flex-shrink: 0;">
+                                        <span style="font-size: 14px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">N854EC</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Rest from last & Consecutive Shifts -->
-                        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
-                            <span style="color: var(--text-main); font-weight: 600;">Rest from last:</span>
-                            <span style="color: var(--text-muted);">&gt;10h</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
-                            <span style="color: var(--text-main); font-weight: 600;">Consecutive Shifts:</span>
-                            <span style="color: var(--text-muted);">1</span>
+                        <div style="display: flex; gap: 12px;">
+                            <div style="flex: 1; background-color: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); padding: 12px; display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                                <span style="font-size: 12px; color: var(--text-muted); font-weight: bold; text-transform: uppercase;">Rest from last</span>
+                                <span style="font-size: 18px; font-weight: 700; color: var(--text-main);">&gt;10h</span>
+                            </div>
+                            <div style="flex: 1; background-color: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); padding: 12px; display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                                <span style="font-size: 12px; color: var(--text-muted); font-weight: bold; text-transform: uppercase;">Consecutive Shifts</span>
+                                <span style="font-size: 18px; font-weight: 700; color: var(--text-main);">1</span>
+                            </div>
                         </div>
 
-                        <!-- Aircraft -->
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: bold;">AIRCRAFT</label>
-                            <div style="display: flex; align-items: center; padding: 12px; border-radius: 8px; background-color: var(--bg-card); border: 1px solid var(--border-color);">
-                                <input type="checkbox" style="margin-right: 12px; width: 20px; height: 20px;">
-                                <span style="font-size: 16px; font-weight: 600; color: var(--text-main);">N850BU</span>
+
+                        <!-- System Identified Risks -->
+                        <div id="system-identified-risks-container" style="display: none; flex-direction: column; gap: 8px; margin-top: 8px;">
+                            <div style="font-size: 12px; color: var(--text-muted); font-weight: bold;">SYSTEM IDENTIFIED RISKS</div>
+                            <div id="system-identified-risks-list" style="display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Dynamically populated -->
                             </div>
                         </div>
 
                         <!-- Duty In Risk Button -->
-                        <button style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-card); font-size: 16px; font-weight: 600; color: var(--text-main); box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; margin-top: 8px;">Duty In Risk</button>
+                        <button style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-card); font-size: 16px; font-weight: 600; color: var(--text-main); box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; margin-top: 8px; cursor: pointer;" onclick="openDutyInRiskModal()">Duty In Risk</button>
                         
                         <!-- Currency Hard Stop -->
                         <div style="background-color: var(--accent-red); color: white; padding: 16px; border-radius: 8px; margin-top: 16px;">
@@ -482,28 +679,7 @@
                             </div>
                         </div>
 
-                        <!-- DUTY IN -->
-                        <div style="margin-top: 16px; margin-bottom: 24px;">
-                            <div style="font-size: 12px; color: var(--text-muted); font-weight: bold; margin-bottom: 8px;">DUTY IN</div>
-                            <div style="background-color: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color);">
-                                <div style="display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border-color);">
-                                    <span style="color: var(--text-main);">Duty In Test Stat:</span>
-                                    <span style="color: var(--text-muted);">[ 0 ]</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border-color);">
-                                    <span style="color: var(--text-main);">Last 10 h rest:</span>
-                                    <span style="color: var(--text-muted);">&gt;10h</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border-color);">
-                                    <span style="color: var(--text-main);">Total rest last 24 hours:</span>
-                                    <span style="color: var(--text-muted);">--</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; padding: 12px;">
-                                    <span style="color: var(--text-main);">Rest Time Prior to Duty In:</span>
-                                    <span style="color: var(--text-muted);">--</span>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
 
@@ -543,7 +719,13 @@
     </div>
 
     
+
     <script>
+
+
+
+
+
         // Map Implementation
         let leafletMap = null;
 
@@ -687,7 +869,54 @@
             if (initialSyncText) {
                 initialSyncText.innerHTML = `Last sync: ${formatSyncTime()}`;
             }
+
+            loadSystemIdentifiedRisks();
         });
+
+        function loadSystemIdentifiedRisks() {
+            const container = document.getElementById('system-identified-risks-container');
+            const list = document.getElementById('system-identified-risks-list');
+            if (!container || !list) return;
+
+            const defaultRisks = [
+                { text: '2- Consecutive night shifts > 4', pts: 2 },
+                { text: '3- PIC < 1 YR or 100 flights at program', pts: 2 },
+                { text: '6- Last flight > 30 days', pts: 2 },
+                { text: '7- Last Night and/or HNVGO flight > 30 days (Only applicable when conducting Night Flight)', pts: 4 }
+            ];
+
+            try {
+                let savedRisks = JSON.parse(localStorage.getItem('ops_suite_active_risks'));
+                
+                // If localStorage is empty or null, use defaults
+                if (!savedRisks || savedRisks.length === 0) {
+                    savedRisks = defaultRisks;
+                    localStorage.setItem('ops_suite_active_risks', JSON.stringify(defaultRisks));
+                }
+
+                if (savedRisks.length > 0) {
+                    list.innerHTML = '';
+                    let totalPts = 0;
+                    savedRisks.forEach(risk => {
+                        totalPts += risk.pts;
+                        list.innerHTML += `
+                            <div style="background-color: rgba(249, 171, 0, 0.1); border-left: 4px solid var(--accent-orange); padding: 12px; border-radius: 0 8px 8px 0; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                                    <span style="font-size: 14px; font-weight: 600; color: var(--text-main); line-height: 1.3;">${risk.text}</span>
+                                </div>
+                                <span style="font-size: 14px; font-weight: bold; color: var(--accent-orange); white-space: nowrap; margin-left: 8px;">${risk.pts} pts</span>
+                            </div>
+                        `;
+                    });
+                    container.style.display = 'flex';
+                } else {
+                    container.style.display = 'none';
+                }
+            } catch (e) {
+                console.error("Error loading system risks", e);
+            }
+        }
 
         function formatSyncTime() {
             const now = new Date();
@@ -711,8 +940,112 @@
                 el.classList.remove('syncing');
             }, 10000);
         }
+
+        const dutyInRisksData = [
+            { id: "dir-1", text: "Severe Anal Glaucoma (I just can't see my ass coming to work today)", pts: 4 },
+            { id: "dir-2", text: 'Chronic "Zero Fucks Given" Syndrome', pts: 4 },
+            { id: "dir-3", text: "Stage 4 Vodka Sweats", pts: 4 },
+            { id: "dir-4", text: "Unexplained Oozing from the HR-Mandated Sensitivity Training", pts: 4 },
+            { id: "dir-5", text: "Cranial Rectal Inversion (Head firmly lodged up ass)", pts: 2 },
+            { id: "dir-6", text: "Spontaneous Acid Flashbacks from 1998", pts: 2 },
+            { id: "dir-7", text: "Post-Coital Existential Crisis", pts: 2 },
+            { id: "dir-8", text: "Restless Middle Finger Syndrome", pts: 1 },
+            { id: "dir-9", text: "Acute Allergic Reaction to Management's Bullshit", pts: 1 },
+            { id: "dir-10", text: "Irritable Bowel Induced by Co-Pilot's Breathing", pts: 1 },
+            { id: "dir-11", text: 'Clinically Diagnosed with "Main Character Syndrome"', pts: 1 },
+            { id: "dir-12", text: "Temporary Blindness to Red Flags", pts: 1 },
+            { id: "dir-13", text: "Phantom Hangover from Looking at Cheap Tequila", pts: 1 },
+            { id: "dir-14", text: "Premature Ejaculation of Complaints", pts: 1 }
+        ];
+
+        function openDutyInRiskModal() {
+            const modal = document.getElementById('duty-in-risk-modal');
+            const list = document.getElementById('duty-in-risk-list');
+            
+            if (list.children.length === 0) {
+                dutyInRisksData.forEach((risk, index) => {
+                    const isLast = index === dutyInRisksData.length - 1;
+                    const borderStyle = isLast ? '' : 'border-bottom: 1px solid var(--border-color);';
+                    list.innerHTML += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; ${borderStyle}">
+                            <div style="font-size: 14px; color: var(--text-main); flex: 1; padding-right: 16px; line-height: 1.4;">${risk.text}</div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <span style="font-size: 14px; color: var(--text-muted);">${risk.pts} pts</span>
+                                <input type="checkbox" id="${risk.id}" style="width: 20px; height: 20px; border: 1px solid var(--border-color); border-radius: 4px;">
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            const savedState = JSON.parse(localStorage.getItem('ops_suite_duty_in_risks')) || {};
+            dutyInRisksData.forEach(risk => {
+                const cb = document.getElementById(risk.id);
+                if (cb) cb.checked = !!savedState[risk.id];
+            });
+            document.getElementById('duty-in-pilot-comments').value = savedState.comments || '';
+            document.getElementById('duty-in-sign-toggle').checked = !!savedState.signed;
+
+            modal.style.display = 'flex';
+        }
+
+        function closeDutyInRiskModal() {
+            document.getElementById('duty-in-risk-modal').style.display = 'none';
+        }
+
+        function saveDutyInRiskModal() {
+            const state = { comments: document.getElementById('duty-in-pilot-comments').value, signed: document.getElementById('duty-in-sign-toggle').checked };
+            dutyInRisksData.forEach(risk => {
+                const cb = document.getElementById(risk.id);
+                if (cb) state[risk.id] = cb.checked;
+            });
+            localStorage.setItem('ops_suite_duty_in_risks', JSON.stringify(state));
+            closeDutyInRiskModal();
+        }
     </script>
 <script src="assets/simulator.js?v=4"></script>
 <script src="assets/changelog.js"></script>
+    <!-- Duty In Risk Modal -->
+    <div id="duty-in-risk-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
+        <div style="background-color: var(--bg-card); width: 100%; max-width: 600px; max-height: 90vh; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+            <!-- Modal Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--border-color);">
+                <div style="font-size: 16px; font-weight: 700; color: var(--text-main);">Duty-In Risk Assessment (rev 10.3.2024)</div>
+                <div style="cursor: pointer; padding: 4px;" onclick="closeDutyInRiskModal()">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted);"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </div>
+            </div>
+            
+            <!-- Modal Content -->
+            <div style="flex: 1; overflow-y: auto; padding: 16px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 16px; letter-spacing: 0.5px;">HEALTH & WELLNESS - SELECT ALL THAT APPLY.</div>
+                
+                <div id="duty-in-risk-list" style="display: flex; flex-direction: column;">
+                    <!-- Risk items will be generated here -->
+                </div>
+
+                <div style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 16px;">
+                    <label style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; display: block;">Pilot Comments</label>
+                    <textarea id="duty-in-pilot-comments" placeholder="Enter comments..." style="width: 100%; height: 100px; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-family: inherit; resize: none; background-color: var(--bg-body); box-sizing: border-box;"></textarea>
+                </div>
+
+                <div style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+                    <label style="font-size: 14px; color: var(--text-main);">Sign this form</label>
+                    <!-- Toggle Switch -->
+                    <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                        <input type="checkbox" id="duty-in-sign-toggle" style="opacity: 0; width: 0; height: 0;">
+                        <span class="ios-switch"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div style="display: flex; gap: 12px; padding: 16px; border-top: 1px solid var(--border-color); background-color: var(--bg-body);">
+                <button onclick="closeDutyInRiskModal()" style="flex: 1; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-body); font-size: 16px; font-weight: 600; color: var(--text-main); cursor: pointer;">Cancel</button>
+                <button onclick="saveDutyInRiskModal()" style="flex: 1; padding: 14px; border-radius: 8px; border: none; background-color: var(--accent-blue); font-size: 16px; font-weight: 600; color: white; cursor: pointer;">Save</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

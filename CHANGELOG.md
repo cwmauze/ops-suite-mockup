@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.4.2] - 2026-06-21
+## [0.4.3] - 2026-06-21
 ### Fixed
 - Fixed an issue on the home page preview map where waypoints visited multiple times would overlap instead of stacking neatly.
 - Increased the width of the desktop instructions and comm center simulator panels by ~28% (from 350px to 450px) to provide more breathing room for content.

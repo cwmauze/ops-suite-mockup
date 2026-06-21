@@ -2,6 +2,7 @@
 
 ## [0.4.2] - 2026-06-21
 ### Fixed
+- Fixed an issue where the iPad simulation didn't properly scale to fit the screen on the initial page load until the user manually resized their browser.
 - Fixed an issue where tapping the `Highest Obstacle` header in the flight log failed silently due to a syntax error.
 - Persisted highest obstacle calculation to `AppState` to ensure it automatically copies over to newly added legs.
 - Fixed a typo on the home page base alerts and made them editable.

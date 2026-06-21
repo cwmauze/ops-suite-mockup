@@ -129,6 +129,11 @@ window.FlightSimulator = {
         } catch (e) {
             this.activeRoute = [];
         }
+        
+        // Ensure ETAs and distance are recalculated consistently with current code logic
+        if (this.activeRoute.length > 0) {
+            this.recalculateRouteMath();
+        }
     },
 
     saveActiveRoute: function() {
@@ -166,10 +171,12 @@ window.FlightSimulator = {
                 // Assuming ~120 knots speed -> 2 nm per minute
                 let time = Math.round(dist / 2);
                 
-                // Add 20 mins ground time at previous if it's not the first leg
+                // Add ground delay at previous if it's not the first leg
                 if (i > 1) {
-                    cumulativeTime += 20; 
-                    wp.groundTimePrev = 20;
+                    let prevDelay = prev.delay !== undefined ? parseInt(prev.delay, 10) : 30;
+                    if (isNaN(prevDelay)) prevDelay = 0;
+                    cumulativeTime += prevDelay; 
+                    wp.groundTimePrev = prevDelay;
                 } else {
                     wp.groundTimePrev = 0;
                 }
@@ -463,6 +470,10 @@ window.FlightSimulator = {
             let info = '';
             if (i > 0) {
                 info = `<div style="font-size:0.75rem; color:#888; margin-top: 4px;">${wp.heading}&deg; | ${wp.legDistance} nm | ${wp.legTime} min</div>`;
+                if (i < this.activeRoute.length - 1) {
+                    let d = wp.delay !== undefined ? wp.delay : 30;
+                    info += `<div style="font-size:0.75rem; margin-top: 4px; display:flex; align-items:center; gap:5px;">Ground Time (min): <input type="number" class="sim-delay-input" data-index="${i}" value="${d}" min="0" style="width: 45px; background: #222; border: 1px solid #444; color: white; border-radius: 4px; padding: 2px 4px; font-size: 0.75rem;"></div>`;
+                }
             } else {
                 info = `<div style="font-size:0.75rem; color:#888; margin-top: 4px;">Origin</div>`;
             }
@@ -495,6 +506,17 @@ window.FlightSimulator = {
         const clearBtn = document.getElementById('sim-btn-clear');
         const autocomplete = document.getElementById('sim-autocomplete');
         const listDiv = document.getElementById('sim-route-list');
+
+        listDiv.addEventListener('change', (e) => {
+            if (e.target.classList.contains('sim-delay-input')) {
+                const idx = parseInt(e.target.getAttribute('data-index'), 10);
+                const val = parseInt(e.target.value, 10);
+                if (!isNaN(val) && this.activeRoute[idx]) {
+                    this.activeRoute[idx].delay = val;
+                    this.recalculateRouteMath();
+                }
+            }
+        });
 
         listDiv.addEventListener('click', (e) => {
             if (e.target.classList.contains('remove-btn')) {

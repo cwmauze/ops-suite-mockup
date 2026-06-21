@@ -510,11 +510,11 @@
                         <div style="display: flex; gap: 12px;">
                             <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
                                 <label style="font-size: 12px; color: var(--text-muted); font-weight: bold;">DUTY IN</label>
-                                <input type="datetime-local" value="2026-06-19T06:00" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; background-color: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
+                                <input type="datetime-local" id="duty-in-time" onchange="localStorage.setItem('ops_suite_duty_in_time', this.value)" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; background-color: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
                                 <label style="font-size: 12px; color: var(--text-muted); font-weight: bold;">DUTY OUT</label>
-                                <input type="datetime-local" value="2026-06-19T18:00" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; background-color: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
+                                <input type="datetime-local" id="duty-out-time" onchange="localStorage.setItem('ops_suite_duty_out_time', this.value)" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; background-color: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
                             </div>
                         </div>
                         
@@ -983,6 +983,28 @@
             if (savedTheme) {
                 document.documentElement.setAttribute('data-theme', savedTheme);
             }
+            
+            // Restore duty times or set defaults
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            
+            let dutyIn = localStorage.getItem('ops_suite_duty_in_time');
+            if (!dutyIn) {
+                dutyIn = `${yyyy}-${mm}-${dd}T07:00`;
+                localStorage.setItem('ops_suite_duty_in_time', dutyIn);
+            }
+            const dutyInEl = document.getElementById('duty-in-time');
+            if (dutyInEl) dutyInEl.value = dutyIn;
+            
+            let dutyOut = localStorage.getItem('ops_suite_duty_out_time');
+            if (!dutyOut) {
+                dutyOut = `${yyyy}-${mm}-${dd}T19:00`;
+                localStorage.setItem('ops_suite_duty_out_time', dutyOut);
+            }
+            const dutyOutEl = document.getElementById('duty-out-time');
+            if (dutyOutEl) dutyOutEl.value = dutyOut;
 
         window.addEventListener('storage', (e) => {
             if (e.key === 'ops_suite_theme' && e.newValue) {
@@ -1129,7 +1151,7 @@
             closeDutyInRiskModal();
         }
     </script>
-<script src="assets/simulator.js?v=4"></script>
+<script src="assets/simulator.js?v=6"></script>
 <script src="assets/changelog.js"></script>
 
 </body>

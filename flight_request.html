@@ -319,7 +319,7 @@
         }
         .nav-log-header {
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr 1.8fr 2fr;
+            grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr 1fr 1.8fr 2fr 1fr;
             padding: 8px 12px;
             background-color: var(--bg-body);
             font-size: 10px;
@@ -329,7 +329,7 @@
         }
         .nav-log-row {
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr 1.8fr 2fr;
+            grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr 1fr 1.8fr 2fr 1fr;
             padding: 10px 12px;
             border-bottom: 1px solid var(--border-color);
             align-items: center;
@@ -554,6 +554,14 @@
                             <div class="detail-item">
                                 <span class="detail-label">Distance</span>
                                 <span class="detail-value">139.0 nm</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Est. Completion</span>
+                                <span class="detail-value" id="detail-est-completion">...</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Est. Duty Time</span>
+                                <span class="detail-value" id="detail-est-duty-time">...</span>
                             </div>
                             <div class="detail-item" id="detail-highest-peak" style="display:none;"></div>
                             <div class="detail-item" id="detail-est-fuel" style="display:none;"></div>
@@ -800,6 +808,7 @@
                 
                 let highestRoutePeak = 0;
                 let totalFuelGal = 0;
+                let finalEtaOffset = 0;
                 
                 const routeList = document.getElementById('flight-request-route-list');
                 if (routeList) {
@@ -812,9 +821,11 @@
                                 <div>WPT</div>
                                 <div>CRS</div>
                                 <div>NM</div>
+                                <div>LEG TIME</div>
                                 <div>ETA</div>
                                 <div>EST FUEL (GALS)</div>
                                 <div>HIGHEST OBSTACLE</div>
+                                <div>GROUND TIME</div>
                             </div>
                         `;
                         tableHtml += route.map((wp, index) => {
@@ -822,6 +833,8 @@
                             let dist = '-';
                             let fuelStr = '-';
                             let obsStr = '-';
+                            let delayStr = '-';
+                            let legTimeStr = '-';
                             
                             if (index > 0) {
                                 const prevWp = route[index-1];
@@ -834,12 +847,22 @@
                                 
                                 crs = `${wp.heading}&deg;`;
                                 dist = `${wp.legDistance}`;
+                                legTimeStr = `${wp.legTime} min`;
                                 fuelStr = `${Math.round(legFuel)}`;
                                 if (legPeak !== null) {
                                     obsStr = `${legPeak.elevation}`;
                                 }
                             }
+
+                            if (index > 0 && index < route.length - 1) {
+                                let d = wp.delay !== undefined ? wp.delay : 30;
+                                delayStr = `${d} min`;
+                            }
+
                             const etaOffset = wp.etaOffset || 0;
+                            if (index === route.length - 1) {
+                                finalEtaOffset = etaOffset;
+                            }
                             const d = new Date();
                             d.setMinutes(d.getMinutes() + etaOffset);
                             const etaStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -848,9 +871,11 @@
                                 <div class="nl-wpt">${wp.id}</div>
                                 <div class="nl-val">${crs}</div>
                                 <div class="nl-val">${dist}</div>
+                                <div class="nl-val">${legTimeStr}</div>
                                 <div class="nl-time">${etaStr}</div>
                                 <div class="nl-fuel">${fuelStr}</div>
                                 <div class="nl-obs">${obsStr}</div>
+                                <div class="nl-val">${delayStr}</div>
                             </div>`;
                         }).join('');
                         tableHtml += `</div>`;
@@ -869,9 +894,43 @@
                         detailFuel.style.display = 'flex';
                         detailFuel.innerHTML = `<span class="detail-label">Est. Total Fuel</span><span class="detail-value" style="color:var(--accent-blue);">${Math.round(totalFuelGal)} gal</span>`;
                     }
+                    
+                    // Calculate Est Completion and Duty Time
+                    const completionDate = new Date();
+                    completionDate.setMinutes(completionDate.getMinutes() + finalEtaOffset);
+                    const completionStr = completionDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    
+                    document.getElementById('detail-est-completion').innerText = completionStr;
+                    
+                    let dutyInStr = localStorage.getItem('ops_suite_duty_in_time');
+                    if (!dutyInStr) {
+                        const now = new Date();
+                        const yyyy = now.getFullYear();
+                        const mm = String(now.getMonth() + 1).padStart(2, '0');
+                        const dd = String(now.getDate()).padStart(2, '0');
+                        dutyInStr = `${yyyy}-${mm}-${dd}T07:00`;
+                    }
+                    
+                    if (dutyInStr) {
+                        const dutyInDate = new Date(dutyInStr);
+                        // Make sure it's the same day by only taking the time, or assume dutyInStr has the correct day
+                        // since duty_options.html defaults it to today.
+                        const dutyDiffMs = completionDate - dutyInDate;
+                        if (dutyDiffMs > 0) {
+                            const dutyDiffHrs = (dutyDiffMs / (1000 * 60 * 60)).toFixed(1);
+                            document.getElementById('detail-est-duty-time').innerText = `${dutyDiffHrs} hours`;
+                        } else {
+                            document.getElementById('detail-est-duty-time').innerText = `N/A`;
+                        }
+                    } else {
+                        document.getElementById('detail-est-duty-time').innerText = `Unknown`;
+                    }
+                    
                 } else {
                     if (detailPeak) detailPeak.style.display = 'none';
                     if (detailFuel) detailFuel.style.display = 'none';
+                    document.getElementById('detail-est-completion').innerText = '...';
+                    document.getElementById('detail-est-duty-time').innerText = '...';
                 }
 
                 if (leafletMap && route.length > 0) {
@@ -1046,7 +1105,7 @@
         }
     </script>
     <script src="assets/obstacle_engine.js"></script>
-    <script src="assets/simulator.js?v=4"></script>
+    <script src="assets/simulator.js?v=6"></script>
 <script src="assets/changelog.js"></script>
 </body>
 </html>

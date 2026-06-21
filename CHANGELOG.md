@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.1] - 2026-06-21
+### Added
+- Added "Est. Completion Time" and "Est. Duty Time" displays to the Flight Request page.
+- Added a "Leg Time" column to the Flight Request route table.
+
+### Changed
+- Updated the "Duty In" time setting in Duty Options to automatically save to localStorage and default to 07:00.
+- Fixed an issue where ETA calculations were misaligned due to cached `etaOffset` values.
+- Implemented immediate route math recalculation upon loading saved routes from storage to ensure accurate default ground times.
+- Bumped cache-busters across all prototype HTML files.
+
 ## [0.4.0] - 2026-06-21
 ### Added
 - Integrated offline Highest Obstacle Engine utilizing `terrain.json` and `obstacles.json`.

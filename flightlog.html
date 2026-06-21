@@ -11,10 +11,26 @@
     <title>Ops Suite - Manifest Prototype</title>
     <script>
         function populateHighestObstacle() {
-            const val = localStorage.getItem('ops_suite_highest_obstacle');
-            if (val) {
+            let val = localStorage.getItem('ops_suite_highest_obstacle');
+            
+            // Fallback: Calculate directly if not in localStorage or is '0'
+            if (!val || val === '0') {
+                if (window.FlightSimulator && window.FlightSimulator.activeRoute && typeof calculateLegPeakElevation === 'function') {
+                    const route = window.FlightSimulator.activeRoute;
+                    let highest = 0;
+                    for (let i = 1; i < route.length; i++) {
+                        const peak = calculateLegPeakElevation(route[i-1], route[i], 4);
+                        if (peak && peak.elevation > highest) highest = peak.elevation;
+                    }
+                    if (highest > 0) val = highest;
+                }
+            }
+            
+            if (val && val !== '0') {
                 document.getElementById('highest-obst').value = val;
                 if (typeof updateCurrentLeg === 'function') updateCurrentLeg();
+            } else {
+                alert('No obstacle data available for this route.');
             }
         }
         // Simulator and logic functions for Flight Log

@@ -2,6 +2,7 @@
 
 ## [0.4.2] - 2026-06-21
 ### Fixed
+- Fixed an issue on the home page preview map where waypoints visited multiple times would overlap instead of stacking neatly.
 - Increased the width of the desktop instructions and comm center simulator panels by ~28% (from 350px to 450px) to provide more breathing room for content.
 - Fixed an issue where the iPad simulation didn't properly scale to fit the screen on the initial page load until the user manually resized their browser.
 - Fixed an issue where tapping the `Highest Obstacle` header in the flight log failed silently due to a syntax error.

@@ -1414,16 +1414,22 @@
                     routeMarkers = [];
                     
                     const waypoints = [];
+                    const locationCounts = {};
                     route.forEach((wp, index) => {
                         const latLng = [wp.lat, wp.lon];
                         waypoints.push(latLng);
+                        
+                        const locKey = wp.lat.toFixed(4) + '_' + wp.lon.toFixed(4);
+                        if (!locationCounts[locKey]) locationCounts[locKey] = 0;
+                        const offsetIdx = locationCounts[locKey];
+                        locationCounts[locKey]++;
                         
                         const markerHtml = `<div style="background-color: var(--accent-orange); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${index + 1}</div>`;
                         const customIcon = L.divIcon({
                             html: markerHtml,
                             className: 'custom-div-icon',
                             iconSize: [24, 24],
-                            iconAnchor: [12, 12]
+                            iconAnchor: [12, 12 - (offsetIdx * 26)]
                         });
                         
                         const m = L.marker(latLng, {icon: customIcon}).addTo(leafletMap);

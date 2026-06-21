@@ -301,7 +301,7 @@ window.FlightSimulator = {
         style.textContent = `
             #flight-request-simulator {
                 display: flex !important;
-                width: 350px;
+                width: 450px;
                 flex-shrink: 0;
                 background-color: #222;
                 color: #ddd;

@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.4.0] - 2026-06-21
+### Added
+- Integrated offline Highest Obstacle Engine utilizing `terrain.json` and `obstacles.json`.
+- Plotted precise peak elevation dots and detection footprints (4NM corridor) on maps.
+- Added scrollability and structured data grid to Flight Request.
+
+### Changed
+- Refactored Route details into a 6-column Nav Log Table (WPT, CRS, NM, ETA, EST FUEL (GALS), HIGHEST OBSTACLE).
+- Adjusted Map elements to better display obstacle labels with dynamic widths.
+
 ## [0.3.1] - 2026-06-20
 ### Changed
 - Refactored Map UI to include a new `.map-command-bar`.

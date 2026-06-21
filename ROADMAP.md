@@ -16,8 +16,10 @@ This roadmap tracks feature requests, outstanding bugs, and architectural change
 - [ ] Lock down exact styling parameters for high-contrast accessibility modes based on web accessibility guidelines.
 - [ ] **Souls on Board (SOB) auto-calculation**: Automate the SOB field to dynamically calculate based on the entries in the personnel stations area.
 - [ ] **Quick Offload/Onload**: Add "Offload crew and patient" and "Onload Crew" buttons to speed creating new flight legs.
-- [ ] **Obstacle Detection**: Add obstacle detection to the flight request page using the engine from kml-obstacle-tool. Allow users to send their route to ForeFlight along with a customized KML of obstacles and obstacle NOTAMs.
-- [ ] **Auto-Generated Route Altitudes**: Auto-generate route MSA (Minimum Safe Altitude) and ESA (Emergency Safe Altitude) using the engine from the KML obstacle tool. Display this data on the flight request page and auto-push it to the manifest/flight log page.
+- [ ] **Obstacle Detection**: Add obstacle detection to the flight request page using the terrain/obstacle engine from the IIMC-card-tool. We will use the kml-obstacle tool to visually highlight potential obstacles along the flight route on map previews and give the user the option to generate customized KML overlays that would get sent to ForeFlight.
+- [ ] **Auto-Generated Route Altitudes**: Auto-generate route MSA (Minimum Safe Altitude) and ESA (Emergency Safe Altitude) using the terrain/obstacle engine from the IIMC-card-tool. Display this data on the flight request page and auto-push it to the manifest/flight log page.
+- [ ] **Clickable Waypoints**: Investigate linking waypoints in the flight route to be clickable, opening their respective entries in ForeFlight and/or the hospital/heliport guide. Additionally, explore providing context-rich data (especially for scenes), such as satellite photos or a "virtual high/low recon" (a visual 3D orbit around the LZ using satellite and terrain imagery) with nearby obstacles and terrain visually highlighted.
+- [ ] **Flight Request Page Upscale**: Major upscale of the flight request page to include more comprehensive data about duty times, and much more context about individual legs (including estimated fuel, terrain, obstacles, etc.).
 
 ---
 *Note: This document is a living artifact and will be updated as new requirements are discovered.*

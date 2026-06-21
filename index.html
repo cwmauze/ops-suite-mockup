@@ -59,12 +59,17 @@
                 document.documentElement.setAttribute('data-theme', savedTheme);
             }
 
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'ops_suite_theme' && e.newValue) {
-                document.documentElement.setAttribute('data-theme', e.newValue);
-            }
-        });
+            // Clear flight request data to ensure a fresh session on login
+            localStorage.removeItem('ops_suite_sim_route');
+            localStorage.removeItem('ops_suite_flight_sent');
+            localStorage.removeItem('ops_suite_flight_time');
+            localStorage.removeItem('ops_suite_highest_obstacle');
 
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'ops_suite_theme' && e.newValue) {
+                    document.documentElement.setAttribute('data-theme', e.newValue);
+                }
+            });
         });
 
         function formatSyncTime() {

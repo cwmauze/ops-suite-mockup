@@ -11,26 +11,40 @@
     <title>Ops Suite - Manifest Prototype</title>
     <script>
         function populateHighestObstacle() {
-            let val = localStorage.getItem('ops_suite_highest_obstacle');
-            
-            // Fallback: Calculate directly if not in localStorage or is '0'
-            if (!val || val === '0') {
-                if (window.FlightSimulator && window.FlightSimulator.activeRoute && typeof calculateLegPeakElevation === 'function') {
-                    const route = window.FlightSimulator.activeRoute;
-                    let highest = 0;
-                    for (let i = 1; i < route.length; i++) {
-                        const peak = calculateLegPeakElevation(route[i-1], route[i], 4);
-                        if (peak && peak.elevation > highest) highest = peak.elevation;
+            try {
+                let val = localStorage.getItem('ops_suite_highest_obstacle');
+                
+                // Fallback: Calculate directly if not in localStorage or is '0'
+                if (!val || val === '0') {
+                    if (window.FlightSimulator && window.FlightSimulator.activeRoute && window.FlightSimulator.activeRoute.length > 0) {
+                        const route = window.FlightSimulator.activeRoute;
+                        let highest = 0;
+                        if (typeof calculateLegPeakElevation === 'function') {
+                            for (let i = 1; i < route.length; i++) {
+                                const peak = calculateLegPeakElevation(route[i-1], route[i], 4);
+                                if (peak && peak.elevation > highest) highest = peak.elevation;
+                            }
+                        }
+                        if (highest > 0) val = highest;
                     }
-                    if (highest > 0) val = highest;
                 }
-            }
-            
-            if (val && val !== '0') {
-                document.getElementById('highest-obst').value = val;
-                if (typeof updateCurrentLeg === 'function') updateCurrentLeg();
-            } else {
-                alert('No obstacle data available for this route.');
+                
+                if (val && val !== '0' && val !== 0) {
+                    val = Math.round(parseFloat(val));
+                    const input = document.getElementById('highest-obst');
+                    if (input) {
+                        input.value = val;
+                        // Dispatch input event to ensure any listeners fire
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                        if (typeof updateCurrentLeg === 'function') updateCurrentLeg();
+                    } else {
+                        alert('Could not find the obstacle input field.');
+                    }
+                } else {
+                    alert('No obstacle data available. Did you calculate a route first?');
+                }
+            } catch (err) {
+                alert('Error populating obstacle: ' + err.message);
             }
         }
         // Simulator and logic functions for Flight Log
@@ -859,7 +873,7 @@
                 <div class="section">
                     <div class="form-row" style="margin-bottom: 8px;">
                         <div class="form-group" style="flex: 0.6;">
-                            <label style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; color: var(--accent-blue);" title="HIGHEST OBST" onclick="populateHighestObstacle()">HIGHEST OBST</label>
+                            <span style="display: block; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; color: var(--accent-blue);" title="HIGHEST OBST" onclick="populateHighestObstacle()">HIGHEST OBST</span>
                             <input type="number" id="highest-obst" value="" placeholder="---" oninput="updateCurrentLeg()">
                         </div>
                         <div class="form-group" style="flex: 1.3;">

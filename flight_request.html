@@ -890,6 +890,7 @@
                         detailPeak.style.display = 'flex';
                         detailPeak.innerHTML = `<span class="detail-label">Highest Route Obstacle</span><span class="detail-value" style="color:var(--accent-red);">${highestRoutePeak} ft MSL</span>`;
                     }
+                    localStorage.setItem('ops_suite_highest_obstacle', highestRoutePeak);
                     if (detailFuel) {
                         detailFuel.style.display = 'flex';
                         detailFuel.innerHTML = `<span class="detail-label">Est. Total Fuel</span><span class="detail-value" style="color:var(--accent-blue);">${Math.round(totalFuelGal)} gal</span>`;

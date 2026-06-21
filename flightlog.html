@@ -29,14 +29,16 @@
                     }
                 }
                 
-                if (val && val !== '0' && val !== 0) {
+                if (val && val !== '0' && val !== 0 && val !== 'NaN' && val !== 'null' && val !== 'undefined') {
                     val = Math.round(parseFloat(val));
+                    if (isNaN(val)) throw new Error('Value evaluated to NaN');
                     const input = document.getElementById('highest-obst');
                     if (input) {
                         input.value = val;
                         // Dispatch input event to ensure any listeners fire
                         input.dispatchEvent(new Event('input', { bubbles: true }));
                         if (typeof updateCurrentLeg === 'function') updateCurrentLeg();
+                        // alert('Successfully populated highest obstacle: ' + val + ' ft'); // Optional, leaving out to not annoy user on success
                     } else {
                         alert('Could not find the obstacle input field.');
                     }
@@ -873,7 +875,7 @@
                 <div class="section">
                     <div class="form-row" style="margin-bottom: 8px;">
                         <div class="form-group" style="flex: 0.6;">
-                            <span style="display: block; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; color: var(--accent-blue);" title="HIGHEST OBST" onclick="populateHighestObstacle()">HIGHEST OBST</span>
+                            <button type="button" style="background: none; border: none; padding: 0; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; color: var(--accent-blue); text-align: left; display: block; width: 100%; font-family: inherit; z-index: 10; position: relative;" title="HIGHEST OBST" onclick="alert('Button clicked'); populateHighestObstacle();">HIGHEST OBST</button>
                             <input type="number" id="highest-obst" value="" placeholder="---" oninput="updateCurrentLeg()">
                         </div>
                         <div class="form-group" style="flex: 1.3;">

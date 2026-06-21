@@ -32,6 +32,7 @@
             }
         }
         window.addEventListener('resize', scaleDevice);
+        window.addEventListener('load', scaleDevice);
         window.addEventListener('DOMContentLoaded', () => {
             // Detect mobile/tablet devices, including iPadOS 13+ desktop mode, or PWA standalone mode
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;

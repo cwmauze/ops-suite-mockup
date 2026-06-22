@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.4] - 2026-06-21
+### Added
+- Added ability to toggle between Highest Obstacle (4NM corridor) and Leg MSA (25NM radius) in the flight log.
+
+### Fixed
+- Fixed an issue where the Highest Obstacle/MSA was not automatically recalculating when adding a new leg or updating waypoints dynamically.
+- Improved waypoint ID matching to handle "K" prefixed ICAO identifiers for US airports.
+
 ## [0.4.3] - 2026-06-21
 ### Fixed
 - Fixed an issue on the home page preview map where waypoints visited multiple times would overlap instead of stacking neatly.

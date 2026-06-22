@@ -10,11 +10,79 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>Ops Suite - Manifest Prototype</title>
     <script>
-        function populateHighestObstacle() {
-            try {
-                let val = localStorage.getItem('ops_suite_highest_obstacle');
-                
-                // Fallback: Calculate directly if not in localStorage or is '0'
+        window.obstacleMode = 'HIGHEST';
+        let highestObstacleLongPressTimer;
+        let wasLongPress = false;
+
+        function handleObstacleTouchStart(e) {
+            wasLongPress = false;
+            highestObstacleLongPressTimer = setTimeout(() => {
+                wasLongPress = true;
+                toggleObstacleMode();
+            }, 600);
+        }
+
+        function handleObstacleTouchEnd(e) {
+            clearTimeout(highestObstacleLongPressTimer);
+        }
+
+        function handleObstacleClick(e) {
+            if (wasLongPress) {
+                if (e) { e.preventDefault(); e.stopPropagation(); }
+                wasLongPress = false;
+                return;
+            }
+            populateHighestObstacle();
+        }
+
+        function toggleObstacleMode() {
+            window.obstacleMode = window.obstacleMode === 'HIGHEST' ? 'MSA' : 'HIGHEST';
+            const btn = document.getElementById('highest-obst-btn');
+            if (btn) {
+                btn.innerText = window.obstacleMode === 'HIGHEST' ? 'HIGHEST OBST' : 'LEG MSA';
+                btn.title = window.obstacleMode === 'HIGHEST' ? 'HIGHEST OBST' : 'LEG MSA';
+            }
+            populateHighestObstacle();
+        }
+
+        function getElevationForLeg(originStr, destStr, mode) {
+            originStr = (originStr || '').trim().toUpperCase();
+            destStr = (destStr || '').trim().toUpperCase();
+            let val = null;
+
+            if (mode === 'MSA') {
+                if (originStr && destStr && window.FlightSimulator && window.FlightSimulator.waypointsData) {
+                    let originWp = window.FlightSimulator.waypointsData[originStr] || 
+                                  (originStr.length === 3 ? window.FlightSimulator.waypointsData['K' + originStr] : null) ||
+                                  (originStr.startsWith('K') ? window.FlightSimulator.waypointsData[originStr.substring(1)] : null);
+                    
+                    let destWp = window.FlightSimulator.waypointsData[destStr] || 
+                                (destStr.length === 3 ? window.FlightSimulator.waypointsData['K' + destStr] : null) ||
+                                (destStr.startsWith('K') ? window.FlightSimulator.waypointsData[destStr.substring(1)] : null);
+                    
+                    if ((!originWp || !destWp) && window.FlightSimulator.activeRoute) {
+                        const route = window.FlightSimulator.activeRoute;
+                        if (!originWp) originWp = route.find(w => {
+                            const id = (w.id || '').toUpperCase();
+                            const name = (w.name || '').toUpperCase();
+                            return id === originStr || name === originStr || id === 'K' + originStr || 'K' + id === originStr;
+                        });
+                        if (!destWp) destWp = route.find(w => {
+                            const id = (w.id || '').toUpperCase();
+                            const name = (w.name || '').toUpperCase();
+                            return id === destStr || name === destStr || id === 'K' + destStr || 'K' + id === destStr;
+                        });
+                    }
+                    
+                    if (originWp && destWp && typeof calculateLegPeakElevation === 'function') {
+                        const peak = calculateLegPeakElevation(originWp, destWp, 25);
+                        if (peak && peak.elevation !== undefined && peak.elevation !== null) {
+                            val = peak.elevation;
+                        }
+                    }
+                }
+            } else {
+                val = localStorage.getItem('ops_suite_highest_obstacle');
                 if (!val || val === '0') {
                     if (window.FlightSimulator && window.FlightSimulator.activeRoute && window.FlightSimulator.activeRoute.length > 0) {
                         const route = window.FlightSimulator.activeRoute;
@@ -28,22 +96,86 @@
                         if (highest > 0) val = highest;
                     }
                 }
-                
-                if (val && val !== '0' && val !== 0 && val !== 'NaN' && val !== 'null' && val !== 'undefined') {
-                    val = Math.round(parseFloat(val));
-                    if (isNaN(val)) throw new Error('Value evaluated to NaN');
-                    const input = document.getElementById('highest-obst');
-                    if (input) {
-                        input.value = val;
-                        // Dispatch input event to ensure any listeners fire
-                        input.dispatchEvent(new Event('input', { bubbles: true }));
-                        if (typeof updateCurrentLeg === 'function') updateCurrentLeg();
-                        // alert('Successfully populated highest obstacle: ' + val + ' ft'); // Optional, leaving out to not annoy user on success
-                    } else {
-                        alert('Could not find the obstacle input field.');
+            }
+
+            if (val !== null && val !== undefined && val !== '' && val !== 'NaN' && val !== 'null' && val !== 'undefined' && val !== '0' && val !== 0) {
+                val = Math.round(parseFloat(val));
+                if (!isNaN(val)) {
+                    if (mode === 'MSA') {
+                        val = (Math.ceil(val / 100) * 100) + 1000;
+                    }
+                    return val;
+                }
+            }
+            return null;
+        }
+
+        function populateHighestObstacle() {
+            try {
+                let globalHighest = null;
+                if (window.obstacleMode === 'HIGHEST') {
+                    globalHighest = getElevationForLeg('', '', 'HIGHEST');
+                    if (globalHighest === null) {
+                        alert('No obstacle data available. Did you calculate a route first?');
+                        return;
+                    }
+                }
+
+                if (typeof AppState !== 'undefined' && AppState.legs && AppState.legs.length > 0) {
+                    let hasErrors = false;
+                    AppState.legs.forEach(leg => {
+                        if (window.obstacleMode === 'HIGHEST') {
+                            leg.highestObstacle = globalHighest;
+                        } else {
+                            let origin = leg.origin || '';
+                            let dest = leg.dest || '';
+                            
+                            if (leg.active) {
+                                origin = document.getElementById('leg-origin') ? document.getElementById('leg-origin').value : origin;
+                                dest = document.getElementById('leg-dest') ? document.getElementById('leg-dest').value : dest;
+                            }
+
+                            const val = getElevationForLeg(origin, dest, 'MSA');
+                            if (val !== null) {
+                                leg.highestObstacle = val;
+                            } else {
+                                if (origin && dest) hasErrors = true;
+                            }
+                        }
+                    });
+
+                    const activeLeg = AppState.legs.find(l => l.active);
+                    if (activeLeg) {
+                        const input = document.getElementById('highest-obst');
+                        if (input) {
+                            input.value = (activeLeg.highestObstacle !== undefined && activeLeg.highestObstacle !== null) ? activeLeg.highestObstacle : '';
+                            input.dispatchEvent(new Event('input', { bubbles: true }));
+                            if (typeof updateCurrentLeg === 'function') updateCurrentLeg();
+                        }
+                    }
+
+                    if (hasErrors) {
+                        alert('Could not calculate leg MSA for some legs. Ensure origin and destination match the route waypoints.');
                     }
                 } else {
-                    alert('No obstacle data available. Did you calculate a route first?');
+                    const originStr = document.getElementById('leg-origin') ? document.getElementById('leg-origin').value : '';
+                    const destStr = document.getElementById('leg-dest') ? document.getElementById('leg-dest').value : '';
+                    const val = window.obstacleMode === 'HIGHEST' ? globalHighest : getElevationForLeg(originStr, destStr, 'MSA');
+                    
+                    if (val !== null) {
+                        const input = document.getElementById('highest-obst');
+                        if (input) {
+                            input.value = val;
+                            input.dispatchEvent(new Event('input', { bubbles: true }));
+                            if (typeof updateCurrentLeg === 'function') updateCurrentLeg();
+                        }
+                    } else {
+                        if (window.obstacleMode === 'MSA') {
+                            alert('Could not calculate leg MSA. Ensure origin and destination match the route waypoints.');
+                        } else {
+                            alert('No obstacle data available. Did you calculate a route first?');
+                        }
+                    }
                 }
             } catch (err) {
                 alert('Error populating obstacle: ' + err.message);
@@ -797,7 +929,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.4.3</div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.4.4</div>
     </div>
 
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
@@ -805,7 +937,7 @@
         <div class="device-screen">
             
             <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.4.3</span>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.4.4</span>
                 <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -874,7 +1006,7 @@
                 <div class="section">
                     <div class="form-row" style="margin-bottom: 8px;">
                         <div class="form-group" style="flex: 0.6;">
-                            <button type="button" style="background: none; border: none; padding: 0; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; color: var(--accent-blue); text-align: left; display: block; width: 100%; font-family: inherit; z-index: 10; position: relative;" title="HIGHEST OBST" onclick="populateHighestObstacle();">HIGHEST OBST</button>
+                            <button type="button" id="highest-obst-btn" style="background: none; border: none; padding: 0; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; color: var(--accent-blue); text-align: left; display: block; width: 100%; font-family: inherit; z-index: 10; position: relative; -webkit-user-select: none; user-select: none;" title="HIGHEST OBST" onclick="handleObstacleClick(event);" oncontextmenu="if(!wasLongPress) toggleObstacleMode(); event.preventDefault(); return false;" ontouchstart="handleObstacleTouchStart(event)" ontouchend="handleObstacleTouchEnd(event)" onmousedown="handleObstacleTouchStart(event)" onmouseup="handleObstacleTouchEnd(event)" onmouseleave="handleObstacleTouchEnd(event)">HIGHEST OBST</button>
                             <input type="number" id="highest-obst" value="" placeholder="---" oninput="updateCurrentLeg()">
                         </div>
                         <div class="form-group" style="flex: 1.3;">
@@ -2377,7 +2509,12 @@
             const hours = prevLeg ? prevLeg.hours : '02';
             const minutes = prevLeg ? prevLeg.minutes : '58';
             const fto = prevLeg ? prevLeg.fuelTimeOverridden : false;
-            const highestObstacle = prevLeg ? prevLeg.highestObstacle : '';
+            
+            let highestObstacle = prevLeg ? prevLeg.highestObstacle : '';
+            if (window.obstacleMode === 'MSA') {
+                const val = getElevationForLeg(origin, dest, 'MSA');
+                if (val !== null) highestObstacle = val;
+            }
             
             let newCrew = null;
             if (prevLeg && prevLeg.crew) {
@@ -2473,7 +2610,17 @@
                 if (toggle) activeLeg.isIfr = toggle.checked;
 
                 const obstInput = document.getElementById('highest-obst');
-                if (obstInput) activeLeg.highestObstacle = obstInput.value;
+                if (window.obstacleMode === 'MSA') {
+                    const val = getElevationForLeg(activeLeg.origin, activeLeg.dest, 'MSA');
+                    if (val !== null) {
+                        activeLeg.highestObstacle = val;
+                        if (obstInput && document.activeElement !== obstInput) obstInput.value = val;
+                    } else if (obstInput) {
+                        activeLeg.highestObstacle = obstInput.value;
+                    }
+                } else {
+                    if (obstInput) activeLeg.highestObstacle = obstInput.value;
+                }
 
                 activeLeg.supply = document.getElementById('supply-tank').value;
                 activeLeg.main = document.getElementById('main-tank').value;
@@ -2677,8 +2824,11 @@
         </div>
         <div id="changelog-content" style="padding:20px; line-height:1.5; font-size: 0.95rem;"></div>
         </div>
-    </div>
-<script src="assets/simulator.js?v=7"></script>
-<script src="assets/changelog.js"></script>
+    <script src="assets/obstacle_engine.js"></script>
+    <script>
+        if (typeof initObstacleEngine === 'function') initObstacleEngine();
+    </script>
+    <script src="assets/simulator.js?v=7"></script>
+    <script src="assets/changelog.js"></script>
 </body>
 </html>

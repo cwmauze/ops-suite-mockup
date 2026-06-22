@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.4.5] - 2026-06-21
+### Added
+- Rewrote the drag-and-drop mechanism for Manifest crew seats to use native HTML5 drag-and-drop, matching the Comm Center simulator behavior.
+
+### Fixed
+- Fixed an issue where the autocomplete dropdown menus were clipped and hidden behind other seat cards in Safari.
+- Fixed an issue where dragging a seat card visually dragged the entire grid by explicitly managing native `dragenter` and `dragover` events.
+- Condensed the standalone "< Manifest List" back link into the main Manifest title to save vertical UI space.
+
 ## [0.4.4] - 2026-06-21
 ### Added
 - Added ability to toggle between Highest Obstacle (4NM corridor) and Leg MSA (25NM radius) in the flight log.

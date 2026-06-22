@@ -414,18 +414,22 @@
         input:checked + .slider:before { transform: translateX(22px); }
 
         .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background-color: var(--surface-color-light); padding: 4px; border-radius: 6px; border: 2px dashed var(--border-color); }
-        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 6px; padding: 4px; display: flex; flex-direction: column; gap: 2px; cursor: pointer; position: relative; transition: all 0.2s; }
+        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 6px; padding: 4px; display: flex; flex-direction: column; gap: 2px; cursor: pointer; position: relative; transition: all 0.2s; -webkit-user-drag: element; }
+        .seat-card input { user-select: auto; -webkit-user-select: auto; }
+        .drag-handle { user-select: none; -webkit-user-select: none; }
         .seat-card.active { border-color: var(--accent-blue); }
         .seat-card:has(.seat-occupant-input:not(:placeholder-shown)) { background-color: rgba(39, 174, 96, 0.1); border-color: var(--accent-green); }
         .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
         .seat-title { font-size: 0.75rem; color: var(--text-secondary); text-align: left; text-transform: uppercase; font-weight: bold; margin: 0; }
         .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 4px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; min-height: 28px; display: flex; align-items: center; justify-content: center; }
-        .seat-occupant-input { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 4px; padding-right: 24px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; width: 100%; box-sizing: border-box; color: var(--text-primary); outline: none; margin: 0; }
+        .seat-occupant-input { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 4px 24px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; width: 100%; box-sizing: border-box; color: var(--text-primary); outline: none; margin: 0; }
         .seat-occupant-input::placeholder { color: var(--text-secondary); font-weight: normal; }
         .seat-occupant-input:focus { border-color: var(--accent-blue); }
         .clear-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 1.2rem; font-weight: bold; line-height: 1; }
         .seat-occupant-input:placeholder-shown + .clear-btn { display: none; }
         .clear-btn:hover { color: var(--accent-red); }
+        .cycle-btn { position: absolute; left: 0; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 1.2rem; font-weight: bold; line-height: 1; padding: 10px; width: 44px; text-align: center; box-sizing: border-box; }
+        .cycle-btn:hover { color: var(--accent-blue); }
         .autocomplete-dropdown { position: absolute; top: calc(100% - 10px); left: 12px; right: 12px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 6px; max-height: 150px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
         .autocomplete-item { padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; display: flex; justify-content: space-between; cursor: pointer; color: var(--text-primary); }
         .autocomplete-item:last-child { border-bottom: none; }
@@ -758,7 +762,7 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.4.4</div>
+        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.4.5</div>
     </div>
 
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
@@ -766,7 +770,7 @@
         <div class="device-screen">
             
             <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.4.4</span>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.4.5</span>
                 <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -782,10 +786,9 @@
             <div class="global-header">
                 <div class="header-top-row" style="align-items: stretch; gap: 15px;">
                     <div style="display: flex; flex-direction: column; gap: 4px; justify-content: center; min-width: 120px;">
-                        <div class="back-link" style="font-size: 1rem; color: var(--accent-blue); font-weight: bold; cursor: pointer; margin-bottom: 4px;" onclick="window.location.href='manifest.html'">
-                            &lt; Manifest List
+                        <div class="manifest-title" style="font-size: 1.15rem; font-weight: 700; color: var(--accent-blue); cursor: pointer; padding-top: 23px;" onclick="window.location.href='manifest.html'">
+                            &lt; Manifest 3664365
                         </div>
-                        <div class="manifest-title" style="font-size: 1.2rem; font-weight: 700;">Manifest: 3664365</div>
                         <div class="aircraft-number" style="font-size: 0.95rem; color: var(--text-secondary); font-weight: bold;">N850BU</div>
                         <div class="team-badge" style="font-size: 0.85rem; color: var(--accent-blue); font-weight: bold; cursor: pointer; text-transform: uppercase;">👥 RWI Medical Team</div>
                     </div>
@@ -883,53 +886,72 @@
                     <div class="spatial-grid">
                         <div class="seat-card">
                             <div class="seat-header">
-                                <div class="seat-title">Copilot Seat</div>
-                                <div class="seat-weight">[<input type="number" id="wt-1" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="drag-handle" style="cursor: grab; color: var(--border-color); font-size: 1.2rem; line-height: 1; padding-bottom: 2px;">⋮⋮</span>
+                                    <div class="seat-title">Copilot Seat</div>
+                                </div>
+                                <div class="seat-weight">[<input type="number" id="wt-1" value="0" inputmode="decimal" pattern="[0-9]*" readonly> KG]</div>
                             </div>
                             <div style="position: relative;">
                                 <input type="text" class="seat-occupant-input" id="occ-1" placeholder="Search personnel..." oninput="filterPersonnel(1)" onfocus="showPersonnel(1)">
+                                <span class="cycle-btn" title="Cycle through recent crew" onclick="cycleRecentCrew(1, event)">↻</span>
                                 <span class="clear-btn" onclick="clearSeat(1, event)">&times;</span>
                             </div>
                             <div class="autocomplete-dropdown" id="dropdown-1"></div>
                         </div>
                         <div class="seat-card active">
                             <div class="seat-header">
-                                <div class="seat-title">Pilot Seat</div>
-                                <div class="seat-weight">[<input type="number" id="wt-2" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="drag-handle" style="cursor: grab; color: var(--border-color); font-size: 1.2rem; line-height: 1; padding-bottom: 2px;">⋮⋮</span>
+                                    <div class="seat-title">Pilot Seat</div>
+                                </div>
+                                <div class="seat-weight">[<input type="number" id="wt-2" value="0" inputmode="decimal" pattern="[0-9]*" readonly> KG]</div>
                             </div>
                             <div style="position: relative;">
                                 <input type="text" class="seat-occupant-input" id="occ-2" value="" placeholder="Search personnel..." oninput="filterPersonnel(2)" onfocus="showPersonnel(2)">
+                                <span class="cycle-btn" title="Cycle through recent crew" onclick="cycleRecentCrew(2, event)">↻</span>
                                 <span class="clear-btn" onclick="clearSeat(2, event)">&times;</span>
                             </div>
                             <div class="autocomplete-dropdown" id="dropdown-2"></div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-header">
-                                <div class="seat-title">Aft Facing Left Hand</div>
-                                <div class="seat-weight">[<input type="number" id="wt-3" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="drag-handle" style="cursor: grab; color: var(--border-color); font-size: 1.2rem; line-height: 1; padding-bottom: 2px;">⋮⋮</span>
+                                    <div class="seat-title">Aft Facing Left Hand</div>
+                                </div>
+                                <div class="seat-weight">[<input type="number" id="wt-3" value="0" inputmode="decimal" pattern="[0-9]*" readonly> KG]</div>
                             </div>
                             <div style="position: relative;">
                                 <input type="text" class="seat-occupant-input" id="occ-3" value="" placeholder="Search personnel..." oninput="filterPersonnel(3)" onfocus="showPersonnel(3)">
+                                <span class="cycle-btn" title="Cycle through recent crew" onclick="cycleRecentCrew(3, event)">↻</span>
                                 <span class="clear-btn" onclick="clearSeat(3, event)">&times;</span>
                             </div>
                             <div class="autocomplete-dropdown" id="dropdown-3"></div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-header">
-                                <div class="seat-title">Aft Facing Right Hand</div>
-                                <div class="seat-weight">[<input type="number" id="wt-4" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="drag-handle" style="cursor: grab; color: var(--border-color); font-size: 1.2rem; line-height: 1; padding-bottom: 2px;">⋮⋮</span>
+                                    <div class="seat-title">Aft Facing Right Hand</div>
+                                </div>
+                                <div class="seat-weight">[<input type="number" id="wt-4" value="0" inputmode="decimal" pattern="[0-9]*" readonly> KG]</div>
                             </div>
                             <div style="position: relative;">
                                 <input type="text" class="seat-occupant-input" id="occ-4" value="" placeholder="Search personnel..." oninput="filterPersonnel(4)" onfocus="showPersonnel(4)">
+                                <span class="cycle-btn" title="Cycle through recent crew" onclick="cycleRecentCrew(4, event)">↻</span>
                                 <span class="clear-btn" onclick="clearSeat(4, event)">&times;</span>
                             </div>
                             <div class="autocomplete-dropdown" id="dropdown-4"></div>
                         </div>
                         <div class="seat-card">
                             <div class="seat-header">
-                                <div class="seat-title">LEFT HAND LITTER</div>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="drag-handle" style="cursor: grab; color: var(--border-color); font-size: 1.2rem; line-height: 1; padding-bottom: 2px;">⋮⋮</span>
+                                    <div class="seat-title">LEFT HAND LITTER</div>
+                                </div>
                                 <!-- Empty spacer to keep header height aligned with adjacent cards -->
-                                <div class="seat-weight" style="visibility: hidden;">[<input type="number" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
+                                <div class="seat-weight" style="visibility: hidden;">[<input type="number" value="0" inputmode="decimal" pattern="[0-9]*" readonly> KG]</div>
                             </div>
                             <div style="position: relative;">
                                 <input type="number" class="seat-occupant-input" id="wt-5" value="" placeholder="Weight" inputmode="decimal" pattern="[0-9]*">
@@ -938,11 +960,15 @@
                         </div>
                         <div class="seat-card">
                             <div class="seat-header">
-                                <div class="seat-title">FWD FACING AFT SEAT RIGHT</div>
-                                <div class="seat-weight">[<input type="number" id="wt-6" value="0" inputmode="decimal" pattern="[0-9]*"> KG]</div>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="drag-handle" style="cursor: grab; color: var(--border-color); font-size: 1.2rem; line-height: 1; padding-bottom: 2px;">⋮⋮</span>
+                                    <div class="seat-title">FWD FACING AFT SEAT RIGHT</div>
+                                </div>
+                                <div class="seat-weight">[<input type="number" id="wt-6" value="0" inputmode="decimal" pattern="[0-9]*" readonly> KG]</div>
                             </div>
                             <div style="position: relative;">
                                 <input type="text" class="seat-occupant-input" id="occ-6" value="" placeholder="Search personnel..." oninput="filterPersonnel(6)" onfocus="showPersonnel(6)">
+                                <span class="cycle-btn" title="Cycle through recent crew" onclick="cycleRecentCrew(6, event)">↻</span>
                                 <span class="clear-btn" onclick="clearSeat(6, event)">&times;</span>
                             </div>
                             <div class="autocomplete-dropdown" id="dropdown-6"></div>
@@ -1877,12 +1903,15 @@
 
     </div> <!-- /device-frame -->
 
+
+
     <script>
         const AppState = {
             legs: [
                 { id: 1, origin: 'RWI', dest: 'NC91', isIfr: false, active: true },
                 { id: 2, origin: 'NC91', dest: 'RWI', isIfr: false, active: false }
-            ]
+            ],
+            flightRoster: []
         };
 
         const DummyPersonnel = [
@@ -2156,6 +2185,47 @@
             if(dropdown) dropdown.style.display = 'none';
         }
 
+        function getSeatedPersonnel(excludeSeatId = null) {
+            let seated = [];
+            for(let i=1; i<=6; i++) {
+                if (i === excludeSeatId) continue;
+                const occ = document.getElementById(`occ-${i}`);
+                if (occ && occ.value.trim() !== '') {
+                    seated.push(occ.value.trim().toLowerCase());
+                }
+            }
+            return seated;
+        }
+
+        function cycleRecentCrew(seatId, event) {
+            if (event) event.stopPropagation();
+            const seated = getSeatedPersonnel(seatId);
+            const availableRoster = AppState.flightRoster.filter(p => !seated.includes(p.name.toLowerCase()));
+            
+            if (availableRoster.length === 0) return; // Nobody available to cycle
+            
+            const input = document.getElementById(`occ-${seatId}`);
+            const wt = document.getElementById(`wt-${seatId}`);
+            if (!input) return;
+            
+            let currentIndex = -1;
+            if (input.value.trim() !== '') {
+                currentIndex = availableRoster.findIndex(p => p.name.toLowerCase() === input.value.trim().toLowerCase());
+            }
+            
+            const nextIndex = (currentIndex + 1) % availableRoster.length;
+            const nextPerson = availableRoster[nextIndex];
+            
+            input.value = nextPerson.name;
+            if (wt) wt.value = nextPerson.weight;
+            
+            const dropdown = document.getElementById(`dropdown-${seatId}`);
+            if (dropdown) dropdown.style.display = 'none';
+            
+            calculateSob();
+            updateCurrentLeg(); // Make sure flight state captures this change
+        }
+
         function filterPersonnel(seatId) {
             calculateSob(); // Trigger SOB recount
             const input = document.getElementById(`occ-${seatId}`);
@@ -2172,9 +2242,11 @@
             
             dropdown.innerHTML = '';
             
-            let matches = DummyPersonnel;
+            const seated = getSeatedPersonnel(seatId);
+            let matches = DummyPersonnel.filter(p => !seated.includes(p.name.toLowerCase()));
+            
             if (query.trim() !== '') {
-                matches = DummyPersonnel.filter(p => p.name.toLowerCase().includes(query));
+                matches = matches.filter(p => p.name.toLowerCase().includes(query));
             }
 
             if (matches.length > 0) {
@@ -2444,7 +2516,112 @@
             }
         }
 
+        // Native HTML5 Drag and Drop for Seat Swapping
+        let dragSourceSeatId = null;
+
+        function swapSeats(id1, id2) {
+            const occ1 = document.getElementById(`occ-${id1}`);
+            const wt1 = document.getElementById(`wt-${id1}`);
+            const occ2 = document.getElementById(`occ-${id2}`);
+            const wt2 = document.getElementById(`wt-${id2}`);
+            
+            // Litters or empty seats might not have occ input (e.g., id 5)
+            // But we can swap what we have
+            const valOcc1 = occ1 ? occ1.value : '';
+            const valWt1 = wt1 ? wt1.value : '0';
+            
+            const valOcc2 = occ2 ? occ2.value : '';
+            const valWt2 = wt2 ? wt2.value : '0';
+            
+            if (occ1) occ1.value = valOcc2;
+            if (wt1) wt1.value = valWt2;
+            
+            if (occ2) occ2.value = valOcc1;
+            if (wt2) wt2.value = valWt1;
+            
+            calculateSob();
+        }
+
+        const spatialGrid = document.querySelector('.spatial-grid');
         
+        // Ensure data-seat-ids exist and set cards to be globally draggable
+        spatialGrid.querySelectorAll('.seat-card').forEach(card => {
+            if (!card.hasAttribute('data-seat-id')) {
+                const wtInput = card.querySelector('.seat-weight input');
+                if (wtInput && wtInput.id) {
+                    card.setAttribute('data-seat-id', wtInput.id.replace('wt-', ''));
+                } else if (card.querySelector('.seat-title').innerText.includes('LITTER')) {
+                    card.setAttribute('data-seat-id', '5');
+                }
+            }
+            card.setAttribute('draggable', 'true');
+        });
+        
+        // Remove draggable from drag-handles in case they were stuck from previous step
+        spatialGrid.querySelectorAll('.drag-handle').forEach(handle => {
+            handle.removeAttribute('draggable');
+        });
+
+        spatialGrid.addEventListener('dragstart', (e) => {
+            const card = e.target.closest('.seat-card');
+            if (!card) return;
+            
+            // Prevent dragging if the user is interacting with an input or button!
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.closest('.clear-btn') || e.target.closest('.cycle-btn')) {
+                e.preventDefault();
+                return;
+            }
+
+            dragSourceSeatId = card.getAttribute('data-seat-id');
+            e.dataTransfer.setData('text/plain', dragSourceSeatId);
+            e.dataTransfer.effectAllowed = 'move';
+            setTimeout(() => card.classList.add('is-dragging'), 0);
+        });
+
+        spatialGrid.addEventListener('dragenter', (e) => {
+            e.preventDefault(); // Safari requires dragenter preventDefault to allow drop
+        });
+
+        spatialGrid.addEventListener('dragover', (e) => {
+            e.preventDefault(); // allow dropping
+            const card = e.target.closest('.seat-card');
+            if (card && dragSourceSeatId && dragSourceSeatId !== card.getAttribute('data-seat-id')) {
+                card.classList.add('drag-over');
+            }
+        });
+
+        spatialGrid.addEventListener('dragleave', (e) => {
+            const card = e.target.closest('.seat-card');
+            if (card) {
+                // Only remove if we actually left the card, not just moving inside children
+                if (!card.contains(e.relatedTarget)) {
+                    card.classList.remove('drag-over');
+                }
+            }
+        });
+
+        spatialGrid.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const card = e.target.closest('.seat-card');
+            if (card) {
+                card.classList.remove('drag-over');
+                const targetSeatId = card.getAttribute('data-seat-id');
+                if (dragSourceSeatId && targetSeatId && targetSeatId !== dragSourceSeatId) {
+                    swapSeats(dragSourceSeatId, targetSeatId);
+                }
+            }
+            spatialGrid.querySelectorAll('.seat-card').forEach(c => c.classList.remove('drag-over'));
+        });
+
+        spatialGrid.addEventListener('dragend', (e) => {
+            const handle = e.target.closest('.drag-handle');
+            if (handle) {
+                const card = handle.closest('.seat-card');
+                if (card) card.classList.remove('is-dragging');
+            }
+            dragSourceSeatId = null;
+            spatialGrid.querySelectorAll('.seat-card').forEach(c => c.classList.remove('drag-over'));
+        });
     </script>
     </div> <!-- Close main-view -->
 

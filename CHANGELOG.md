@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.7] - 2026-06-22
+### Fixed
+- Re-architected side panel CSS using strict `min-width`, `max-width`, and `flex-shrink: 0` constraints to ensure the left and right side panels maintain identical, mathematically rigid dimensions (450px) across all views.
+- Added a layout recalculation trigger inside the simulator injection sequence to eliminate race conditions causing iPad scaling inconsistencies on pages with asynchronously loading panels.
+- Fixed a flexbox layout overflow issue that caused the right-side comm center simulator to disappear on smaller screens.
+
 ## [0.4.6] - 2026-06-22
 ### Fixed
 - Fixed UI scaling issue by replacing `zoom: 0.75` on body and adjusting `133.33vw` width and `133.33vh` height.

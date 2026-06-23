@@ -928,7 +928,14 @@
             pointer-events: none;
         }
 
-    </style>
+    
+        #main-view {
+            flex-direction: column;
+        }
+        body.native-mode .testing-banner {
+            display: none !important;
+        }
+</style>
 </head>
 <body>
 
@@ -937,9 +944,7 @@
             <h2 style="margin-bottom: 0;">Ops Suite Prototype</h2>
             <div class="mockup-version" onclick="toggleChangelog()" style="margin-top: 0; padding: 6px 10px; font-size: 0.85rem; border-radius: 4px;">v0.5.2</div>
         </div>
-        <div style="background-color: var(--accent-red, #d9381e); color: white; padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 15px; text-align: center; border: 2px solid #ff5555; box-shadow: 0 4px 12px rgba(217, 56, 30, 0.4);">
-            ⚠️ For Metro Aviation Internal Testing Only
-        </div>
+
         <p>This is a semi-functional prototype designed to experiment with and implement user feedback. Its primary goal is to prototype a new, optimized user interface for the app previously known as Complete Flight.</p>
         
         <div class="instruction-box">
@@ -968,7 +973,10 @@
     </div>
 
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
-        <div class="device-frame">
+                <div class="testing-banner" style="background-color: var(--accent-red, #d9381e); color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; margin: 12px 0; text-align: center; border: 1px solid #ff5555; box-shadow: 0 2px 8px rgba(217, 56, 30, 0.4); z-index: 1000; flex-shrink: 0; width: 744px; box-sizing: border-box;">
+            ⚠️ For Metro Aviation Internal Testing Only
+        </div>
+<div class="device-frame">
         <div class="device-screen">
             
             <div class="sync-bar">
@@ -2130,7 +2138,14 @@
                 .cf-toggle-row .switch { width: 44px; height: 24px; margin: 0; }
                 .cf-toggle-row .slider:before { height: 18px; width: 18px; left: 2px; bottom: 1px; }
                 .cf-toggle-row input:checked + .slider:before { transform: translateX(20px); }
-            </style>
+            
+        #main-view {
+            flex-direction: column;
+        }
+        body.native-mode .testing-banner {
+            display: none !important;
+        }
+</style>
             
             <div class="modal-content modal-full close-flight-modal">
                 <div class="modal-header" style="flex-shrink: 0; padding: 10px 15px;">
@@ -2577,7 +2592,11 @@
         </div>
     </div>
 
-    </div> <!-- /device-frame -->
+    </div>
+        <div class="testing-banner" style="background-color: var(--accent-red, #d9381e); color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; margin: 12px 0; text-align: center; border: 1px solid #ff5555; box-shadow: 0 2px 8px rgba(217, 56, 30, 0.4); z-index: 1000; flex-shrink: 0; width: 744px; box-sizing: border-box;">
+            ⚠️ For Metro Aviation Internal Testing Only
+        </div>
+ <!-- /device-frame -->
 
     <script>
         const AppState = {

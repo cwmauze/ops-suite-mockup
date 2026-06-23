@@ -55,7 +55,14 @@
                 }
                 .cf-has-error input { border-color: var(--error-color) !important; border-width: 2px !important; }
                 .cf-has-error .cf-error-msg { display: block; }
-            </style>
+            
+        #main-view {
+            flex-direction: column;
+        }
+        body.native-mode .testing-banner {
+            display: none !important;
+        }
+</style>
             <div class="modal-content modal-full close-flight-modal" style="display:flex; flex-direction:column; background-color: var(--bg-body);">
                 <div class="modal-header" style="flex-shrink: 0;">
                     <div class="modal-close" onclick="closeModal('close-modal')" style="margin-right: 15px; font-size: 1.5rem;">×</div>

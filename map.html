@@ -460,7 +460,14 @@
                 display: flex;
             }
         }
-    </style>
+    
+        #main-view {
+            flex-direction: column;
+        }
+        body.native-mode .testing-banner {
+            display: none !important;
+        }
+</style>
 </head>
 <body>
 
@@ -469,9 +476,7 @@
             <h2 style="margin-bottom: 0;">Ops Suite Prototype</h2>
             <div class="mockup-version" onclick="toggleChangelog()" style="margin-top: 0; padding: 6px 10px; font-size: 0.85rem; border-radius: 4px;">v0.5.2</div>
         </div>
-        <div style="background-color: var(--accent-red, #d9381e); color: white; padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 15px; text-align: center; border: 2px solid #ff5555; box-shadow: 0 4px 12px rgba(217, 56, 30, 0.4);">
-            ⚠️ For Metro Aviation Internal Testing Only
-        </div>
+
         <p>This is a semi-functional prototype designed to experiment with and implement user feedback. Its primary goal is to prototype a new, optimized user interface for the app previously known as Complete Flight.</p>
         
         <div class="instruction-box">

@@ -303,6 +303,8 @@ window.FlightSimulator = {
                 display: flex !important;
                 width: 450px;
                 flex-shrink: 0;
+                min-width: 450px;
+                max-width: 450px;
                 background-color: #222;
                 color: #ddd;
                 padding: 40px 30px;

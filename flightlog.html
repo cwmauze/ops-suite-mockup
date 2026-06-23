@@ -2944,7 +2944,10 @@
 
         function startCustomDrag(e, card) {
             // Prevent dragging if interacting with inputs, buttons, or dropdowns
-            const target = e.target;
+            let target = e.target;
+            if (target.nodeType === 3) target = target.parentNode; // Handle text node clicks
+            if (!target || !target.closest) return; // Failsafe
+
             if (target.tagName === 'INPUT' || target.tagName === 'BUTTON' || target.closest('button') || target.closest('.clear-btn') || target.closest('.cycle-btn') || target.closest('.autocomplete-dropdown')) {
                 return;
             }

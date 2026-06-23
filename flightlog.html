@@ -933,10 +933,26 @@
 <body>
 
     <div id="desktop-instructions">
-        <h2>Ops Suite Prototype</h2>
-        <p>Welcome to the Ops Suite interactive mockup.</p>
-        <p>This prototype demonstrates the offline-first layout, risk assessment tools, and manifest management designed for seamless tablet operations.</p>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+            <h2 style="margin-bottom: 0;">Ops Suite Prototype</h2>
+            <div class="mockup-version" onclick="toggleChangelog()" style="margin-top: 0; padding: 6px 10px; font-size: 0.85rem; border-radius: 4px;">v0.5.0</div>
+        </div>
+        <div style="background-color: var(--accent-red, #d9381e); color: white; padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 15px; text-align: center; border: 2px solid #ff5555; box-shadow: 0 4px 12px rgba(217, 56, 30, 0.4);">
+            ⚠️ For Metro Aviation Internal Testing Only
+        </div>
+        <p>This is a semi-functional prototype designed to experiment with and implement user feedback. Its primary goal is to prototype a new, optimized user interface for the app previously known as Complete Flight.</p>
         
+        <div class="instruction-box">
+            <h3>✨ Key Improvements</h3>
+            <ul style="margin-left: 20px; font-size: 0.9rem; line-height: 1.5;">
+                <li style="margin-bottom: 8px;"><strong>Single-Screen Layout</strong>: All critical flight information fits on a single iPad screen without any vertical scrolling.</li>
+                <li style="margin-bottom: 8px;"><strong>Offline Obstacle Clearance</strong>: Automatically calculates the highest obstacles along your flight path, even without an internet connection, and lets you quickly toggle between the Route Highest Obstacle or the Leg MSA.</li>
+                <li style="margin-bottom: 8px;"><strong>Aviation Maps & ForeFlight Sync</strong>: Integrated full-screen maps with FAA Charts and live weather overlays. Routes are now sent directly to ForeFlight using official FAA identifiers, not just coordinates.</li>
+                <li style="margin-bottom: 8px;"><strong>Pre-Populated Risk Assessment</strong>: Streamlined risk assessment that automatically pre-loads known risk factors for quick pilot review and acknowledgment.</li>
+                <li style="margin-bottom: 8px;"><strong>Revamped Flight Log</strong>: Fully redesigned manifest page featuring quick drag-and-drop crew seating and rapid onload/offload capabilities, eliminating the need to search for personnel every time.</li>
+            </ul>
+        </div>
+
         <div class="instruction-box">
             <h3>📱 Install on iOS (PWA)</h3>
             <p>For the most realistic experience, install this prototype as a native app on your iPad or iPhone:</p>
@@ -948,7 +964,6 @@
                 <li>Go to your Home Screen and open the new <strong>Ops Suite</strong> app to experience the UI in full-screen native mode.</li>
             </ol>
         </div>
-        <div class="mockup-version" onclick="toggleChangelog()">Mockup v0.4.10</div>
     </div>
 
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
@@ -956,7 +971,7 @@
         <div class="device-screen">
             
             <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.4.10</span>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.5.0</span>
                 <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

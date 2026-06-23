@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.5.0] - 2026-06-23
+### Added
+- "For Metro Aviation Internal Testing Only" disclaimer to the instructions panel.
+- "Key Improvements" section in the instructions panel detailing single-screen layout, offline obstacle clearance, aviation maps sync, pre-populated risk assessment, and revamped flight log.
+
+### Changed
+- Refined instruction panel language to be more pilot-friendly and accessible.
+- Relocated the mockup version box to sit neatly in a flex row to the right of the panel title.
+- Updated the main prototype description to clarify its purpose as an experimental tool for user feedback on the Complete Flight app UI.
+
 ## [0.4.10] - 2026-06-23
 ### Fixed
 - Fixed manifest links navigating to a non-existent archive page.

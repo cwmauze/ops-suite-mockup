@@ -2596,6 +2596,7 @@
 
         spatialGrid.addEventListener('dragover', (e) => {
             e.preventDefault(); // allow dropping
+            e.dataTransfer.dropEffect = 'move';
             const card = e.target.closest('.seat-card');
             if (card && dragSourceSeatId && dragSourceSeatId !== card.getAttribute('data-seat-id')) {
                 card.classList.add('drag-over');
@@ -2626,11 +2627,8 @@
         });
 
         spatialGrid.addEventListener('dragend', (e) => {
-            const handle = e.target.closest('.drag-handle');
-            if (handle) {
-                const card = handle.closest('.seat-card');
-                if (card) card.classList.remove('is-dragging');
-            }
+            const card = e.target.closest('.seat-card');
+            if (card) card.classList.remove('is-dragging');
             dragSourceSeatId = null;
             spatialGrid.classList.remove('dragging-active');
             spatialGrid.querySelectorAll('.seat-card').forEach(c => c.classList.remove('drag-over'));

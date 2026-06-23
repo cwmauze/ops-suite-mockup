@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.9] - 2026-06-23
+### Fixed
+- Fixed a bug where PWA native mode on mobile/iPad appeared too small due to missing `zoom: 1` and `100vw/vh` overrides for `.native-mode` after recent desktop scaling adjustments.
+
 ## [0.4.8] - 2026-06-22
 ### Fixed
 - Fixed fatal TDZ ReferenceError crashing the flight log script execution.

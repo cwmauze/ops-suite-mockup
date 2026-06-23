@@ -2975,13 +2975,20 @@
 
             // Setup clone
             const rect = card.getBoundingClientRect();
+            const scaleX = rect.width / card.offsetWidth;
+            const scaleY = rect.height / card.offsetHeight;
+
             dragClone = card.cloneNode(true);
             dragClone.classList.add('floating-drag-clone');
             
-            // Lock dimensions to match original card
-            dragClone.style.width = rect.width + 'px';
-            dragClone.style.height = rect.height + 'px';
+            // Lock dimensions to the un-scaled original size
+            dragClone.style.width = card.offsetWidth + 'px';
+            dragClone.style.height = card.offsetHeight + 'px';
             dragClone.style.margin = '0';
+            
+            // Apply dynamic scaling to match visual size exactly
+            dragClone.style.transform = `scale(${scaleX}, ${scaleY})`;
+            dragClone.style.transformOrigin = 'top left';
             
             document.body.appendChild(dragClone);
 

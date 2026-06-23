@@ -10,6 +10,14 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>Ops Suite - Manifest Prototype</title>
     <script>
+        window.onerror = function(msg, url, line, col, error) {
+            var errDiv = document.createElement('div');
+            errDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;z-index:999999;padding:20px;font-size:16px;white-space:pre-wrap;';
+            errDiv.innerText = 'JS ERROR: ' + msg + '\nLine: ' + line + '\n' + (error && error.stack ? error.stack : '');
+            document.body.appendChild(errDiv);
+        };
+    </script>
+    <script>
         window.obstacleMode = 'HIGHEST';
         let highestObstacleLongPressTimer;
         let wasLongPress = false;
@@ -2941,9 +2949,6 @@
 
         const spatialGrid = document.querySelector('.spatial-grid');
         
-        // Native HTML5 Drag and Drop for Seat Swapping
-        let dragSourceSeatId = null;
-
         spatialGrid.querySelectorAll('.seat-card').forEach(card => {
             if (!card.hasAttribute('data-seat-id')) {
                 const wtInput = card.querySelector('.seat-weight input');

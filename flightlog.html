@@ -2941,11 +2941,11 @@
 
         const spatialGrid = document.querySelector('.spatial-grid');
         
-        // Ensure data-seat-ids exist and set cards to be globally draggable
-        // Bulletproof Custom Drag and Drop for Seat Swapping (Mouse & Touch)
         let customDragSourceId = null;
-        let dragClone = null;
         let currentTargetCard = null;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+        let dragClone = null;
 
         function startCustomDrag(e, card) {
             console.log("[DND] startCustomDrag triggered", e.type);
@@ -2973,18 +2973,28 @@
             card.classList.add('is-dragging');
             spatialGrid.classList.add('dragging-active');
 
-            // Create a floating clone
+            // Setup clone
+            const rect = card.getBoundingClientRect();
             dragClone = card.cloneNode(true);
-            dragClone.classList.remove('is-dragging');
             dragClone.classList.add('floating-drag-clone');
             
-            // Match dimensions
-            const rect = card.getBoundingClientRect();
+            // Lock dimensions to match original card
             dragClone.style.width = rect.width + 'px';
             dragClone.style.height = rect.height + 'px';
+            dragClone.style.margin = '0';
+            
             document.body.appendChild(dragClone);
 
-            moveCustomDrag(e); // Initial position
+            // Calculate offset of mouse relative to the card's top-left corner
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            
+            dragOffsetX = clientX - rect.left;
+            dragOffsetY = clientY - rect.top;
+            
+            // Set initial position based on offset
+            dragClone.style.left = (clientX - dragOffsetX) + 'px';
+            dragClone.style.top = (clientY - dragOffsetY) + 'px';
 
             // Bind global move and end listeners
             document.addEventListener('mousemove', handleCustomDragMove, {passive: false});
@@ -2998,9 +3008,9 @@
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
-            // Center the clone under cursor
-            dragClone.style.left = (clientX - dragClone.offsetWidth / 2) + 'px';
-            dragClone.style.top = (clientY - dragClone.offsetHeight / 2) + 'px';
+            // Position using the calculated offsets
+            dragClone.style.left = (clientX - dragOffsetX) + 'px';
+            dragClone.style.top = (clientY - dragOffsetY) + 'px';
 
             // Find element under cursor
             // Hide clone temporarily to find what's underneath

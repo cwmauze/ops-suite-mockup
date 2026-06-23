@@ -424,6 +424,7 @@
         .drag-handle { user-select: none; -webkit-user-select: none; }
         .seat-card.active { border-color: var(--accent-blue); }
         .seat-card:has(.seat-occupant-input:not(:placeholder-shown)) { background-color: rgba(39, 174, 96, 0.1); border-color: var(--accent-green); }
+        .dragging-active .seat-card * { pointer-events: none; }
         .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
         .seat-title { font-size: 0.75rem; color: var(--text-secondary); text-align: left; text-transform: uppercase; font-weight: bold; margin: 0; }
         .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 4px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 0.9rem; min-height: 28px; display: flex; align-items: center; justify-content: center; }
@@ -2583,7 +2584,10 @@
             dragSourceSeatId = card.getAttribute('data-seat-id');
             e.dataTransfer.setData('text/plain', dragSourceSeatId);
             e.dataTransfer.effectAllowed = 'move';
-            setTimeout(() => card.classList.add('is-dragging'), 0);
+            setTimeout(() => {
+                card.classList.add('is-dragging');
+                spatialGrid.classList.add('dragging-active');
+            }, 0);
         });
 
         spatialGrid.addEventListener('dragenter', (e) => {
@@ -2628,6 +2632,7 @@
                 if (card) card.classList.remove('is-dragging');
             }
             dragSourceSeatId = null;
+            spatialGrid.classList.remove('dragging-active');
             spatialGrid.querySelectorAll('.seat-card').forEach(c => c.classList.remove('drag-over'));
         });
     </script>

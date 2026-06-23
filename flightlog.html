@@ -9,14 +9,7 @@
     <meta name="apple-mobile-web-app-title" content="Ops Suite">
     <meta name="mobile-web-app-capable" content="yes">
     <title>Ops Suite - Manifest Prototype</title>
-    <script>
-        window.onerror = function(msg, url, line, col, error) {
-            var errDiv = document.createElement('div');
-            errDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;z-index:999999;padding:20px;font-size:16px;white-space:pre-wrap;';
-            errDiv.innerText = 'JS ERROR: ' + msg + '\nLine: ' + line + '\n' + (error && error.stack ? error.stack : '');
-            document.body.appendChild(errDiv);
-        };
-    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         window.obstacleMode = 'HIGHEST';
         let highestObstacleLongPressTimer;
@@ -603,10 +596,8 @@
         .drag-handle { user-select: none; -webkit-user-select: none; }
         .is-dragging { opacity: 0.4; user-select: none; }
         .drag-over { border-color: var(--accent-blue) !important; background-color: rgba(68, 136, 255, 0.1) !important; }
-        .floating-drag-clone { position: fixed; pointer-events: none; z-index: 9999; box-shadow: 0 10px 20px rgba(0,0,0,0.3); opacity: 0.9; transition: none; margin: 0 !important; }
         .seat-card.active { border-color: var(--accent-blue); }
         .seat-card:has(.seat-occupant-input:not(:placeholder-shown)) { background-color: rgba(39, 174, 96, 0.1); border-color: var(--accent-green); }
-        .dragging-active .seat-card * { pointer-events: none; }
         .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; }
         .seat-title { font-size: 0.9rem; color: var(--text-secondary); text-align: left; text-transform: uppercase; font-weight: bold; margin: 0; }
         .seat-occupant { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 8px 10px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 1rem; min-height: 40px; display: flex; align-items: center; justify-content: center; }
@@ -1232,7 +1223,7 @@
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                 <span>Home</span>
             </div>
-            <div class="nav-item" onclick=\"window.location.href='map.html'\" style="cursor:pointer;">
+            <div class="nav-item" onclick="window.location.href='map.html'" style="cursor:pointer;">
                 <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                 <span>Map</span>
             </div>
@@ -2057,7 +2048,7 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- Close Flight Modal -->
         <div class="modal-overlay" id="close-modal" style="z-index: 1020;">
             <div class="modal-content">
@@ -2919,7 +2910,6 @@
         let dragSourceSeatId = null;
 
         function swapSeats(id1, id2) {
-            console.log("[DND] Executing swapSeats", id1, id2);
             const occ1 = document.getElementById(`occ-${id1}`);
             const wt1 = document.getElementById(`wt-${id1}`);
             const occ2 = document.getElementById(`occ-${id2}`);
@@ -2933,15 +2923,11 @@
             const valOcc2 = occ2 ? occ2.value : '';
             const valWt2 = wt2 ? wt2.value : '0';
             
-            console.log(`[DND] Pre-swap: Seat ${id1} (${valOcc1}, ${valWt1}), Seat ${id2} (${valOcc2}, ${valWt2})`);
-            
             if (occ1) occ1.value = valOcc2;
             if (wt1) wt1.value = valWt2;
             
             if (occ2) occ2.value = valOcc1;
             if (wt2) wt2.value = valWt1;
-            
-            console.log("[DND] Swapped DOM values. Triggering state update.");
             
             calculateSob();
             updateCurrentLeg();
@@ -3003,7 +2989,6 @@
             if (card) {
                 card.classList.remove('drag-over');
                 const targetSeatId = card.getAttribute('data-seat-id');
-                console.log("[DND] Dropped onto seat", targetSeatId, "from", dragSourceSeatId);
                 if (dragSourceSeatId && targetSeatId && targetSeatId !== dragSourceSeatId) {
                     swapSeats(dragSourceSeatId, targetSeatId);
                 }

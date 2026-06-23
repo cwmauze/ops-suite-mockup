@@ -22,12 +22,17 @@
                 if (document.body.classList.contains('native-mode')) {
                     frame.style.transform = 'none';
                     return;
-                }                // Calculate available width and height for the container
-                // #main-view automatically sizes itself via flexbox to fit between the side panels
+                }
+                
                 const availableWidth = container.clientWidth;
                 const availableHeight = container.clientHeight;
-                const scale = Math.min((availableWidth * 0.95) / 784, (availableHeight * 0.95) / 1173);
+                
+                const targetWidth = 784;
+                const targetHeight = 1173;
+
+                const scale = Math.min((availableWidth * 0.95) / targetWidth, (availableHeight * 0.95) / targetHeight);
                 frame.style.transform = `scale(${scale})`;
+                frame.style.transformOrigin = "center center";
             }
         }
         window.addEventListener('resize', scaleDevice);
@@ -198,7 +203,11 @@
         /* --- IPAD SIMULATION WRAPPER --- */
         .device-frame {
             width: 744px;
-            height: 1133px; 
+            height: 1133px;
+            min-width: 744px;
+            max-width: 744px;
+            min-height: 1133px;
+            max-height: 1133px; 
             background-color: #111;
             border-radius: 40px;
             padding: 20px;
@@ -1542,7 +1551,6 @@
             <button onclick="toggleChangelog()" style="background:none; border:none; color:#aaa; font-size:1.5rem; cursor:pointer;">&times;</button>
         </div>
         <div id="changelog-content" style="padding:20px; line-height:1.5; font-size: 0.95rem;"></div>
-        </div>
     </div>
 <script src="assets/simulator.js?v=7"></script>
 <script src="assets/changelog.js"></script>

@@ -27,6 +27,7 @@
                 const availableHeight = container.clientHeight;
                 const scale = Math.min((availableWidth * 0.95) / 784, (availableHeight * 0.95) / 1173);
                 frame.style.transform = `scale(${scale})`;
+                frame.style.transformOrigin = "center center";
             }
         }
         window.addEventListener('resize', scaleDevice);
@@ -116,7 +117,11 @@
         /* --- IPAD SIMULATION WRAPPER --- */
         .device-frame {
             width: 744px;
-            height: 1133px; 
+            height: 1133px;
+            min-width: 744px;
+            max-width: 744px;
+            min-height: 1133px;
+            max-height: 1133px; 
             background-color: #111;
             border-radius: 40px;
             padding: 20px;
@@ -461,7 +466,7 @@
         <p>It demonstrates a view of a dispatched flight request and route before manifest creation.</p>
     </div>
 
-    <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative;">
+    <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
         <div class="device-frame" id="deviceFrame">
             <div class="device-screen">
 

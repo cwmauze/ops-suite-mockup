@@ -590,7 +590,7 @@
         input:checked + .slider:before { transform: translateX(26px); }
 
         .spatial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background-color: var(--surface-color-light); padding: 8px; border-radius: 6px; border: 2px dashed var(--border-color); }
-        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 6px; padding: 4px; display: flex; flex-direction: column; gap: 2px; cursor: pointer; position: relative; transition: all 0.2s; -webkit-user-drag: element; }
+        .seat-card { background-color: var(--surface-color); border: 2px solid var(--border-color); border-radius: 6px; padding: 4px; display: flex; flex-direction: column; gap: 2px; cursor: pointer; position: relative; transition: all 0.2s; }
         .seat-card input { user-select: auto; -webkit-user-select: auto; }
         .drag-handle { user-select: none; -webkit-user-select: none; }
         .is-dragging { opacity: 0.4; user-select: none; }
@@ -2943,8 +2943,15 @@
         let currentTargetCard = null;
 
         function startCustomDrag(e, card) {
-            // Only start if they clicked the drag handle
-            if (!e.target.closest('.drag-handle')) return;
+            // Prevent dragging if interacting with inputs, buttons, or dropdowns
+            const target = e.target;
+            if (target.tagName === 'INPUT' || target.tagName === 'BUTTON' || target.closest('button') || target.closest('.clear-btn') || target.closest('.cycle-btn') || target.closest('.autocomplete-dropdown')) {
+                return;
+            }
+            
+            // For mouse events, only allow left-click
+            if (e.type === 'mousedown' && e.button !== 0) return;
+
             e.preventDefault();
 
             customDragSourceId = card.getAttribute('data-seat-id');
@@ -3052,11 +3059,9 @@
             // Remove native drag to avoid conflicts
             card.removeAttribute('draggable');
 
-            const handle = card.querySelector('.drag-handle');
-            if (handle) {
-                handle.addEventListener('mousedown', (e) => startCustomDrag(e, card));
-                handle.addEventListener('touchstart', (e) => startCustomDrag(e, card), {passive: false});
-            }
+            // Attach listeners to the whole card so it acts as a tile
+            card.addEventListener('mousedown', (e) => startCustomDrag(e, card));
+            card.addEventListener('touchstart', (e) => startCustomDrag(e, card), {passive: false});
         });
 
     </script>

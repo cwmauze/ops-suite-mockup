@@ -2821,6 +2821,9 @@
             initInitialLegs();
         });
 
+        let currentRiskScore = 0;
+        let isRiskSigned = false;
+
         initInitialLegs();
         calculateRisk();
         const initialSyncText = document.querySelector('.sync-text');
@@ -2849,9 +2852,6 @@
             }, 10000);
         }
     
-
-        let currentRiskScore = 0;
-        let isRiskSigned = false;
 
         function calculateRisk() {
             let total = 0;
@@ -2911,6 +2911,7 @@
         let dragSourceSeatId = null;
 
         function swapSeats(id1, id2) {
+            console.log("[DND] Executing swapSeats", id1, id2);
             const occ1 = document.getElementById(`occ-${id1}`);
             const wt1 = document.getElementById(`wt-${id1}`);
             const occ2 = document.getElementById(`occ-${id2}`);
@@ -2924,11 +2925,15 @@
             const valOcc2 = occ2 ? occ2.value : '';
             const valWt2 = wt2 ? wt2.value : '0';
             
+            console.log(`[DND] Pre-swap: Seat ${id1} (${valOcc1}, ${valWt1}), Seat ${id2} (${valOcc2}, ${valWt2})`);
+            
             if (occ1) occ1.value = valOcc2;
             if (wt1) wt1.value = valWt2;
             
             if (occ2) occ2.value = valOcc1;
             if (wt2) wt2.value = valWt1;
+            
+            console.log("[DND] Swapped DOM values. Triggering state update.");
             
             calculateSob();
             updateCurrentLeg();
@@ -2943,12 +2948,17 @@
         let currentTargetCard = null;
 
         function startCustomDrag(e, card) {
+            console.log("[DND] startCustomDrag triggered", e.type);
             // Prevent dragging if interacting with inputs, buttons, or dropdowns
             let target = e.target;
             if (target.nodeType === 3) target = target.parentNode; // Handle text node clicks
-            if (!target || !target.closest) return; // Failsafe
+            if (!target || !target.closest) {
+                console.log("[DND] Failsafe return: target is invalid");
+                return; // Failsafe
+            }
 
             if (target.tagName === 'INPUT' || target.tagName === 'BUTTON' || target.closest('button') || target.closest('.clear-btn') || target.closest('.cycle-btn') || target.closest('.autocomplete-dropdown')) {
+                console.log("[DND] Ignored drag because target is interactive:", target.tagName, target.className);
                 return;
             }
             
@@ -2958,6 +2968,8 @@
             e.preventDefault();
 
             customDragSourceId = card.getAttribute('data-seat-id');
+            console.log("[DND] Drag started! Source ID:", customDragSourceId);
+            
             card.classList.add('is-dragging');
             spatialGrid.classList.add('dragging-active');
 
@@ -3020,6 +3032,7 @@
         }
 
         function endCustomDrag(e) {
+            console.log("[DND] endCustomDrag triggered");
             // Unbind global listeners
             document.removeEventListener('mousemove', handleCustomDragMove);
             document.removeEventListener('touchmove', handleCustomDragMove);
@@ -3038,11 +3051,18 @@
                 c.classList.remove('drag-over');
             });
 
+            console.log("[DND] customDragSourceId:", customDragSourceId, "currentTargetCard:", currentTargetCard ? currentTargetCard.getAttribute('data-seat-id') : null);
+
             if (customDragSourceId && currentTargetCard) {
                 const targetSeatId = currentTargetCard.getAttribute('data-seat-id');
                 if (targetSeatId && targetSeatId !== customDragSourceId) {
+                    console.log("[DND] Attempting to swap seats:", customDragSourceId, "with", targetSeatId);
                     swapSeats(customDragSourceId, targetSeatId);
+                } else {
+                    console.log("[DND] Target seat same as source seat, not swapping");
                 }
+            } else {
+                console.log("[DND] Missing source or target, not swapping");
             }
 
             customDragSourceId = null;

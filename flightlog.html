@@ -2947,6 +2947,58 @@
                 }
             }
             card.setAttribute('draggable', 'true');
+
+            card.addEventListener('dragstart', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.closest('.clear-btn') || e.target.closest('.cycle-btn')) {
+                    e.preventDefault();
+                    return;
+                }
+                dragSourceSeatId = card.getAttribute('data-seat-id');
+                if (e.dataTransfer) {
+                    e.dataTransfer.setData('text/plain', dragSourceSeatId);
+                    e.dataTransfer.effectAllowed = 'move';
+                }
+                setTimeout(() => {
+                    card.classList.add('is-dragging');
+                    spatialGrid.classList.add('dragging-active');
+                }, 0);
+            });
+
+            card.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+            });
+
+            card.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+                if (dragSourceSeatId && dragSourceSeatId !== card.getAttribute('data-seat-id')) {
+                    card.classList.add('drag-over');
+                }
+            });
+
+            card.addEventListener('dragleave', (e) => {
+                if (!card.contains(e.relatedTarget)) {
+                    card.classList.remove('drag-over');
+                }
+            });
+
+            card.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                card.classList.remove('drag-over');
+                const targetSeatId = card.getAttribute('data-seat-id');
+                if (dragSourceSeatId && targetSeatId && targetSeatId !== dragSourceSeatId) {
+                    swapSeats(dragSourceSeatId, targetSeatId);
+                }
+                spatialGrid.querySelectorAll('.seat-card').forEach(c => c.classList.remove('drag-over'));
+            });
+
+            card.addEventListener('dragend', (e) => {
+                card.classList.remove('is-dragging');
+                dragSourceSeatId = null;
+                spatialGrid.classList.remove('dragging-active');
+                spatialGrid.querySelectorAll('.seat-card').forEach(c => c.classList.remove('drag-over'));
+            });
         });
         
         // Remove draggable from drag-handles in case they were stuck from previous step
@@ -2954,68 +3006,7 @@
             handle.removeAttribute('draggable');
         });
 
-        spatialGrid.addEventListener('dragstart', (e) => {
-            const card = e.target.closest('.seat-card');
-            if (!card) return;
-            
-            // Prevent dragging if the user is interacting with an input or button!
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.closest('.clear-btn') || e.target.closest('.cycle-btn')) {
-                e.preventDefault();
-                return;
-            }
-
-            dragSourceSeatId = card.getAttribute('data-seat-id');
-            e.dataTransfer.setData('text/plain', dragSourceSeatId);
-            e.dataTransfer.effectAllowed = 'move';
-            setTimeout(() => {
-                card.classList.add('is-dragging');
-                spatialGrid.classList.add('dragging-active');
-            }, 0);
-        });
-
-        spatialGrid.addEventListener('dragenter', (e) => {
-            e.preventDefault(); // Safari requires dragenter preventDefault to allow drop
-        });
-
-        spatialGrid.addEventListener('dragover', (e) => {
-            e.preventDefault(); // allow dropping
-            e.dataTransfer.dropEffect = 'move';
-            const card = e.target.closest('.seat-card');
-            if (card && dragSourceSeatId && dragSourceSeatId !== card.getAttribute('data-seat-id')) {
-                card.classList.add('drag-over');
-            }
-        });
-
-        spatialGrid.addEventListener('dragleave', (e) => {
-            const card = e.target.closest('.seat-card');
-            if (card) {
-                // Only remove if we actually left the card, not just moving inside children
-                if (!card.contains(e.relatedTarget)) {
-                    card.classList.remove('drag-over');
-                }
-            }
-        });
-
-        spatialGrid.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const card = e.target.closest('.seat-card');
-            if (card) {
-                card.classList.remove('drag-over');
-                const targetSeatId = card.getAttribute('data-seat-id');
-                if (dragSourceSeatId && targetSeatId && targetSeatId !== dragSourceSeatId) {
-                    swapSeats(dragSourceSeatId, targetSeatId);
-                }
-            }
-            spatialGrid.querySelectorAll('.seat-card').forEach(c => c.classList.remove('drag-over'));
-        });
-
-        spatialGrid.addEventListener('dragend', (e) => {
-            const card = e.target.closest('.seat-card');
-            if (card) card.classList.remove('is-dragging');
-            dragSourceSeatId = null;
-            spatialGrid.classList.remove('dragging-active');
-            spatialGrid.querySelectorAll('.seat-card').forEach(c => c.classList.remove('drag-over'));
-        });
+        // Removed delegated drag listeners from spatialGrid
 
     </script>
     </div> <!-- Close main-view -->

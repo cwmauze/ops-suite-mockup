@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.10] - 2026-06-23
+### Fixed
+- Fixed manifest links navigating to a non-existent archive page.
+- Fixed an extra brace syntax error in inline javascript causing PWA scaling failure on home, index, and roadmap pages.
+
 ## [0.4.9] - 2026-06-23
 ### Fixed
 - Fixed a bug where PWA native mode on mobile/iPad appeared too small due to missing `zoom: 1` and `100vw/vh` overrides for `.native-mode` after recent desktop scaling adjustments.

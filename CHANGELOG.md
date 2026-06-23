@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.5.2] - 2026-06-23
+### Added
+- New legs automatically chain their departure date and time from the previous leg's arrival date and time.
+- Clickable labels for flight times (Day, Night, NVG) on the Close Flight modal to instantly auto-fill the total flight time.
+- Clickable labels for takeoffs, landings, and HNVGOs to instantly auto-fill based on the total number of legs.
+
+### Changed
+- Flight Start and Flight End times on the Close Flight modal are now dynamically parsed and mirrored from the manifest's first takeoff and last landing.
+- Made Flight Start and Flight End inputs read-only to ensure integrity with manifest data.
+
+### Fixed
+- Fixed an issue where times entered without colons (e.g., 1330) caused the total flight time calculation to fail and silently drop the leg.
+
 ## [0.5.1] - 2026-06-23
 ### Added
 - Full-page layout for Close Flight manifest.

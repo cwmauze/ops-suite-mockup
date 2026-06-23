@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.8] - 2026-06-22
+### Fixed
+- Fixed fatal TDZ ReferenceError crashing the flight log script execution.
+- Fixed an issue where the native HTML5 drag-and-drop implementation had duplicate variable declarations, causing a SyntaxError.
+- Completely removed custom pointer-based drag-and-drop workarounds and restored perfect native drag-and-drop ghosting and events for crew station swaps.
+
 ## [0.4.7] - 2026-06-22
 ### Fixed
 - Re-architected side panel CSS using strict `min-width`, `max-width`, and `flex-shrink: 0` constraints to ensure the left and right side panels maintain identical, mathematically rigid dimensions (450px) across all views.

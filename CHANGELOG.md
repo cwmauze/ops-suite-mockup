@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.1] - 2026-06-23
+### Added
+- Full-page layout for Close Flight manifest.
+- Dynamic tab generation and validation logic for multiple seated pilots.
+- Updated DummyPersonnel data to support pilot/medical roles.
+
 ## [0.5.0] - 2026-06-23
 ### Added
 - "For Metro Aviation Internal Testing Only" disclaimer to the instructions panel.

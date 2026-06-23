@@ -935,7 +935,7 @@
     <div id="desktop-instructions">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
             <h2 style="margin-bottom: 0;">Ops Suite Prototype</h2>
-            <div class="mockup-version" onclick="toggleChangelog()" style="margin-top: 0; padding: 6px 10px; font-size: 0.85rem; border-radius: 4px;">v0.5.0</div>
+            <div class="mockup-version" onclick="toggleChangelog()" style="margin-top: 0; padding: 6px 10px; font-size: 0.85rem; border-radius: 4px;">v0.5.1</div>
         </div>
         <div style="background-color: var(--accent-red, #d9381e); color: white; padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 15px; text-align: center; border: 2px solid #ff5555; box-shadow: 0 4px 12px rgba(217, 56, 30, 0.4);">
             ⚠️ For Metro Aviation Internal Testing Only
@@ -971,7 +971,7 @@
         <div class="device-screen">
             
             <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.5.0</span>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.5.1</span>
                 <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1227,7 +1227,7 @@
                 <button class="btn btn-primary" style="padding: 10px; font-size: 0.85rem;">Save</button>
                 <button class="btn btn-primary" onclick="handleSaveAddLeg()" style="padding: 10px; font-size: 0.85rem;">Save/Add Leg</button>
                 <button class="btn btn-outline" onclick="deleteCurrentLeg()" style="color:var(--accent-red); border-color:var(--accent-red); padding: 10px; font-size: 0.85rem;">Delete Leg</button>
-                <button class="btn btn-danger" onclick="openModal('close-modal')" style="padding: 10px; font-size: 0.85rem;">Close Flt</button>
+                <button class="btn btn-danger" onclick="openCloseFlightPage()" style="padding: 10px; font-size: 0.85rem;">Close Flt</button>
                 <div class="verify-wrapper" style="margin-left: auto; flex-shrink: 0;">
                     <label>Verified</label>
                     <label class="switch">
@@ -2068,57 +2068,514 @@
             </div>
         </div>
         
-        <!-- Close Flight Modal -->
-        <div class="modal-overlay" id="close-modal" style="z-index: 1020;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="modal-title">Close Flight Leg</div>
-                    <div class="modal-close" onclick="closeModal('close-modal')">×</div>
+                        <!-- Close Flight Modal -->
+        <div class="modal-overlay" id="close-modal" style="z-index: 1020; background-color: var(--bg-color);">
+            <style>
+                .close-flight-modal {
+                    background-color: var(--bg-color);
+                    display: flex; flex-direction: column;
+                    width: 100%; height: 100%; max-height: 100%; border-radius: 0;
+                }
+                .cf-top-bar {
+                    display: flex; gap: 10px; background-color: var(--surface-color); 
+                    padding: 10px 15px; border-bottom: 1px solid var(--border-color); align-items: center; justify-content: space-between;
+                }
+                .cf-top-block {
+                    display: flex; flex-direction: column;
+                }
+                .cf-top-label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: bold; margin-bottom: 2px; }
+                .cf-top-val { font-size: 0.95rem; color: var(--text-primary); font-weight: bold; }
+                .cf-top-input { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 6px; border-radius: 4px; font-size: 0.85rem;}
+                
+                .cf-grid {
+                    display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; flex: 1; overflow-y: auto;
+                }
+                .cf-panel {
+                    background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px;
+                }
+                .cf-panel-title {
+                    font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; font-weight: bold; margin-bottom: 10px; letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;
+                }
+                
+                .cf-field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
+                .cf-field-full { grid-column: 1 / -1; }
+                
+                .cf-compact-stepper { display: flex; flex-direction: column; }
+                .cf-compact-stepper label { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; text-transform: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                .cf-ctrl { display: flex; align-items: center; justify-content: space-between; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 2px; }
+                .cf-btn-round { 
+                    width: 26px; height: 26px; border-radius: 4px; background-color: var(--surface-color-light); 
+                    color: var(--text-primary); border: 1px solid var(--border-color); font-size: 1rem; cursor: pointer;
+                    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+                }
+                .cf-btn-round:active { opacity: 0.7; background-color: var(--accent-blue); color: white; border-color: var(--accent-blue); }
+                .cf-ctrl input {
+                    width: 100%; min-width: 0; text-align: center; border: none; background-color: transparent; color: var(--text-primary); font-size: 0.95rem; font-weight: bold; padding: 0 2px;
+                }
+                .cf-ctrl input:focus { outline: none; }
+                
+                .cf-input-block { display: flex; flex-direction: column; }
+                .cf-input-block label { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; text-transform: none; }
+                .cf-input-block input, .cf-input-block select { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px 8px; border-radius: 6px; font-size: 0.9rem; min-height: 32px; }
+                
+                .cf-toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 6px 8px; background: var(--input-bg); border-radius: 6px; border: 1px solid var(--border-color); }
+                .cf-toggle-row label { margin: 0; font-size: 0.85rem; color: var(--text-primary); font-weight: bold; }
+                
+                .cf-error-msg { color: var(--error-color); font-size: 0.75rem; margin-top: 2px; display: none; font-weight: bold; }
+                .cf-has-error .cf-ctrl, .cf-has-error input, .cf-has-error select { border-color: var(--error-color) !important; border-width: 2px !important; }
+                .cf-has-error .cf-error-msg { display: block; }
+                
+                
+                .cf-tabs { display: flex; background: var(--surface-color-light); border-radius: 8px; padding: 4px; margin-bottom: 12px; }
+                .cf-tab { flex: 1; text-align: center; font-size: 0.85rem; font-weight: bold; color: var(--text-secondary); padding: 6px; cursor: pointer; border-radius: 6px; transition: all 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+                .cf-tab.active { background: var(--surface-color); color: var(--accent-blue); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+                /* Override switch for compactness */
+                .cf-toggle-row .switch { width: 44px; height: 24px; margin: 0; }
+                .cf-toggle-row .slider:before { height: 18px; width: 18px; left: 2px; bottom: 1px; }
+                .cf-toggle-row input:checked + .slider:before { transform: translateX(20px); }
+            </style>
+            
+            <div class="modal-content modal-full close-flight-modal">
+                <div class="modal-header" style="flex-shrink: 0; padding: 10px 15px;">
+                    <div class="modal-close" onclick="closeModal('close-modal')" style="margin-right: 15px; font-size: 1.5rem;">×</div>
+                    <div class="modal-title" style="flex:1; font-size: 1.1rem;">Manifest: 3664375 &nbsp;|&nbsp; Aircraft: N850BU</div>
                 </div>
-                <div class="modal-body modal-body-pad">
-                    <div class="alert-banner red" id="close-error-banner" style="display:none; margin: 0 0 15px 0;">
-                        Errors found. Correct them to close flight.
+                
+                <!-- TOP STRIP -->
+                <div class="cf-top-bar">
+                    <div class="cf-top-block">
+                        <div class="cf-top-label">Flight Start</div>
+                        <input type="datetime-local" class="cf-top-input" id="cf-flight-start" value="2026-06-16T21:07">
                     </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Night Time</label>
-                            <input type="number" id="val-night" value="0.0" step="0.1">
-                        </div>
-                        <div class="form-group">
-                            <label>NVG Time</label>
-                            <input type="number" id="val-nvg" value="0.0" step="0.1">
-                        </div>
+                    <div class="cf-top-block">
+                        <div class="cf-top-label">Flight End</div>
+                        <input type="datetime-local" class="cf-top-input" id="cf-flight-end" value="2026-06-17T00:30">
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>HNVGOs</label>
-                            <input type="number" id="val-hnvgo" value="0">
-                        </div>
+                    <div class="cf-top-block">
+                        <div class="cf-top-label">Flight Time</div>
+                        <div class="cf-top-val" style="color: var(--accent-blue);">1.6</div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Instrument Time</label>
-                            <input type="number" id="val-inst" value="0.0" step="0.1">
-                        </div>
-                        <div class="form-group">
-                            <label>Hood Time</label>
-                            <input type="number" id="val-hood" value="0.0" step="0.1">
-                        </div>
+                    <div class="cf-top-block">
+                        <div class="cf-top-label">Leg Time</div>
+                        <div class="cf-top-val">21m; 20m; 15m; 4m; 35m;</div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Approaches</label>
-                            <input type="number" id="val-app" value="0">
+                    <div class="cf-top-block" style="align-items: center;">
+                        <div class="cf-top-label">CC CNX Before Eng</div>
+                        <label class="switch" style="width:40px; height:20px;"><input type="checkbox" id="cf-cc-cnx"><span class="slider" style="border-radius:20px;"></span></label>
+                    </div>
+                </div>
+
+                <div class="alert-banner red" id="close-error-banner" style="display:none; margin: 10px 15px 0 15px;">
+                    Errors found. Correct them to close flight.
+                </div>
+
+                <div class="cf-grid">
+                    <!-- LEFT COLUMN: PILOT -->
+                    <div class="cf-panel">
+                        
+                        <div class="cf-tabs">
+                            <div class="cf-tab active" id="cf-tab-p1" onclick="switchPilotTab('p1')">Pilot: Mauze</div>
+                            <div class="cf-tab" id="cf-tab-p2" onclick="switchPilotTab('p2')">Copilot: Smith</div>
+                        </div>
+                        <div class="cf-field-grid" id="cf-fields-p1">
+
+                            <div class="cf-compact-stepper">
+                                <label>Day Flt Time</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-day-flight-p1', -0.1)">−</button>
+                                    <input type="number" step="0.1" value="0.0" id="cf-day-flight-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-day-flight-p1', 0.1)">+</button>
+                                </div>
+                            </div>
+                            <div class="cf-compact-stepper">
+                                <label>Day Landings</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-day-landings-p1', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-day-landings-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-day-landings-p1', 1)">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="cf-compact-stepper" id="group-night-flight-p1">
+                                <label>Night Flight</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-night-flight-p1', -0.1)">−</button>
+                                    <input type="number" step="0.1" value="0.0" id="cf-night-flight-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-night-flight-p1', 0.1)">+</button>
+                                </div>
+                                <div class="cf-error-msg cf-field-full" id="err-night-flight-p1">Night time error</div>
+                            </div>
+                            <div class="cf-compact-stepper">
+                                <label>Night Landings</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-night-landings-p1', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-night-landings-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-night-landings-p1', 1)">+</button>
+                                </div>
+                            </div>
+
+                            <div class="cf-compact-stepper" id="group-nvg-time-p1">
+                                <label>NVG Time</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-nvg-time-p1', -0.1)">−</button>
+                                    <input type="number" step="0.1" value="0.0" id="cf-nvg-time-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-nvg-time-p1', 0.1)">+</button>
+                                </div>
+                                <div class="cf-error-msg cf-field-full" id="err-nvg-time-p1">NVG time error.</div>
+                            </div>
+                            <div class="cf-compact-stepper" id="group-hnvgo-p1">
+                                <label>HNVGO</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-hnvgo-p1', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-hnvgo-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-hnvgo-p1', 1)">+</button>
+                                </div>
+                                <div class="cf-error-msg cf-field-full" id="err-hnvgo-p1">HNVGO logged but NVG time is 0.</div>
+                            </div>
+
+                            <div class="cf-compact-stepper" id="group-inst-time-p1">
+                                <label>Instrument Time</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-inst-time-p1', -0.1)">−</button>
+                                    <input type="number" step="0.1" value="0.0" id="cf-inst-time-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-inst-time-p1', 0.1)">+</button>
+                                </div>
+                                <div class="cf-error-msg cf-field-full" id="err-inst-time-p1">Instrument time error</div>
+                            </div>
+                            <div class="cf-compact-stepper">
+                                <label>Hood Time</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-hood-time-p1', -0.1)">−</button>
+                                    <input type="number" step="0.1" value="0.0" id="cf-hood-time-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-hood-time-p1', 0.1)">+</button>
+                                </div>
+                            </div>
+
+                            <div class="cf-compact-stepper" id="group-inst-app-p-p1">
+                                <label>Inst. Approaches P.</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-inst-app-p-p1', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-inst-app-p-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-inst-app-p-p1', 1)">+</button>
+                                </div>
+                            </div>
+                            <div class="cf-compact-stepper" id="group-inst-app-np-p1">
+                                <label>Inst. Approaches N.P.</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-inst-app-np-p1', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-inst-app-np-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-inst-app-np-p1', 1)">+</button>
+                                </div>
+                            </div>
+
+                            <div class="cf-compact-stepper">
+                                <label>Holds</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-holds-p1', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-holds-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-holds-p1', 1)">+</button>
+                                </div>
+                            </div>
+                            <div class="cf-compact-stepper">
+                                <label>IFR Legs</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-ifr-legs-p1', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-ifr-legs-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-ifr-legs-p1', 1)">+</button>
+                                </div>
+                            </div>
+
+                            <div class="cf-compact-stepper">
+                                <label>Takeoffs Day</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-tkof-day-p1', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-tkof-day-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-tkof-day-p1', 1)">+</button>
+                                </div>
+                            </div>
+                            <div class="cf-compact-stepper">
+                                <label>Takeoffs Night</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-tkof-night-p1', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-tkof-night-p1">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-tkof-night-p1', 1)">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="cf-input-block cf-field-full">
+                                <label>Instructor</label>
+                                <input type="text" placeholder="Enter instructor name" id="cf-instructor-p1">
+                            </div>
+
+                        </div>
+                        <div class="cf-field-grid" id="cf-fields-p2" style="display:none;">
+
+                            <div class="cf-compact-stepper">
+                                <label>Day Flt Time</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-day-flight-p2', -0.1)">−</button>
+                                    <input type="number" step="0.1" value="0.0" id="cf-day-flight-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-day-flight-p2', 0.1)">+</button>
+                                </div>
+                            </div>
+                            <div class="cf-compact-stepper">
+                                <label>Day Landings</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-day-landings-p2', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-day-landings-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-day-landings-p2', 1)">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="cf-compact-stepper" id="group-night-flight-p2">
+                                <label>Night Flight</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-night-flight-p2', -0.1)">−</button>
+                                    <input type="number" step="0.1" value="0.0" id="cf-night-flight-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-night-flight-p2', 0.1)">+</button>
+                                </div>
+                                <div class="cf-error-msg cf-field-full" id="err-night-flight-p2">Night time error</div>
+                            </div>
+                            <div class="cf-compact-stepper">
+                                <label>Night Landings</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-night-landings-p2', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-night-landings-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-night-landings-p2', 1)">+</button>
+                                </div>
+                            </div>
+
+                            <div class="cf-compact-stepper" id="group-nvg-time-p2">
+                                <label>NVG Time</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-nvg-time-p2', -0.1)">−</button>
+                                    <input type="number" step="0.1" value="0.0" id="cf-nvg-time-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-nvg-time-p2', 0.1)">+</button>
+                                </div>
+                                <div class="cf-error-msg cf-field-full" id="err-nvg-time-p2">NVG time error.</div>
+                            </div>
+                            <div class="cf-compact-stepper" id="group-hnvgo-p2">
+                                <label>HNVGO</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-hnvgo-p2', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-hnvgo-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-hnvgo-p2', 1)">+</button>
+                                </div>
+                                <div class="cf-error-msg cf-field-full" id="err-hnvgo-p2">HNVGO logged but NVG time is 0.</div>
+                            </div>
+
+                            <div class="cf-compact-stepper" id="group-inst-time-p2">
+                                <label>Instrument Time</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-inst-time-p2', -0.1)">−</button>
+                                    <input type="number" step="0.1" value="0.0" id="cf-inst-time-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-inst-time-p2', 0.1)">+</button>
+                                </div>
+                                <div class="cf-error-msg cf-field-full" id="err-inst-time-p2">Instrument time error</div>
+                            </div>
+                            <div class="cf-compact-stepper">
+                                <label>Hood Time</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-hood-time-p2', -0.1)">−</button>
+                                    <input type="number" step="0.1" value="0.0" id="cf-hood-time-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-hood-time-p2', 0.1)">+</button>
+                                </div>
+                            </div>
+
+                            <div class="cf-compact-stepper" id="group-inst-app-p-p2">
+                                <label>Inst. Approaches P.</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-inst-app-p-p2', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-inst-app-p-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-inst-app-p-p2', 1)">+</button>
+                                </div>
+                            </div>
+                            <div class="cf-compact-stepper" id="group-inst-app-np-p2">
+                                <label>Inst. Approaches N.P.</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-inst-app-np-p2', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-inst-app-np-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-inst-app-np-p2', 1)">+</button>
+                                </div>
+                            </div>
+
+                            <div class="cf-compact-stepper">
+                                <label>Holds</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-holds-p2', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-holds-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-holds-p2', 1)">+</button>
+                                </div>
+                            </div>
+                            <div class="cf-compact-stepper">
+                                <label>IFR Legs</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-ifr-legs-p2', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-ifr-legs-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-ifr-legs-p2', 1)">+</button>
+                                </div>
+                            </div>
+
+                            <div class="cf-compact-stepper">
+                                <label>Takeoffs Day</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-tkof-day-p2', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-tkof-day-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-tkof-day-p2', 1)">+</button>
+                                </div>
+                            </div>
+                            <div class="cf-compact-stepper">
+                                <label>Takeoffs Night</label>
+                                <div class="cf-ctrl">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-tkof-night-p2', -1)">−</button>
+                                    <input type="number" step="1" value="0" id="cf-tkof-night-p2">
+                                    <button class="cf-btn-round" onclick="stepValue('cf-tkof-night-p2', 1)">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="cf-input-block cf-field-full">
+                                <label>Instructor</label>
+                                <input type="text" placeholder="Enter instructor name" id="cf-instructor-p2">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT COLUMN: MAINT & FUEL -->
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div class="cf-panel">
+                            <div class="cf-panel-title">MAINTENANCE</div>
+                            <div class="cf-field-grid">
+                                <div class="cf-compact-stepper cf-field-full">
+                                    <label>Landings <span style="color:var(--error-color)">*</span></label>
+                                    <div class="cf-ctrl">
+                                        <button class="cf-btn-round" onclick="stepValue('cf-maint-landings', -1)">−</button>
+                                        <input type="number" value="0" id="cf-maint-landings">
+                                        <button class="cf-btn-round" onclick="stepValue('cf-maint-landings', 1)">+</button>
+                                    </div>
+                                </div>
+
+                                <div class="cf-compact-stepper">
+                                    <label>#1 Eng N1 <span style="color:var(--error-color)">*</span></label>
+                                    <div class="cf-ctrl">
+                                        <button class="cf-btn-round" onclick="stepValue('cf-e1-n1', -0.1)">−</button>
+                                        <input type="number" step="0.1" value="0.0" id="cf-e1-n1">
+                                        <button class="cf-btn-round" onclick="stepValue('cf-e1-n1', 0.1)">+</button>
+                                    </div>
+                                </div>
+                                <div class="cf-compact-stepper">
+                                    <label>#1 Eng N2 <span style="color:var(--error-color)">*</span></label>
+                                    <div class="cf-ctrl">
+                                        <button class="cf-btn-round" onclick="stepValue('cf-e1-n2', -0.1)">−</button>
+                                        <input type="number" step="0.1" value="0.0" id="cf-e1-n2">
+                                        <button class="cf-btn-round" onclick="stepValue('cf-e1-n2', 0.1)">+</button>
+                                    </div>
+                                </div>
+
+                                <div class="cf-compact-stepper">
+                                    <label>#2 Eng N1 <span style="color:var(--error-color)">*</span></label>
+                                    <div class="cf-ctrl">
+                                        <button class="cf-btn-round" onclick="stepValue('cf-e2-n1', -0.1)">−</button>
+                                        <input type="number" step="0.1" value="0.0" id="cf-e2-n1">
+                                        <button class="cf-btn-round" onclick="stepValue('cf-e2-n1', 0.1)">+</button>
+                                    </div>
+                                </div>
+                                <div class="cf-compact-stepper">
+                                    <label>#2 Eng N2 <span style="color:var(--error-color)">*</span></label>
+                                    <div class="cf-ctrl">
+                                        <button class="cf-btn-round" onclick="stepValue('cf-e2-n2', -0.1)">−</button>
+                                        <input type="number" step="0.1" value="0.0" id="cf-e2-n2">
+                                        <button class="cf-btn-round" onclick="stepValue('cf-e2-n2', 0.1)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cf-panel" style="flex: 1;">
+                            <div class="cf-panel-title">FUEL</div>
+                            <div class="cf-toggle-row">
+                                <label>METRO PURCHASED</label>
+                                <label class="switch"><input type="checkbox" id="cf-metro-fuel"><span class="slider"></span></label>
+                            </div>
+                            <div class="cf-field-grid" style="margin-bottom: 10px;">
+                                <div class="cf-input-block">
+                                    <label>Gals Purch. M</label>
+                                    <input type="number" step="0.1" value="0.0">
+                                </div>
+                                <div class="cf-input-block">
+                                    <label>Price Paid</label>
+                                    <input type="number" step="0.1" value="0.0">
+                                </div>
+                                <div class="cf-input-block">
+                                    <label>Vendor M</label>
+                                    <input type="text">
+                                </div>
+                                <div class="cf-input-block">
+                                    <label>Other Chrg</label>
+                                    <input type="number" step="0.1" value="0.0">
+                                </div>
+                                <div class="cf-input-block cf-field-full">
+                                    <label>Last 4 digits-Metro CC</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+
+                            <div class="cf-toggle-row">
+                                <label>PROGRAM PURCHASED</label>
+                                <label class="switch"><input type="checkbox" id="cf-prog-fuel"><span class="slider"></span></label>
+                            </div>
+                            <div class="cf-field-grid" style="margin-bottom: 10px;">
+                                <div class="cf-input-block">
+                                    <label>Vendor P</label>
+                                    <input type="text">
+                                </div>
+                                <div class="cf-input-block">
+                                    <label>Gals Purch. P</label>
+                                    <input type="number" step="0.1" value="0.0">
+                                </div>
+                            </div>
+
+                            <div class="cf-toggle-row">
+                                <label>Approved Vendor</label>
+                                <label class="switch"><input type="checkbox" id="cf-app-vendor"><span class="slider"></span></label>
+                            </div>
+                            <div class="cf-field-grid">
+                                <div class="cf-input-block">
+                                    <label>Quality Check</label>
+                                    <select>
+                                        <option>Select...</option>
+                                        <option>Clear & Bright</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="cf-input-block">
+                                    <label>Pass/Fail</label>
+                                    <select>
+                                        <option>Select...</option>
+                                        <option>Pass</option>
+                                        <option>Fail</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-outline" onclick="closeModal('close-modal')">Cancel</button>
-                    <button class="btn btn-danger" onclick="validateAndClose()">Submit</button>
+
+                <div style="padding: 0 15px;">
+                    <div class="cf-panel" style="padding: 10px;">
+                        <div class="cf-panel-title" style="margin-bottom: 5px;">COMMENTS</div>
+                        <textarea style="width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px; border-radius: 6px; font-size: 0.9rem; resize: none;" rows="2" placeholder="Enter comments..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="flex-shrink: 0; display:flex; gap: 10px; padding: 10px 15px; border-top: 1px solid var(--border-color); margin-top: 10px;">
+                    <button class="btn btn-outline" onclick="closeModal('close-modal')" style="flex:1; min-height: 44px;">Cancel</button>
+                    <button class="btn btn-primary" onclick="validateAndClose()" style="flex:2; min-height: 44px;">Close Flight Manifest</button>
                 </div>
             </div>
         </div>
+
 
 
 
@@ -2131,27 +2588,27 @@
         };
 
         const DummyPersonnel = [
-            { name: "Empty", weight: 0 },
-            { name: "Schwarzenegger, Arnold", weight: 105 },
-            { name: "Stallone, Sylvester", weight: 85 },
-            { name: "Norris, Chuck", weight: 77 },
-            { name: "Johnson, Dwayne", weight: 118 },
-            { name: "Statham, Jason", weight: 84 },
-            { name: "Willis, Bruce", weight: 82 },
-            { name: "Cruise, Tom", weight: 68 },
-            { name: "Reeves, Keanu", weight: 79 },
-            { name: "Van Damme, Jean-Claude", weight: 82 },
-            { name: "Ford, Harrison", weight: 80 },
-            { name: "Monroe, Marilyn", weight: 54 },
-            { name: "Johansson, Scarlett", weight: 57 },
-            { name: "Robbie, Margot", weight: 57 },
-            { name: "Theron, Charlize", weight: 61 },
-            { name: "Jolie, Angelina", weight: 54 },
-            { name: "Fox, Megan", weight: 52 },
-            { name: "Hayek, Salma", weight: 54 },
-            { name: "Vergara, Sofia", weight: 64 },
-            { name: "Welch, Raquel", weight: 55 },
-            { name: "Anderson, Pamela", weight: 60 }
+            { name: "Empty", weight: 0, role: "none" },
+            { name: "Schwarzenegger, Arnold", weight: 105, role: "pilot" },
+            { name: "Stallone, Sylvester", weight: 85, role: "pilot" },
+            { name: "Norris, Chuck", weight: 77, role: "pilot" },
+            { name: "Johnson, Dwayne", weight: 118, role: "pilot" },
+            { name: "Statham, Jason", weight: 84, role: "pilot" },
+            { name: "Willis, Bruce", weight: 82, role: "pilot" },
+            { name: "Cruise, Tom", weight: 68, role: "pilot" },
+            { name: "Reeves, Keanu", weight: 79, role: "pilot" },
+            { name: "Van Damme, Jean-Claude", weight: 82, role: "pilot" },
+            { name: "Ford, Harrison", weight: 80, role: "pilot" },
+            { name: "Monroe, Marilyn", weight: 54, role: "medical" },
+            { name: "Johansson, Scarlett", weight: 57, role: "medical" },
+            { name: "Robbie, Margot", weight: 57, role: "medical" },
+            { name: "Theron, Charlize", weight: 61, role: "medical" },
+            { name: "Jolie, Angelina", weight: 54, role: "medical" },
+            { name: "Fox, Megan", weight: 52, role: "medical" },
+            { name: "Hayek, Salma", weight: 54, role: "medical" },
+            { name: "Vergara, Sofia", weight: 64, role: "medical" },
+            { name: "Welch, Raquel", weight: 55, role: "medical" },
+            { name: "Anderson, Pamela", weight: 60, role: "medical" }
         ];
 
         // Simulated Keyboard Logic
@@ -2772,36 +3229,167 @@
             document.getElementById(id).classList.remove('active');
         }
 
+        function stepValue(id, step) {
+            const input = document.getElementById(id);
+            if (!input) return;
+            
+            // Keep precision correct (JS floats are weird)
+            let val = parseFloat(input.value) || 0;
+            val += step;
+            if (val < 0) val = 0;
+            
+            // Format back
+            if (step % 1 !== 0) {
+                input.value = val.toFixed(1);
+            } else {
+                input.value = Math.round(val);
+            }
+        }
+
+        
+        function switchPilotTab(p) {
+            document.querySelectorAll('.cf-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('cf-tab-' + p).classList.add('active');
+            
+            document.getElementById('cf-fields-p1').style.display = 'none';
+            document.getElementById('cf-fields-p2').style.display = 'none';
+            document.getElementById('cf-fields-' + p).style.display = 'grid';
+        }
+
+        
+        function openCloseFlightPage() {
+            const copilot = document.getElementById('occ-1').value.trim();
+            const pilot = document.getElementById('occ-2').value.trim();
+            
+            let p1Name = pilot || "Pilot";
+            let p2Name = copilot || "Copilot";
+
+            const tabContainer = document.querySelector('.cf-tabs');
+            const tabP1 = document.getElementById('cf-tab-p1');
+            const tabP2 = document.getElementById('cf-tab-p2');
+
+            if(pilot && copilot && pilot !== "Empty" && copilot !== "Empty") {
+                // 2 Pilots
+                tabP1.innerText = "Pilot: " + p1Name.split(',')[0];
+                tabP2.innerText = "Copilot: " + p2Name.split(',')[0];
+                tabP2.style.display = 'block'; // Make sure it's visible
+                window._cfActivePilots = ['p1', 'p2'];
+            } else {
+                // 1 Pilot or less
+                let name = pilot !== "Empty" && pilot ? pilot : copilot;
+                if(name === "Empty" || !name) name = "Pilot";
+                tabP1.innerText = "Pilot: " + name.split(',')[0];
+                tabP2.style.display = 'none'; // Hide second tab entirely
+                window._cfActivePilots = ['p1'];
+            }
+
+            switchPilotTab('p1');
+
+            // Reset validation styling
+            document.querySelectorAll('.cf-has-error').forEach(el => el.classList.remove('cf-has-error'));
+            document.getElementById('close-error-banner').style.display = 'none';
+
+            openModal('close-modal');
+        }
+
         function validateAndClose() {
-            const night = parseFloat(document.getElementById('val-night').value) || 0;
-            const nvg = parseFloat(document.getElementById('val-nvg').value) || 0;
-            const hnvgo = parseInt(document.getElementById('val-hnvgo').value) || 0;
-            const inst = parseFloat(document.getElementById('val-inst').value) || 0;
-            const hood = parseFloat(document.getElementById('val-hood').value) || 0;
-            const app = parseInt(document.getElementById('val-app').value) || 0;
-            const isIfr = document.getElementById('ifr-toggle') ? document.getElementById('ifr-toggle').checked : false;
+            let hasError = false;
+            let firstErrorPilot = null;
 
-            let error = "";
+            // Reset errors
+            document.querySelectorAll('.cf-has-error').forEach(el => el.classList.remove('cf-has-error'));
 
-            if (nvg > night) {
-                error = "NVG time cannot exceed Night time.";
-            } else if (hnvgo > 0 && nvg <= 0) {
-                error = "HNVGO logged but NVG time is 0.";
-            } else if (nvg > 0 && night <= 0) {
-                error = "NVG time logged but Night time is 0.";
-            } else if (app > 0 && (inst + hood) <= 0) {
-                error = "Approaches logged without Instrument/Hood time.";
-            } else if (inst > 0 && !isIfr) {
-                error = "Instrument time logged but IFR Flight is NOT toggled.";
+            // Validate both pilots
+            (window._cfActivePilots || ['p1', 'p2']).forEach(p => {
+                const night = parseFloat(document.getElementById('cf-night-flight-' + p).value) || 0;
+                const nvg = parseFloat(document.getElementById('cf-nvg-time-' + p).value) || 0;
+                const hnvgo = parseInt(document.getElementById('cf-hnvgo-' + p).value) || 0;
+                const inst = parseFloat(document.getElementById('cf-inst-time-' + p).value) || 0;
+                const hood = parseFloat(document.getElementById('cf-hood-time-' + p).value) || 0;
+                const appP = parseInt(document.getElementById('cf-inst-app-p-' + p).value) || 0;
+                const appNp = parseInt(document.getElementById('cf-inst-app-np-' + p).value) || 0;
+                const isIfr = document.getElementById('cf-ifr-legs-' + p).value > 0;
+
+                let pilotHasError = false;
+
+                // NVG > Night
+                if (nvg > night) {
+                    document.getElementById('group-night-flight-' + p).classList.add('cf-has-error');
+                    document.getElementById('group-nvg-time-' + p).classList.add('cf-has-error');
+                    document.getElementById('err-nvg-time-' + p).innerText = "NVG time cannot exceed Night time.";
+                    pilotHasError = true;
+                }
+                
+                // HNVGO logged but NVG time is 0
+                if (hnvgo > 0 && nvg <= 0) {
+                    document.getElementById('group-hnvgo-' + p).classList.add('cf-has-error');
+                    document.getElementById('err-hnvgo-' + p).innerText = "HNVGO logged but NVG time is 0.";
+                    pilotHasError = true;
+                }
+
+                // Approaches logged without Instrument/Hood
+                if ((appP > 0 || appNp > 0) && (inst + hood) <= 0) {
+                    document.getElementById('group-inst-app-p-' + p).classList.add('cf-has-error');
+                    document.getElementById('group-inst-app-np-' + p).classList.add('cf-has-error');
+                    pilotHasError = true;
+                }
+
+                // Instrument logged but not IFR
+                if (inst > 0 && !isIfr) {
+                    document.getElementById('group-inst-time-' + p).classList.add('cf-has-error');
+                    document.getElementById('err-inst-time-' + p).innerText = "Instrument time logged but IFR legs is 0.";
+                    pilotHasError = true;
+                }
+
+                if (pilotHasError) {
+                    hasError = true;
+                    if (!firstErrorPilot) firstErrorPilot = p;
+                }
+            });
+
+            // Validate Maintenance Required fields
+            const maintLandings = document.getElementById('cf-maint-landings').value;
+            const e1n1 = document.getElementById('cf-e1-n1').value;
+            const e1n2 = document.getElementById('cf-e1-n2').value;
+            const e2n1 = document.getElementById('cf-e2-n1').value;
+            const e2n2 = document.getElementById('cf-e2-n2').value;
+
+            if (!maintLandings || maintLandings <= 0) {
+                document.getElementById('cf-maint-landings').parentElement.parentElement.classList.add('cf-has-error');
+                hasError = true;
+            }
+            if (!e1n1 || e1n1 <= 0) {
+                document.getElementById('cf-e1-n1').parentElement.parentElement.classList.add('cf-has-error');
+                hasError = true;
+            }
+            if (!e1n2 || e1n2 <= 0) {
+                document.getElementById('cf-e1-n2').parentElement.parentElement.classList.add('cf-has-error');
+                hasError = true;
+            }
+            if (!e2n1 || e2n1 <= 0) {
+                document.getElementById('cf-e2-n1').parentElement.parentElement.classList.add('cf-has-error');
+                hasError = true;
+            }
+            if (!e2n2 || e2n2 <= 0) {
+                document.getElementById('cf-e2-n2').parentElement.parentElement.classList.add('cf-has-error');
+                hasError = true;
             }
 
             const errorBanner = document.getElementById('close-error-banner');
-            if (error) {
-                errorBanner.innerText = error;
-                errorBanner.style.display = "flex";
+            if (hasError) {
+                errorBanner.style.display = "block";
+                
+                // If there's an error on a pilot tab, auto-switch to it so the user sees it
+                if (firstErrorPilot) {
+                    switchPilotTab(firstErrorPilot);
+                }
+                
+                // Scroll to top (note: the close-flight modal uses .cf-grid for scrolling)
+                const grid = document.querySelector('.cf-grid');
+                if(grid) grid.scrollTop = 0;
             } else {
                 errorBanner.style.display = "none";
-                alert("Flight leg closed successfully!");
+                alert("Flight manifest closed successfully!");
                 closeModal('close-modal');
             }
         }

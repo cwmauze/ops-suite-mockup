@@ -2937,6 +2937,108 @@
         const spatialGrid = document.querySelector('.spatial-grid');
         
         // Ensure data-seat-ids exist and set cards to be globally draggable
+        // Bulletproof Custom Drag and Drop for Seat Swapping (Mouse & Touch)
+        let customDragSourceId = null;
+        let dragClone = null;
+        let currentTargetCard = null;
+
+        function startCustomDrag(e, card) {
+            // Only start if they clicked the drag handle
+            if (!e.target.closest('.drag-handle')) return;
+            e.preventDefault();
+
+            customDragSourceId = card.getAttribute('data-seat-id');
+            card.classList.add('is-dragging');
+            spatialGrid.classList.add('dragging-active');
+
+            // Create a floating clone
+            dragClone = card.cloneNode(true);
+            dragClone.classList.remove('is-dragging');
+            dragClone.classList.add('floating-drag-clone');
+            
+            // Match dimensions
+            const rect = card.getBoundingClientRect();
+            dragClone.style.width = rect.width + 'px';
+            dragClone.style.height = rect.height + 'px';
+            document.body.appendChild(dragClone);
+
+            moveCustomDrag(e); // Initial position
+
+            // Bind global move and end listeners
+            document.addEventListener('mousemove', handleCustomDragMove, {passive: false});
+            document.addEventListener('touchmove', handleCustomDragMove, {passive: false});
+            document.addEventListener('mouseup', endCustomDrag);
+            document.addEventListener('touchend', endCustomDrag);
+        }
+
+        function moveCustomDrag(e) {
+            if (!dragClone) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            // Center the clone under cursor
+            dragClone.style.left = (clientX - dragClone.offsetWidth / 2) + 'px';
+            dragClone.style.top = (clientY - dragClone.offsetHeight / 2) + 'px';
+
+            // Find element under cursor
+            // Hide clone temporarily to find what's underneath
+            dragClone.style.display = 'none';
+            const elementUnderCursor = document.elementFromPoint(clientX, clientY);
+            dragClone.style.display = '';
+
+            if (!elementUnderCursor) return;
+
+            const targetCard = elementUnderCursor.closest('.seat-card');
+            
+            // Remove highlight from previous target
+            if (currentTargetCard && currentTargetCard !== targetCard) {
+                currentTargetCard.classList.remove('drag-over');
+            }
+
+            // Add highlight to new target
+            if (targetCard && targetCard.getAttribute('data-seat-id') !== customDragSourceId) {
+                targetCard.classList.add('drag-over');
+                currentTargetCard = targetCard;
+            } else {
+                currentTargetCard = null;
+            }
+        }
+
+        function handleCustomDragMove(e) {
+            e.preventDefault(); // Prevent scrolling while dragging
+            moveCustomDrag(e);
+        }
+
+        function endCustomDrag(e) {
+            // Unbind global listeners
+            document.removeEventListener('mousemove', handleCustomDragMove);
+            document.removeEventListener('touchmove', handleCustomDragMove);
+            document.removeEventListener('mouseup', endCustomDrag);
+            document.removeEventListener('touchend', endCustomDrag);
+
+            if (dragClone) {
+                dragClone.remove();
+                dragClone = null;
+            }
+
+            spatialGrid.classList.remove('dragging-active');
+            
+            spatialGrid.querySelectorAll('.seat-card').forEach(c => {
+                c.classList.remove('is-dragging');
+                c.classList.remove('drag-over');
+            });
+
+            if (customDragSourceId && currentTargetCard) {
+                const targetSeatId = currentTargetCard.getAttribute('data-seat-id');
+                if (targetSeatId && targetSeatId !== customDragSourceId) {
+                    swapSeats(customDragSourceId, targetSeatId);
+                }
+            }
+
+            customDragSourceId = null;
+            currentTargetCard = null;
+        }
+
         spatialGrid.querySelectorAll('.seat-card').forEach(card => {
             if (!card.hasAttribute('data-seat-id')) {
                 const wtInput = card.querySelector('.seat-weight input');
@@ -2946,67 +3048,16 @@
                     card.setAttribute('data-seat-id', '5');
                 }
             }
-            card.setAttribute('draggable', 'true');
+            
+            // Remove native drag to avoid conflicts
+            card.removeAttribute('draggable');
 
-            card.addEventListener('dragstart', (e) => {
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.closest('.clear-btn') || e.target.closest('.cycle-btn')) {
-                    e.preventDefault();
-                    return;
-                }
-                dragSourceSeatId = card.getAttribute('data-seat-id');
-                if (e.dataTransfer) {
-                    e.dataTransfer.setData('text/plain', dragSourceSeatId);
-                    e.dataTransfer.effectAllowed = 'move';
-                }
-                setTimeout(() => {
-                    card.classList.add('is-dragging');
-                    spatialGrid.classList.add('dragging-active');
-                }, 0);
-            });
-
-            card.addEventListener('dragenter', (e) => {
-                e.preventDefault();
-            });
-
-            card.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
-                if (dragSourceSeatId && dragSourceSeatId !== card.getAttribute('data-seat-id')) {
-                    card.classList.add('drag-over');
-                }
-            });
-
-            card.addEventListener('dragleave', (e) => {
-                if (!card.contains(e.relatedTarget)) {
-                    card.classList.remove('drag-over');
-                }
-            });
-
-            card.addEventListener('drop', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                card.classList.remove('drag-over');
-                const targetSeatId = card.getAttribute('data-seat-id');
-                if (dragSourceSeatId && targetSeatId && targetSeatId !== dragSourceSeatId) {
-                    swapSeats(dragSourceSeatId, targetSeatId);
-                }
-                spatialGrid.querySelectorAll('.seat-card').forEach(c => c.classList.remove('drag-over'));
-            });
-
-            card.addEventListener('dragend', (e) => {
-                card.classList.remove('is-dragging');
-                dragSourceSeatId = null;
-                spatialGrid.classList.remove('dragging-active');
-                spatialGrid.querySelectorAll('.seat-card').forEach(c => c.classList.remove('drag-over'));
-            });
+            const handle = card.querySelector('.drag-handle');
+            if (handle) {
+                handle.addEventListener('mousedown', (e) => startCustomDrag(e, card));
+                handle.addEventListener('touchstart', (e) => startCustomDrag(e, card), {passive: false});
+            }
         });
-        
-        // Remove draggable from drag-handles in case they were stuck from previous step
-        spatialGrid.querySelectorAll('.drag-handle').forEach(handle => {
-            handle.removeAttribute('draggable');
-        });
-
-        // Removed delegated drag listeners from spatialGrid
 
     </script>
     </div> <!-- Close main-view -->

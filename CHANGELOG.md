@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.5.3] - 2026-06-23
+### Added
+- Implemented long-press drag-and-drop sortability for all data entry fields in the Pilot section of the Close Flight modal, allowing pilots to customize their data entry flow.
+- Added live, real-time validation to the Close Flight modal. Errors and warnings now immediately highlight fields and display context as soon as data is entered, without waiting for submission.
+- Replaced the inline validation banners with a new Validation Summary Modal. The modal displays a combined list of all errors and warnings when attempting to submit, and prevents submission if hard errors exist while allowing the bypassing of warnings.
+
+### Changed
+- Removed the redundant "Landings" input field from the Maintenance section in the Close Flight modal.
+- Removed validation requirements for all fields in the Maintenance section.
+
+### Fixed
+- Clarified the takeoff/landing validation feedback. When total takeoffs do not match total landings, all day/night takeoff and landing fields are now highlighted to correctly indicate that the error is based on aggregate totals, not individual day/night parity.
+- Adjusted takeoff/landing validation to evaluate the aggregate sums across *all* active pilots on the manifest, rather than validating each pilot individually. This correctly accounts for scenarios where one pilot performs a takeoff and another performs the landing.
+
 ## [0.5.2] - 2026-06-23
 ### Added
 - New legs automatically chain their departure date and time from the previous leg's arrival date and time.

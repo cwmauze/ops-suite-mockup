@@ -2121,11 +2121,7 @@
                 .cf-toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 6px 8px; background: var(--input-bg); border-radius: 6px; border: 1px solid var(--border-color); }
                 .cf-toggle-row label { margin: 0; font-size: 0.85rem; color: var(--text-primary); font-weight: bold; }
                 
-                .cf-error-msg { color: var(--error-color); font-size: 0.75rem; margin-top: 2px; display: none; font-weight: bold; }
                 .cf-has-error .cf-ctrl, .cf-has-error input, .cf-has-error select { border-color: var(--error-color) !important; border-width: 2px !important; }
-                .cf-has-error .cf-error-msg { display: block; }
-                
-                
                 .cf-tabs { display: flex; background: var(--surface-color-light); border-radius: 8px; padding: 4px; margin-bottom: 12px; }
                 .cf-tab { flex: 1; text-align: center; font-size: 0.85rem; font-weight: bold; color: var(--text-secondary); padding: 6px; cursor: pointer; border-radius: 6px; transition: all 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
                 .cf-tab.active { background: var(--surface-color); color: var(--accent-blue); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
@@ -2165,13 +2161,7 @@
                     </div>
                 </div>
 
-                <div class="alert-banner red" id="close-error-banner" style="display:none; margin: 10px 15px 0 15px;">
-                    Errors found. Correct them to close flight.
-                </div>
-                <div class="alert-banner" id="close-warning-banner" style="display:none; margin: 10px 15px 0 15px; background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid rgba(255,193,7,0.3); border-radius: 8px; padding: 12px; flex-direction: column; gap: 8px;">
-                    <div style="font-weight: 600;" id="cf-warning-text">Warnings found.</div>
-                    <button style="align-self: flex-end; background: #ffc107; color: #000; border: none; padding: 6px 12px; border-radius: 4px; font-weight: 600; cursor: pointer;" onclick="bypassWarningAndClose()">Submit Anyway</button>
-                </div>
+
 
                 <div class="cf-grid">
                     <!-- LEFT COLUMN: PILOT -->
@@ -2207,7 +2197,6 @@
                                     <input type="number" step="0.1" value="0.0" id="cf-night-flight-p1">
                                     <button class="cf-btn-round" onclick="stepValue('cf-night-flight-p1', 0.1)">+</button>
                                 </div>
-                                <div class="cf-error-msg cf-field-full" id="err-night-flight-p1">Night time error</div>
                             </div>
                             <div class="cf-compact-stepper">
                                 <label style="cursor:pointer; text-decoration:underline; color:var(--accent-blue);" onclick="autoFillLegs('cf-night-landings-p1')">Night Landings</label>
@@ -2225,7 +2214,6 @@
                                     <input type="number" step="0.1" value="0.0" id="cf-nvg-time-p1">
                                     <button class="cf-btn-round" onclick="stepValue('cf-nvg-time-p1', 0.1)">+</button>
                                 </div>
-                                <div class="cf-error-msg cf-field-full" id="err-nvg-time-p1">NVG time error.</div>
                             </div>
                             <div class="cf-compact-stepper" id="group-hnvgo-p1">
                                 <label style="cursor:pointer; text-decoration:underline; color:var(--accent-blue);" onclick="autoFillLegs('cf-hnvgo-p1')">HNVGO</label>
@@ -2234,7 +2222,6 @@
                                     <input type="number" step="1" value="0" id="cf-hnvgo-p1">
                                     <button class="cf-btn-round" onclick="stepValue('cf-hnvgo-p1', 1)">+</button>
                                 </div>
-                                <div class="cf-error-msg cf-field-full" id="err-hnvgo-p1">HNVGO logged but NVG time is 0.</div>
                             </div>
 
                             <div class="cf-compact-stepper" id="group-inst-time-p1">
@@ -2244,7 +2231,6 @@
                                     <input type="number" step="0.1" value="0.0" id="cf-inst-time-p1">
                                     <button class="cf-btn-round" onclick="stepValue('cf-inst-time-p1', 0.1)">+</button>
                                 </div>
-                                <div class="cf-error-msg cf-field-full" id="err-inst-time-p1">Instrument time error</div>
                             </div>
                             <div class="cf-compact-stepper">
                                 <label>Hood Time</label>
@@ -2338,7 +2324,6 @@
                                     <input type="number" step="0.1" value="0.0" id="cf-night-flight-p2">
                                     <button class="cf-btn-round" onclick="stepValue('cf-night-flight-p2', 0.1)">+</button>
                                 </div>
-                                <div class="cf-error-msg cf-field-full" id="err-night-flight-p2">Night time error</div>
                             </div>
                             <div class="cf-compact-stepper">
                                 <label style="cursor:pointer; text-decoration:underline; color:var(--accent-blue);" onclick="autoFillLegs('cf-night-landings-p2')">Night Landings</label>
@@ -2356,7 +2341,6 @@
                                     <input type="number" step="0.1" value="0.0" id="cf-nvg-time-p2">
                                     <button class="cf-btn-round" onclick="stepValue('cf-nvg-time-p2', 0.1)">+</button>
                                 </div>
-                                <div class="cf-error-msg cf-field-full" id="err-nvg-time-p2">NVG time error.</div>
                             </div>
                             <div class="cf-compact-stepper" id="group-hnvgo-p2">
                                 <label style="cursor:pointer; text-decoration:underline; color:var(--accent-blue);" onclick="autoFillLegs('cf-hnvgo-p2')">HNVGO</label>
@@ -2365,7 +2349,6 @@
                                     <input type="number" step="1" value="0" id="cf-hnvgo-p2">
                                     <button class="cf-btn-round" onclick="stepValue('cf-hnvgo-p2', 1)">+</button>
                                 </div>
-                                <div class="cf-error-msg cf-field-full" id="err-hnvgo-p2">HNVGO logged but NVG time is 0.</div>
                             </div>
 
                             <div class="cf-compact-stepper" id="group-inst-time-p2">
@@ -2375,7 +2358,6 @@
                                     <input type="number" step="0.1" value="0.0" id="cf-inst-time-p2">
                                     <button class="cf-btn-round" onclick="stepValue('cf-inst-time-p2', 0.1)">+</button>
                                 </div>
-                                <div class="cf-error-msg cf-field-full" id="err-inst-time-p2">Instrument time error</div>
                             </div>
                             <div class="cf-compact-stepper">
                                 <label>Hood Time</label>
@@ -2451,17 +2433,10 @@
                         <div class="cf-panel">
                             <div class="cf-panel-title">MAINTENANCE</div>
                             <div class="cf-field-grid">
-                                <div class="cf-compact-stepper cf-field-full">
-                                    <label>Landings <span style="color:var(--error-color)">*</span></label>
-                                    <div class="cf-ctrl">
-                                        <button class="cf-btn-round" onclick="stepValue('cf-maint-landings', -1)">−</button>
-                                        <input type="number" value="0" id="cf-maint-landings">
-                                        <button class="cf-btn-round" onclick="stepValue('cf-maint-landings', 1)">+</button>
-                                    </div>
-                                </div>
+
 
                                 <div class="cf-compact-stepper">
-                                    <label>#1 Eng N1 <span style="color:var(--error-color)">*</span></label>
+                                    <label>#1 Eng N1</label>
                                     <div class="cf-ctrl">
                                         <button class="cf-btn-round" onclick="stepValue('cf-e1-n1', -0.1)">−</button>
                                         <input type="number" step="0.1" value="0.0" id="cf-e1-n1">
@@ -2469,7 +2444,7 @@
                                     </div>
                                 </div>
                                 <div class="cf-compact-stepper">
-                                    <label>#1 Eng N2 <span style="color:var(--error-color)">*</span></label>
+                                    <label>#1 Eng N2</label>
                                     <div class="cf-ctrl">
                                         <button class="cf-btn-round" onclick="stepValue('cf-e1-n2', -0.1)">−</button>
                                         <input type="number" step="0.1" value="0.0" id="cf-e1-n2">
@@ -2478,7 +2453,7 @@
                                 </div>
 
                                 <div class="cf-compact-stepper">
-                                    <label>#2 Eng N1 <span style="color:var(--error-color)">*</span></label>
+                                    <label>#2 Eng N1</label>
                                     <div class="cf-ctrl">
                                         <button class="cf-btn-round" onclick="stepValue('cf-e2-n1', -0.1)">−</button>
                                         <input type="number" step="0.1" value="0.0" id="cf-e2-n1">
@@ -2486,7 +2461,7 @@
                                     </div>
                                 </div>
                                 <div class="cf-compact-stepper">
-                                    <label>#2 Eng N2 <span style="color:var(--error-color)">*</span></label>
+                                    <label>#2 Eng N2</label>
                                     <div class="cf-ctrl">
                                         <button class="cf-btn-round" onclick="stepValue('cf-e2-n2', -0.1)">−</button>
                                         <input type="number" step="0.1" value="0.0" id="cf-e2-n2">
@@ -2580,8 +2555,26 @@
             </div>
         </div>
 
-
-
+    <div id="cf-validation-modal" class="modal-overlay" style="z-index: 1030;">
+        <div class="modal-content" style="max-width: 500px; padding: 25px;">
+            <div class="modal-header">
+                <h2>Validation Results</h2>
+                <button class="close-btn" onclick="closeModal('cf-validation-modal')">×</button>
+            </div>
+            <div id="cf-val-errors" style="display:none; margin-bottom: 20px;">
+                <h3 style="color: var(--error-color); margin-top:0; font-size: 16px;">Errors (Must Fix)</h3>
+                <ul id="cf-val-error-list" style="color: var(--text-color); margin: 5px 0 0 15px; padding:0;"></ul>
+            </div>
+            <div id="cf-val-warnings" style="display:none; margin-bottom: 20px;">
+                <h3 style="color: #ffc107; margin-top:0; font-size: 16px;">Warnings (Can Bypass)</h3>
+                <ul id="cf-val-warning-list" style="color: var(--text-color); margin: 5px 0 0 15px; padding:0;"></ul>
+            </div>
+            <div class="modal-actions" style="margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="closeModal('cf-validation-modal')">Go Back</button>
+                <button class="btn btn-primary" id="cf-val-submit-anyway" style="display:none; background: #ffc107; color: #000; border: none;" onclick="bypassWarningAndClose()">Submit Anyway</button>
+            </div>
+        </div>
+    </div>
 
     </div> <!-- /device-frame -->
 
@@ -3272,7 +3265,9 @@
             } else {
                 input.value = Math.round(val);
             }
+            input.dispatchEvent(new Event('input', { bubbles: true }));
         }
+
 
         
         function switchPilotTab(p) {
@@ -3288,8 +3283,6 @@
         function openCloseFlightPage() {
             // Reset validation styling and warning bypassed flag
             document.querySelectorAll('.cf-has-error').forEach(el => el.classList.remove('cf-has-error'));
-            document.getElementById('close-error-banner').style.display = 'none';
-            document.getElementById('close-warning-banner').style.display = 'none';
             window._cfWarningBypassed = false;
             window._cfWarningText = "";
 
@@ -3408,6 +3401,7 @@
                 document.getElementById(id).value = window._cfTotalFlightTime.toFixed(1);
                 // Clear the error styling if any
                 document.getElementById(id).parentElement.parentElement.classList.remove('cf-has-error');
+                document.getElementById(id).dispatchEvent(new Event('input', { bubbles: true }));
             }
         }
 
@@ -3416,19 +3410,23 @@
                 document.getElementById(id).value = window._cfTotalLegs;
                 // Clear the error styling if any
                 document.getElementById(id).parentElement.parentElement.classList.remove('cf-has-error');
+                document.getElementById(id).dispatchEvent(new Event('input', { bubbles: true }));
             }
         }
 
-        function validateAndClose() {
+        function runValidation(isClosing = false) {
             let hasError = false;
             let firstErrorPilot = null;
             let hasWarning = false;
             let warningsList = [];
 
+            let errorsList = [];
+
+            let flightTotalTkof = 0;
+            let flightTotalLdg = 0;
+
             // Reset errors
             document.querySelectorAll('.cf-has-error').forEach(el => el.classList.remove('cf-has-error'));
-            document.getElementById('close-error-banner').style.display = 'none';
-            document.getElementById('close-warning-banner').style.display = 'none';
 
             // Validate both pilots
             (window._cfActivePilots || ['p1', 'p2']).forEach(p => {
@@ -3447,6 +3445,9 @@
                 const ldgDay = parseInt(document.getElementById('cf-day-landings-' + p).value) || 0;
                 const ldgNight = parseInt(document.getElementById('cf-night-landings-' + p).value) || 0;
 
+                flightTotalTkof += (tkofDay + tkofNight);
+                flightTotalLdg += (ldgDay + ldgNight);
+
                 let pilotHasError = false;
 
                 // Total Flight Time sandbox
@@ -3454,38 +3455,31 @@
                 if (totalLogged > window._cfTotalFlightTime) {
                     document.getElementById('cf-day-flight-' + p).parentElement.parentElement.classList.add('cf-has-error');
                     document.getElementById('group-night-flight-' + p).classList.add('cf-has-error');
-                    document.getElementById('err-night-flight-' + p).innerText = `Total flight time (${totalLogged.toFixed(1)}) exceeds manifest total (${window._cfTotalFlightTime.toFixed(1)}).`;
                     pilotHasError = true;
-                }
-
-                // Takeoffs vs Landings
-                if ((tkofDay + tkofNight) !== (ldgDay + ldgNight)) {
-                    document.getElementById('cf-tkof-day-' + p).parentElement.parentElement.classList.add('cf-has-error');
-                    document.getElementById('cf-day-landings-' + p).parentElement.parentElement.classList.add('cf-has-error');
-                    pilotHasError = true;
+                    errorsList.push(`Pilot ${p.toUpperCase()}: Total flight time (${totalLogged.toFixed(1)}) exceeds manifest total (${window._cfTotalFlightTime.toFixed(1)}).`);
                 }
 
                 // Night Landings without Night Time
                 if (ldgNight > 0 && night <= 0) {
                     document.getElementById('cf-night-landings-' + p).parentElement.parentElement.classList.add('cf-has-error');
                     document.getElementById('group-night-flight-' + p).classList.add('cf-has-error');
-                    document.getElementById('err-night-flight-' + p).innerText = "Night landings logged, but Night time is 0.";
                     pilotHasError = true;
+                    errorsList.push(`Pilot ${p.toUpperCase()}: Night landings logged, but Night time is 0.`);
                 }
 
                 // NVG > Night
                 if (nvg > night) {
                     document.getElementById('group-night-flight-' + p).classList.add('cf-has-error');
                     document.getElementById('group-nvg-time-' + p).classList.add('cf-has-error');
-                    document.getElementById('err-nvg-time-' + p).innerText = "NVG time cannot exceed Night time.";
                     pilotHasError = true;
+                    errorsList.push(`Pilot ${p.toUpperCase()}: NVG time cannot exceed Night time.`);
                 }
                 
                 // HNVGO logged but NVG time is 0
                 if (hnvgo > 0 && nvg <= 0) {
                     document.getElementById('group-hnvgo-' + p).classList.add('cf-has-error');
-                    document.getElementById('err-hnvgo-' + p).innerText = "HNVGO logged but NVG time is 0.";
                     pilotHasError = true;
+                    errorsList.push(`Pilot ${p.toUpperCase()}: HNVGO logged but NVG time is 0.`);
                 }
 
                 // Approaches logged without Instrument/Hood
@@ -3493,19 +3487,20 @@
                     document.getElementById('group-inst-app-p-' + p).classList.add('cf-has-error');
                     document.getElementById('group-inst-app-np-' + p).classList.add('cf-has-error');
                     pilotHasError = true;
+                    errorsList.push(`Pilot ${p.toUpperCase()}: Approaches logged without Instrument/Hood time.`);
                 }
 
                 // Instrument logged but not IFR
                 if (inst > 0 && !isIfr) {
                     document.getElementById('group-inst-time-' + p).classList.add('cf-has-error');
-                    document.getElementById('err-inst-time-' + p).innerText = "Instrument time logged but IFR legs is 0.";
                     pilotHasError = true;
+                    errorsList.push(`Pilot ${p.toUpperCase()}: Instrument time logged but IFR legs is 0.`);
                 }
                 
                 // Night VFR Warning
                 if (night > 0 && nvg <= 0 && !isIfr) {
                     hasWarning = true;
-                    warningsList.push("Night VFR flown without NVG Time logged.");
+                    warningsList.push(`Pilot ${p.toUpperCase()}: Night VFR flown without NVG Time logged.`);
                 }
 
                 if (pilotHasError) {
@@ -3514,51 +3509,69 @@
                 }
             });
 
-            // Validate Maintenance Required fields
-            const maintLandings = document.getElementById('cf-maint-landings').value;
-            const e1n1 = document.getElementById('cf-e1-n1').value;
-            const e1n2 = document.getElementById('cf-e1-n2').value;
-            const e2n1 = document.getElementById('cf-e2-n1').value;
-            const e2n2 = document.getElementById('cf-e2-n2').value;
-
-            if (!maintLandings || maintLandings <= 0) {
-                document.getElementById('cf-maint-landings').parentElement.parentElement.classList.add('cf-has-error');
+            // Global Takeoffs vs Landings
+            if (flightTotalTkof !== flightTotalLdg) {
                 hasError = true;
-            }
-            if (!e1n1 || e1n1 <= 0) {
-                document.getElementById('cf-e1-n1').parentElement.parentElement.classList.add('cf-has-error');
-                hasError = true;
-            }
-            if (!e1n2 || e1n2 <= 0) {
-                document.getElementById('cf-e1-n2').parentElement.parentElement.classList.add('cf-has-error');
-                hasError = true;
-            }
-            if (!e2n1 || e2n1 <= 0) {
-                document.getElementById('cf-e2-n1').parentElement.parentElement.classList.add('cf-has-error');
-                hasError = true;
-            }
-            if (!e2n2 || e2n2 <= 0) {
-                document.getElementById('cf-e2-n2').parentElement.parentElement.classList.add('cf-has-error');
-                hasError = true;
+                errorsList.push(`Flight Total: Combined takeoffs (${flightTotalTkof}) do not match combined landings (${flightTotalLdg}).`);
+                (window._cfActivePilots || ['p1', 'p2']).forEach(p => {
+                    document.getElementById('cf-tkof-day-' + p).parentElement.parentElement.classList.add('cf-has-error');
+                    document.getElementById('cf-tkof-night-' + p).parentElement.parentElement.classList.add('cf-has-error');
+                    document.getElementById('cf-day-landings-' + p).parentElement.parentElement.classList.add('cf-has-error');
+                    document.getElementById('cf-night-landings-' + p).parentElement.parentElement.classList.add('cf-has-error');
+                });
             }
 
-            const errorBanner = document.getElementById('close-error-banner');
-            if (hasError) {
-                errorBanner.style.display = "block";
-                
-                // If there's an error on a pilot tab, auto-switch to it so the user sees it
-                if (firstErrorPilot) {
-                    switchPilotTab(firstErrorPilot);
+            if (isClosing) {
+                if (hasError || hasWarning) {
+                    // Switch to first errored pilot tab underneath the modal to make it clear what failed
+                    if (firstErrorPilot) {
+                        switchPilotTab(firstErrorPilot);
+                        const grid = document.querySelector('.cf-grid');
+                        if (grid) grid.scrollTop = 0;
+                    }
+
+                    const errDiv = document.getElementById('cf-val-errors');
+                    const errList = document.getElementById('cf-val-error-list');
+                    const warnDiv = document.getElementById('cf-val-warnings');
+                    const warnList = document.getElementById('cf-val-warning-list');
+                    const btnAnyway = document.getElementById('cf-val-submit-anyway');
+
+                    if (hasError) {
+                        errDiv.style.display = "block";
+                        errList.innerHTML = errorsList.map(e => `<li>${e}</li>`).join("");
+                        btnAnyway.style.display = "none";
+                    } else {
+                        errDiv.style.display = "none";
+                        btnAnyway.style.display = "inline-block";
+                    }
+
+                    if (hasWarning) {
+                        warnDiv.style.display = "block";
+                        warnList.innerHTML = warningsList.map(w => `<li>${w}</li>`).join("");
+                    } else {
+                        warnDiv.style.display = "none";
+                    }
+
+                    openModal('cf-validation-modal');
+                    return false;
+                } else {
+                    alert("Flight manifest closed successfully!");
+                    closeModal('close-modal');
                 }
-                
-                // Scroll to top (note: the close-flight modal uses .cf-grid for scrolling)
-                const grid = document.querySelector('.cf-grid');
-                if(grid) grid.scrollTop = 0;
             } else {
-                errorBanner.style.display = "none";
-                alert("Flight manifest closed successfully!");
-                closeModal('close-modal');
+                if (hasError) return false;
             }
+            return true;
+        }
+
+        function validateAndClose() {
+            runValidation(true);
+        }
+
+        function bypassWarningAndClose() {
+            closeModal('cf-validation-modal');
+            alert("Flight manifest closed successfully (Warnings Bypassed)!");
+            closeModal('close-modal');
         }
 
         function formatSyncTime() {
@@ -3769,6 +3782,149 @@
             }
             spatialGrid.querySelectorAll('.seat-card').forEach(c => c.classList.remove('drag-over'));
             dragSourceSeatId = null;
+        });
+
+        // --- NEW: Long-press to drag for Pilot Fields ---
+        ['p1', 'p2'].forEach(p => {
+            const grid = document.getElementById(`cf-fields-${p}`);
+            if (!grid) return;
+            
+            let dragSrcEl = null;
+            let pressTimer = null;
+            let startX, startY;
+
+            const items = grid.querySelectorAll('.cf-compact-stepper, .cf-input-block');
+            items.forEach(item => {
+                const startPress = (e) => {
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT' || e.button === 2) return;
+                    
+                    startX = e.touches ? e.touches[0].clientX : e.clientX;
+                    startY = e.touches ? e.touches[0].clientY : e.clientY;
+                    
+                    clearTimeout(pressTimer);
+                    pressTimer = setTimeout(() => {
+                        item.setAttribute('draggable', 'true');
+                        item.style.transform = 'scale(1.03)';
+                        item.style.boxShadow = '0 8px 16px rgba(0,0,0,0.2)';
+                        item.style.transition = 'transform 0.2s, box-shadow 0.2s';
+                        item.style.zIndex = '100';
+                        item.style.backgroundColor = 'var(--surface-color)';
+                        item.style.borderRadius = '8px';
+                        if (navigator.vibrate) navigator.vibrate(50);
+                    }, 500);
+                };
+
+                const handleMove = (e) => {
+                    if (!pressTimer) return;
+                    const currentX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const currentY = e.touches ? e.touches[0].clientY : e.clientY;
+                    if (Math.abs(currentX - startX) > 10 || Math.abs(currentY - startY) > 10) {
+                        cancelPress();
+                    }
+                };
+
+                const cancelPress = () => {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                    if (item.getAttribute('draggable') !== 'true') {
+                        resetItemStyle(item);
+                    }
+                };
+
+                const resetItemStyle = (el) => {
+                    el.style.transform = '';
+                    el.style.boxShadow = '';
+                    el.style.zIndex = '';
+                    el.style.backgroundColor = '';
+                    el.style.borderRadius = '';
+                };
+
+                item.addEventListener('mousedown', startPress);
+                item.addEventListener('touchstart', startPress, {passive: true});
+                
+                item.addEventListener('mousemove', handleMove);
+                item.addEventListener('touchmove', handleMove, {passive: true});
+
+                item.addEventListener('mouseup', (e) => {
+                    cancelPress();
+                    setTimeout(() => { if (!dragSrcEl) { item.removeAttribute('draggable'); resetItemStyle(item); } }, 50);
+                });
+                item.addEventListener('touchend', (e) => {
+                    cancelPress();
+                    setTimeout(() => { if (!dragSrcEl) { item.removeAttribute('draggable'); resetItemStyle(item); } }, 50);
+                });
+                item.addEventListener('mouseleave', cancelPress);
+                item.addEventListener('touchcancel', cancelPress);
+
+                item.addEventListener('dragstart', function(e) {
+                    dragSrcEl = this;
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', this.id || 'pilot-field');
+                    setTimeout(() => { this.style.opacity = '0.4'; }, 0);
+                });
+
+                item.addEventListener('dragend', function(e) {
+                    this.style.opacity = '1';
+                    this.removeAttribute('draggable');
+                    resetItemStyle(this);
+                    
+                    grid.querySelectorAll('.cf-compact-stepper, .cf-input-block').forEach(c => {
+                        c.style.outline = '';
+                    });
+                    dragSrcEl = null;
+                });
+
+                item.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    if (dragSrcEl && dragSrcEl !== this) {
+                        grid.querySelectorAll('.cf-compact-stepper, .cf-input-block').forEach(c => {
+                            if (c !== dragSrcEl) c.style.outline = '';
+                        });
+                        this.style.outline = '2px dashed var(--accent-blue)';
+                        this.style.outlineOffset = '2px';
+                        this.style.borderRadius = '6px';
+                    }
+                    return false;
+                });
+
+                item.addEventListener('dragleave', function(e) {
+                    this.style.outline = '';
+                });
+
+                item.addEventListener('drop', function(e) {
+                    e.stopPropagation();
+                    this.style.outline = '';
+                    
+                    if (dragSrcEl && dragSrcEl !== this) {
+                        let isBefore = false;
+                        for (let el = dragSrcEl.nextSibling; el; el = el.nextSibling) {
+                            if (el === this) {
+                                isBefore = true;
+                                break;
+                            }
+                        }
+                        if (isBefore) {
+                            grid.insertBefore(dragSrcEl, this.nextSibling);
+                        } else {
+                            grid.insertBefore(dragSrcEl, this);
+                        }
+                    }
+                    return false;
+                });
+            });
+        });
+
+        // Setup live validation for close flight modal
+        document.getElementById('close-modal').addEventListener('input', (e) => {
+            if (document.getElementById('close-modal').classList.contains('active')) {
+                runValidation(false);
+            }
+        });
+        document.getElementById('close-modal').addEventListener('change', (e) => {
+            if (document.getElementById('close-modal').classList.contains('active')) {
+                runValidation(false);
+            }
         });
 
     </script>

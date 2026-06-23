@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.6] - 2026-06-22
+### Fixed
+- Fixed UI scaling issue by replacing `zoom: 0.75` on body and adjusting `133.33vw` width and `133.33vh` height.
+- Corrected extra `</div>` tag that was causing the flexbox layout to break on the home and manifest pages.
+
 ## [0.4.5] - 2026-06-21
 ### Added
 - Rewrote the drag-and-drop mechanism for Manifest crew seats to use native HTML5 drag-and-drop, matching the Comm Center simulator behavior.

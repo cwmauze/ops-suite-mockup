@@ -2941,150 +2941,8 @@
 
         const spatialGrid = document.querySelector('.spatial-grid');
         
-        let customDragSourceId = null;
-        let currentTargetCard = null;
-        let dragOffsetX = 0;
-        let dragOffsetY = 0;
-        let dragClone = null;
-
-        function startCustomDrag(e, card) {
-            console.log("[DND] startCustomDrag triggered", e.type);
-            // Prevent dragging if interacting with inputs, buttons, or dropdowns
-            let target = e.target;
-            if (target.nodeType === 3) target = target.parentNode; // Handle text node clicks
-            if (!target || !target.closest) {
-                console.log("[DND] Failsafe return: target is invalid");
-                return; // Failsafe
-            }
-
-            if (target.tagName === 'INPUT' || target.tagName === 'BUTTON' || target.closest('button') || target.closest('.clear-btn') || target.closest('.cycle-btn') || target.closest('.autocomplete-dropdown')) {
-                console.log("[DND] Ignored drag because target is interactive:", target.tagName, target.className);
-                return;
-            }
-            
-            // For mouse events, only allow left-click
-            if (e.type === 'mousedown' && e.button !== 0) return;
-
-            e.preventDefault();
-
-            customDragSourceId = card.getAttribute('data-seat-id');
-            console.log("[DND] Drag started! Source ID:", customDragSourceId);
-            
-            card.classList.add('is-dragging');
-            spatialGrid.classList.add('dragging-active');
-
-            // Setup clone
-            const rect = card.getBoundingClientRect();
-            const scaleX = rect.width / card.offsetWidth;
-            const scaleY = rect.height / card.offsetHeight;
-
-            dragClone = card.cloneNode(true);
-            dragClone.classList.add('floating-drag-clone');
-            
-            // Lock dimensions to the un-scaled original size
-            dragClone.style.width = card.offsetWidth + 'px';
-            dragClone.style.height = card.offsetHeight + 'px';
-            dragClone.style.margin = '0';
-            
-            // Apply dynamic scaling to match visual size exactly
-            dragClone.style.transform = `scale(${scaleX}, ${scaleY})`;
-            dragClone.style.transformOrigin = 'top left';
-            
-            document.body.appendChild(dragClone);
-
-            // Calculate offset of mouse relative to the card's top-left corner
-            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-            
-            dragOffsetX = clientX - rect.left;
-            dragOffsetY = clientY - rect.top;
-            
-            // Set initial position based on offset
-            dragClone.style.left = (clientX - dragOffsetX) + 'px';
-            dragClone.style.top = (clientY - dragOffsetY) + 'px';
-
-            // Bind global move and end listeners
-            document.addEventListener('mousemove', handleCustomDragMove, {passive: false});
-            document.addEventListener('touchmove', handleCustomDragMove, {passive: false});
-            document.addEventListener('mouseup', endCustomDrag);
-            document.addEventListener('touchend', endCustomDrag);
-        }
-
-        function moveCustomDrag(e) {
-            if (!dragClone) return;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            
-            // Position using the calculated offsets
-            dragClone.style.left = (clientX - dragOffsetX) + 'px';
-            dragClone.style.top = (clientY - dragOffsetY) + 'px';
-
-            // Find element under cursor
-            // Hide clone temporarily to find what's underneath
-            dragClone.style.display = 'none';
-            const elementUnderCursor = document.elementFromPoint(clientX, clientY);
-            dragClone.style.display = '';
-
-            if (!elementUnderCursor) return;
-
-            const targetCard = elementUnderCursor.closest('.seat-card');
-            
-            // Remove highlight from previous target
-            if (currentTargetCard && currentTargetCard !== targetCard) {
-                currentTargetCard.classList.remove('drag-over');
-            }
-
-            // Add highlight to new target
-            if (targetCard && targetCard.getAttribute('data-seat-id') !== customDragSourceId) {
-                targetCard.classList.add('drag-over');
-                currentTargetCard = targetCard;
-            } else {
-                currentTargetCard = null;
-            }
-        }
-
-        function handleCustomDragMove(e) {
-            e.preventDefault(); // Prevent scrolling while dragging
-            moveCustomDrag(e);
-        }
-
-        function endCustomDrag(e) {
-            console.log("[DND] endCustomDrag triggered");
-            // Unbind global listeners
-            document.removeEventListener('mousemove', handleCustomDragMove);
-            document.removeEventListener('touchmove', handleCustomDragMove);
-            document.removeEventListener('mouseup', endCustomDrag);
-            document.removeEventListener('touchend', endCustomDrag);
-
-            if (dragClone) {
-                dragClone.remove();
-                dragClone = null;
-            }
-
-            spatialGrid.classList.remove('dragging-active');
-            
-            spatialGrid.querySelectorAll('.seat-card').forEach(c => {
-                c.classList.remove('is-dragging');
-                c.classList.remove('drag-over');
-            });
-
-            console.log("[DND] customDragSourceId:", customDragSourceId, "currentTargetCard:", currentTargetCard ? currentTargetCard.getAttribute('data-seat-id') : null);
-
-            if (customDragSourceId && currentTargetCard) {
-                const targetSeatId = currentTargetCard.getAttribute('data-seat-id');
-                if (targetSeatId && targetSeatId !== customDragSourceId) {
-                    console.log("[DND] Attempting to swap seats:", customDragSourceId, "with", targetSeatId);
-                    swapSeats(customDragSourceId, targetSeatId);
-                } else {
-                    console.log("[DND] Target seat same as source seat, not swapping");
-                }
-            } else {
-                console.log("[DND] Missing source or target, not swapping");
-            }
-
-            customDragSourceId = null;
-            currentTargetCard = null;
-        }
+        // Native HTML5 Drag and Drop for Seat Swapping
+        let dragSourceSeatId = null;
 
         spatialGrid.querySelectorAll('.seat-card').forEach(card => {
             if (!card.hasAttribute('data-seat-id')) {
@@ -3095,13 +2953,58 @@
                     card.setAttribute('data-seat-id', '5');
                 }
             }
-            
-            // Remove native drag to avoid conflicts
-            card.removeAttribute('draggable');
 
-            // Attach listeners to the whole card so it acts as a tile
-            card.addEventListener('mousedown', (e) => startCustomDrag(e, card));
-            card.addEventListener('touchstart', (e) => startCustomDrag(e, card), {passive: false});
+            // Restore native drag
+            card.setAttribute('draggable', 'true');
+
+            card.addEventListener('dragstart', (e) => {
+                const target = e.target;
+                if (target.nodeType === 3) target = target.parentNode; // text node
+
+                // Ensure dragging on interactive elements doesn't trigger card drag
+                if (target.tagName === 'INPUT' || target.tagName === 'BUTTON' || target.closest('button') || target.closest('.clear-btn') || target.closest('.cycle-btn') || target.closest('.autocomplete-dropdown')) {
+                    e.preventDefault();
+                    return;
+                }
+                dragSourceSeatId = card.getAttribute('data-seat-id');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', dragSourceSeatId);
+                setTimeout(() => card.classList.add('is-dragging'), 0);
+            });
+
+            card.addEventListener('dragend', (e) => {
+                card.classList.remove('is-dragging');
+            });
+        });
+
+        spatialGrid.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const card = e.target.closest('.seat-card');
+            if (card && card.getAttribute('data-seat-id') !== dragSourceSeatId) {
+                card.classList.add('drag-over');
+            }
+        });
+
+        spatialGrid.addEventListener('dragleave', (e) => {
+            const card = e.target.closest('.seat-card');
+            if (card) {
+                card.classList.remove('drag-over');
+            }
+        });
+
+        spatialGrid.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const card = e.target.closest('.seat-card');
+            if (card) {
+                card.classList.remove('drag-over');
+                const targetSeatId = card.getAttribute('data-seat-id');
+                console.log("[DND] Dropped onto seat", targetSeatId, "from", dragSourceSeatId);
+                if (dragSourceSeatId && targetSeatId && targetSeatId !== dragSourceSeatId) {
+                    swapSeats(dragSourceSeatId, targetSeatId);
+                }
+            }
+            spatialGrid.querySelectorAll('.seat-card').forEach(c => c.classList.remove('drag-over'));
+            dragSourceSeatId = null;
         });
 
     </script>

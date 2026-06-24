@@ -973,9 +973,7 @@
     </div>
 
     <div id="main-view" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; position: relative; min-width: 0; min-height: 0; overflow: hidden;">
-                <div class="testing-banner" style="background-color: var(--accent-red, #d9381e); color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; margin: 12px 0; text-align: center; border: 1px solid #ff5555; box-shadow: 0 2px 8px rgba(217, 56, 30, 0.4); z-index: 1000; flex-shrink: 0; width: 744px; box-sizing: border-box;">
-            ⚠️ For Metro Aviation Internal Testing Only
-        </div>
+                
 <div class="device-frame">
         <div class="device-screen">
             
@@ -1342,8 +1340,6 @@
             </div>
         </div>
         
-        </div> <!-- Close device-screen -->
-
         <!-- ================= MODALS ================= -->
 
         <!-- Risk Modal -->
@@ -2592,10 +2588,9 @@
         </div>
     </div>
 
+    </div> <!-- Close device-screen -->
     </div>
-        <div class="testing-banner" style="background-color: var(--accent-red, #d9381e); color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; margin: 12px 0; text-align: center; border: 1px solid #ff5555; box-shadow: 0 2px 8px rgba(217, 56, 30, 0.4); z-index: 1000; flex-shrink: 0; width: 744px; box-sizing: border-box;">
-            ⚠️ For Metro Aviation Internal Testing Only
-        </div>
+        
  <!-- /device-frame -->
 
     <script>
@@ -3963,7 +3958,52 @@
     <script>
         if (typeof initObstacleEngine === 'function') initObstacleEngine();
     </script>
-    <script src="assets/simulator.js?v=7"></script>
+    <script src="assets/simulator.js?v=8"></script>
     <script src="assets/changelog.js"></script>
+
+    
+    <!-- Global Testing Banners -->
+    <style>
+        .global-testing-banner {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(40, 40, 40, 0.8);
+            color: #aaa;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-align: center;
+            border: 1px solid #555;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 99999;
+            pointer-events: none;
+            width: 744px;
+            box-sizing: border-box;
+            letter-spacing: 0.5px;
+        }
+        .global-testing-banner.top { top: 12px; }
+        .global-testing-banner.bottom { bottom: 12px; }
+        body.native-mode .global-testing-banner { display: none !important; }
+        @media (max-width: 768px) {
+            .global-testing-banner { width: 95%; }
+        }
+    </style>
+    <script>
+        (function() {
+            const mainView = document.getElementById('main-view') || document.body;
+            const bannerTop = document.createElement('div');
+            bannerTop.className = 'global-testing-banner top';
+            bannerTop.innerHTML = 'For Metro Aviation Internal Testing Only';
+            const bannerBottom = document.createElement('div');
+            bannerBottom.className = 'global-testing-banner bottom';
+            bannerBottom.innerHTML = 'For Metro Aviation Internal Testing Only';
+            mainView.appendChild(bannerTop);
+            mainView.appendChild(bannerBottom);
+        })();
+    </script>
+
 </body>
 </html>

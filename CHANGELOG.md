@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.5.4] - 2026-06-23
+### Fixed
+- Contained the Save/Close flight modal strictly within the virtual iPad bezel by adjusting container boundaries.
+
 ## [0.5.3] - 2026-06-23
 ### Added
 - Implemented long-press drag-and-drop sortability for all data entry fields in the Pilot section of the Close Flight modal, allowing pilots to customize their data entry flow.

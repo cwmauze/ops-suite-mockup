@@ -360,7 +360,7 @@
     <div id="desktop-instructions">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
             <h2 style="margin-bottom: 0;">Ops Suite Prototype</h2>
-            <div class="mockup-version" onclick="toggleChangelog()" style="margin-top: 0; padding: 6px 10px; font-size: 0.85rem; border-radius: 4px;">v0.5.3</div>
+            <div class="mockup-version" onclick="toggleChangelog()" style="margin-top: 0; padding: 6px 10px; font-size: 0.85rem; border-radius: 4px;">v0.5.4</div>
         </div>
 
         <p>This is a semi-functional prototype designed to experiment with and implement user feedback. Its primary goal is to prototype a new, optimized user interface for the app previously known as Complete Flight.</p>
@@ -396,7 +396,7 @@
 
                 <!-- Sync Bar -->
                 <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.5.3</span>
+                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.5.4</span>
                     <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -605,7 +605,52 @@
         }
     </script>
     <!-- Simulator JS -->
-    <script src="assets/simulator.js?v=7"></script>
+    <script src="assets/simulator.js?v=8"></script>
 <script src="assets/changelog.js"></script>
+
+    
+    <!-- Global Testing Banners -->
+    <style>
+        .global-testing-banner {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(40, 40, 40, 0.8);
+            color: #aaa;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-align: center;
+            border: 1px solid #555;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 99999;
+            pointer-events: none;
+            width: 744px;
+            box-sizing: border-box;
+            letter-spacing: 0.5px;
+        }
+        .global-testing-banner.top { top: 12px; }
+        .global-testing-banner.bottom { bottom: 12px; }
+        body.native-mode .global-testing-banner { display: none !important; }
+        @media (max-width: 768px) {
+            .global-testing-banner { width: 95%; }
+        }
+    </style>
+    <script>
+        (function() {
+            const mainView = document.getElementById('main-view') || document.body;
+            const bannerTop = document.createElement('div');
+            bannerTop.className = 'global-testing-banner top';
+            bannerTop.innerHTML = 'For Metro Aviation Internal Testing Only';
+            const bannerBottom = document.createElement('div');
+            bannerBottom.className = 'global-testing-banner bottom';
+            bannerBottom.innerHTML = 'For Metro Aviation Internal Testing Only';
+            mainView.appendChild(bannerTop);
+            mainView.appendChild(bannerBottom);
+        })();
+    </script>
+
 </body>
 </html>

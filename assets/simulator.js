@@ -296,6 +296,8 @@ window.FlightSimulator = {
     },
 
     injectUI: function() {
+        
+
         // Inject styles
         const style = document.createElement('style');
         style.textContent = `

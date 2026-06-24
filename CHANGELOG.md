@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.5] - 2026-06-24
+### Added
+- Added `edit-base.html` interface for updating the current base status, base alert, and weather status.
+- Added live data synchronization using `localStorage` between the edit page and the dashboard.
+
+### Changed
+- Refactored `home.html` into a complete 'Command Center' layout to optimize horizontal screen space.
+- Grouped Pilot Currency and Duty Period into prioritized visual components on the home dashboard.
+
 ## [0.5.4] - 2026-06-23
 ### Fixed
 - Contained the Save/Close flight modal strictly within the virtual iPad bezel by adjusting container boundaries.

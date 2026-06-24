@@ -1192,228 +1192,112 @@
         <div class="device-frame" id="deviceFrame">
         <div class="device-screen">
 
-            <!-- Sync Bar -->
-            <div class="sync-bar">
-                <span class="mockup-version-tag" onclick="toggleChangelog()" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; margin-right: auto; padding-left: 8px; font-weight: bold; font-family: monospace;">Mockup v0.5.5</span>
-                <button onclick="window.location.href='roadmap.html'" style="background:var(--accent-blue); border:none; color:white; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-right: 8px; margin-left: auto;">Roadmap</button>
-                <button class="theme-toggle" onclick="toggleTheme()" style="background:none; border: 1px solid var(--border-color); color: var(--text-primary); padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"></path>
-                    </svg>
-                </button>
-                <div style="cursor: pointer; display: flex; align-items: center; gap: 4px;" onclick="triggerManualSync(this)">
-                    <span class="sync-icon">✔</span> <span class="sync-text">Last sync: Just now</span>
-                </div>
+
+            <!-- Header Bar -->
+            <div style="display: flex; align-items: center; padding: 16px; border-bottom: 1px solid var(--border-color); background-color: var(--bg-color); position: sticky; top: 0; z-index: 10;">
+                <svg onclick="window.location.href='home.html'" style="width: 24px; height: 24px; fill: var(--text-main); cursor: pointer;" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/></svg>
+                <h1 style="flex: 1; text-align: center; margin: 0; font-size: 1.2rem; margin-right: 24px;">Edit Aircraft and Base Status</h1>
             </div>
 
-            
-
-
             <!-- Content Area -->
-            <div class="content-container">
+            <div class="content-container" style="padding-bottom: 80px;">
+                <!-- RWI Section -->
+                <div class="section-title" style="font-size: 1.2rem; color: var(--text-main); font-weight: bold; margin-bottom: 16px;">RWI</div>
                 
-
-
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <button class="btn-action blue" onclick="window.location.href='flightlog.html'">
-                        <svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/></svg> New Manifest
-                    </button>
-                    <button class="btn-action blue">
-                        <svg viewBox="0 0 24 24"><path d="M6.5,17.5A3.5,3.5 0 0,1 3,14A3.5,3.5 0 0,1 6.5,10.5C6.8,10.5 7.1,10.5 7.4,10.6C8.2,7.7 10.8,5.5 14,5.5A6.5,6.5 0 0,1 20.5,12C21.9,12.2 23,13.5 23,15A3,3 0 0,1 20,18H6.5V17.5Z"/></svg> Weather
-                    </button>
-
-                    <button class="btn-action red" onclick="window.location.href='index.html'">
-                        <svg viewBox="0 0 24 24"><path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"/></svg> Log Out
-                    </button>
-                </div>
-
-                <!-- Flight Request Card -->
-                <div class="card" id="home-flight-request-card" style="display: none;">
-                    <div class="flight-card-layout">
-                        <div class="flight-details">
-                            <div class="flight-title">Flight Request #1029992</div>
-                            <div class="tag-yellow">Inter-Facility Transfer</div>
-                            
-                            <div class="flight-info-text">
-                                <span id="home-flight-date-text">06/18/2026, 10:26</span><br>
-                                Pilot: <strong>Norris, Chuck</strong><br>
-                                Aircraft: <strong>N850BU</strong><br>
-                                <span id="home-flight-route-text">KRWI &rarr; NC91 &rarr; KRWI</span>
-                            </div>
-                            
-                            <button class="btn-green-outline" onclick="window.location.href='flight_request.html'">
-                                <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
-                                View Flight Request
-                            </button>
-                        </div>
-                        <div class="flight-map">
-                            <div id="leaflet-map"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="pilot-status-row" style="display: flex; gap: 16px; margin-bottom: 20px;">
-                    <!-- Duty Period Card -->
-                    <div class="card" style="flex: 1; margin-bottom: 0;">
-                        <div class="card-header">
-                            <span style="display:flex;align-items:center;gap:8px;">
-                                <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M19,4H18V2H16V4H8V2H6V4H5C3.89,4 3,4.9 3,6V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V6A2,2 0 0,0 19,4M19,20H5V10H19V20M19,8H5V6H19V8Z"/></svg>
-                                DUTY PERIOD
-                            </span>
-                        </div>
-                        <div class="card-body">
-                            <div class="tag-green">
-                                <svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>
-                                ON DUTY
-                            </div>
-                            <div class="duty-stats">
-                                <div>Current Duty Time: <strong>9h 33m</strong></div>
-                                <div>Dutied In: <strong>06/18/2026 09:23</strong></div>
-                                <div>Previous Rest: <strong>&gt;10h</strong></div>
-                            </div>
-                            <button class="btn-blue" onclick="window.location.href='duty_options.html'">
-                                <svg viewBox="0 0 24 24"><path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z"/></svg>
-                                Duty Options
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Currency Card -->
-                    <div class="card" style="flex: 1; margin-bottom: 0; cursor: pointer;" onclick="document.getElementById('currency-modal').classList.add('active')">
-                        <div class="card-header">
-                            <span style="display:flex;align-items:center;gap:8px;color:var(--accent-blue);">
-                                <svg style="width:20px;height:20px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/></svg>
-                                <span style="color:var(--text-main);">CHUCK CURRENCY</span>
-                            </span>
-                            <a href="#" class="link-right">View Details &rsaquo;</a>
-                        </div>
-                        <div class="card-body">
-                            <div class="alert-box">
-                                <div class="alert-icon">x</div>
-                                <div>
-                                    <div class="alert-title">Expired</div>
-                                    <div class="alert-subtitle">3 items expired</div>
-                                </div>
-                            </div>
-                            <div class="pill-group">
-                                <div class="pill red">3 Expired</div>
-                                <div class="pill yellow">4 Warning</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bases Section -->
-                <div class="section-title">BASES (1)</div>
-                <div class="search-container">
-                    <svg viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L19.71,19L18.3,20.41L13.03,15.14C11.89,16.11 10.41,16.7 8.8,16.7A6.5,6.5 0 0,1 2.3,10.2A6.5,6.5 0 0,1 8.8,3M8.8,5A4.5,4.5 0 0,0 4.3,9.5A4.5,4.5 0 0,0 8.8,14A4.5,4.5 0 0,0 13.3,9.5A4.5,4.5 0 0,0 8.8,5Z"/></svg>
-                    <input type="text" class="search-input" placeholder="Search bases...">
-                </div>
-
                 <div class="card">
-                    <div class="card-header" style="font-size:18px;">
-                        <span style="display:flex;align-items:center;gap:8px;">
-                            <svg style="width:24px;height:24px;fill:currentColor;" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/></svg>
-                            RWI Base Status
-                        </span>
-                        <button class="btn-blue" onclick="window.location.href='edit-base.html'" style="margin:0; padding:6px 12px; font-size:13px;">EDIT BASE</button>
-                    </div>
                     <div class="card-body">
-                        <!-- Prominent Base Alerts -->
-                        <div class="alert-banner" style="margin: 0 0 20px 0; border-left: 4px solid var(--accent-orange); background-color: rgba(242, 153, 74, 0.15); border-radius: 0 8px 8px 0;">
-                            <svg style="width:24px;height:24px;fill:var(--accent-orange);flex-shrink:0;" viewBox="0 0 24 24"><path d="M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z"></path></svg>
-                            <div style="flex:1;">
-                                <strong style="display:block; color:var(--text-main); margin-bottom:2px; font-size:16px;">Base Alerts</strong>
-                                <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <span id="home-base-alert" contenteditable="true" style="font-weight:normal; color:var(--text-main); outline:none; font-size:15px;">200' unlit tower at Carteret.</span>
-                                    <span style="color:var(--text-muted); font-weight:normal; font-size: 13px;">Chuck Norris 6/16/2026</span>
-                                </div>
+                        <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                            <div style="flex: 1;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 8px;">Status Date *</label>
+                                <input type="datetime-local" value="2026-06-24T11:12" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; background-color: var(--card-bg); color: var(--text-main);">
+                            </div>
+                            <div style="flex: 1;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 8px;">Base Status *</label>
+                                <select id="base-status" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; background-color: var(--card-bg); color: var(--text-main);">
+                                    <option value="In Service">In Service</option>
+                                    <option value="Out of Service">Out of Service</option>
+                                </select>
                             </div>
                         </div>
 
-                        <!-- Base Status & Weather -->
-                        <div class="base-header-row" style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); font-size: 16px;">
-                            <div id="home-base-status-container" class="base-status" style="font-weight:bold; color:var(--accent-green); display:flex; align-items:center; gap:6px;">
-                                <svg style="width:20px;height:20px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"></path></svg>
-                                <span id="home-base-status-text">Status: In Service</span>
-                            </div>
-                            <div id="home-weather-status-container" class="base-weather" style="font-weight:bold; display:flex; align-items:center; gap:6px; color:var(--accent-red);">
-                                <svg style="width:20px;height:20px;fill:currentColor;" viewBox="0 0 24 24"><path d="M6.5,17.5A3.5,3.5 0 0,1 3,14A3.5,3.5 0 0,1 6.5,10.5C6.8,10.5 7.1,10.5 7.4,10.6C8.2,7.7 10.8,5.5 14,5.5A6.5,6.5 0 0,1 20.5,12C21.9,12.2 23,13.5 23,15A3,3 0 0,1 20,18H6.5V17.5Z"></path></svg>
-                                <span id="home-weather-status-text">Weather: Red</span>
-                            </div>
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px;">Status Comment *</label>
+                            <textarea style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; min-height: 80px; background-color: var(--card-bg); color: var(--text-main);">.</textarea>
                         </div>
                         
-                        <!-- Nested Aircraft Status -->
-                        <div class="inner-card" style="margin-top:0;">
-                            <div class="inner-card-title">
-                                <svg style="width:24px;height:24px;fill:var(--text-muted);" viewBox="0 0 24 24"><path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z"/></svg>
-                                N850BU
-                                <span class="tag-red-text">
-                                    <svg style="width:16px;height:16px;fill:currentColor;" viewBox="0 0 24 24"><path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg>
-                                    OOS: UNSCHD MX &gt; 2 Hours
-                                </span>
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px;">Weather Status</label>
+                            <div style="display: flex; gap: 8px;">
+                                <button id="btn-weather-green" onclick="selectWeather('Green', this)" style="flex: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--card-bg); color: var(--text-main); font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <div style="width: 10px; height: 10px; border-radius: 50%; background-color: #4CAF50;"></div> Green
+                                </button>
+                                <button id="btn-weather-yellow" onclick="selectWeather('Yellow', this)" style="flex: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--card-bg); color: var(--text-main); font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <div style="width: 10px; height: 10px; border-radius: 50%; background-color: #FFC107;"></div> Yellow
+                                </button>
+                                <button id="btn-weather-red" onclick="selectWeather('Red', this)" style="flex: 1; padding: 12px; border: 2px solid #E53935; border-radius: 8px; background-color: rgba(229, 57, 53, 0.1); color: #E53935; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <div style="width: 10px; height: 10px; border-radius: 50%; background-color: #E53935;"></div> Red
+                                </button>
                             </div>
-                            <div class="inner-card-info" style="margin-left: 36px;">MEL Items: None</div>
-                            <a href="#" class="inner-link" style="margin-left: 36px;">Aircraft Maintenance Status &rsaquo;</a>
+                        </div>
+
+                        <div>
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px;">Base Alert</label>
+                            <textarea id="base-alert" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; min-height: 80px; background-color: var(--card-bg); color: var(--text-main);">200' unlit towels at Carteret.</textarea>
                         </div>
                     </div>
                 </div>
 
-                <!-- Open Manifests -->
-                <div class="section-title">Open Manifests</div>
-                <div class="list-card">
-                    <div class="list-item">
-                        <span>3664374 : 06/18/2026 : N850BU : Norris</span>
-                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
+                <!-- Aircraft Section -->
+                <div class="section-title" style="font-size: 1.2rem; color: var(--text-main); font-weight: bold; margin-bottom: 16px;">Aircraft Status</div>
+                
+                <div class="card">
+                    <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding: 16px; font-weight: bold;">
+                        N850BU
+                        <svg style="width:24px;height:24px;fill:var(--text-muted);float:right;" viewBox="0 0 24 24"><path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z"/></svg>
                     </div>
-                    <div class="list-item">
-                        <span>3664375 : 06/18/2026 : N850BU : Norris</span>
-                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
-                    </div>
-                    <div class="list-item">
-                        <span>3664365 : 06/16/2026 : N850BU : Norris</span>
-                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
-                    </div>
-                </div>
+                    <div class="card-body">
+                        <div style="color: var(--accent-blue); font-weight: bold; margin-bottom: 12px; font-size: 0.9rem;">BASIC STATUS</div>
+                        <div style="margin-bottom: 24px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px;">Maintenance Status</label>
+                            <select style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; background-color: var(--card-bg); color: var(--text-main);">
+                                <option>OOS: UNSCHD MX > 2 Hours</option>
+                            </select>
+                        </div>
 
-                <!-- Recent Flights -->
-                <div class="section-title">Recent Flights</div>
-                <div class="list-card">
-                    <div class="list-item">
-                        <span>3664234 : 03/12/2026 : N850BU : Schwarzenegger</span>
-                        <svg viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
+                        <div style="color: var(--accent-blue); font-weight: bold; margin-bottom: 12px; font-size: 0.9rem;">MEL INFORMATION</div>
+                        
+                        <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                            <div style="flex: 1;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 8px;">MEL Items</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <button style="flex: 1; padding: 12px; border: 2px solid var(--accent-blue); border-radius: 8px; background-color: rgba(33, 150, 243, 0.1); color: var(--accent-blue); font-weight: bold;">Yes</button>
+                                    <button style="flex: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--card-bg); color: var(--text-main);">No</button>
+                                </div>
+                            </div>
+                            <div style="flex: 1;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 8px;">MEL Restrictions to Flight</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <button style="flex: 1; padding: 12px; border: 2px solid var(--accent-blue); border-radius: 8px; background-color: rgba(33, 150, 243, 0.1); color: var(--accent-blue); font-weight: bold;">Yes</button>
+                                    <button style="flex: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--card-bg); color: var(--text-main);">No</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px;">MEL Restriction Detail</label>
+                            <textarea style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; min-height: 80px; background-color: var(--card-bg); color: var(--text-main);">VFR only.</textarea>
+                        </div>
                     </div>
                 </div>
 
             </div> <!-- End Content Container -->
 
-        
-            <!-- Bottom Navigation -->
-            <div class="bottom-nav">
-                <div class="nav-item active" onclick="window.location.href='home.html'" style="cursor:pointer;">
-                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                    <span>Home</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='map.html'" style="cursor:pointer;">
-                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-                    <span>Map</span>
-                </div>
-                <div class="nav-item " onclick="window.location.href='manifest.html'" style="cursor:pointer;">
-                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    <span>Manifest</span>
-                </div>
-                <div class="nav-item" onclick="window.location.href='library.html'" style="cursor:pointer;">
-                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                    <span>Library</span>
-                </div>
-                <div class="nav-item" onclick="if(window.FlightSimulator) window.FlightSimulator.toggleMobile(); else alert('Simulator not loaded.');" style="cursor:pointer;">
-                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                    <span>Chat</span>
-                </div>
+            <!-- Sticky Footer Action Bar -->
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 16px; background-color: var(--bg-color); border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 12px; z-index: 10;">
+                <button onclick="window.location.href='home.html'" style="padding: 12px 24px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--card-bg); color: var(--text-main); font-weight: bold; cursor: pointer;">Cancel</button>
+                <button onclick="saveBaseStatus()" style="padding: 12px 32px; border: none; border-radius: 8px; background-color: var(--accent-blue); color: white; font-weight: bold; cursor: pointer;">Save</button>
             </div>
-
+        
         </div> <!-- End Device Screen -->
 
         
@@ -1741,47 +1625,69 @@
             </div>
         </div>
     </div>
+</body>
     <script>
+        let selectedWeather = 'Red';
+
+        function selectWeather(weather, btn) {
+            selectedWeather = weather;
+            
+            document.getElementById('btn-weather-green').style.border = '1px solid var(--border-color)';
+            document.getElementById('btn-weather-green').style.backgroundColor = 'var(--card-bg)';
+            document.getElementById('btn-weather-green').style.color = 'var(--text-main)';
+            
+            document.getElementById('btn-weather-yellow').style.border = '1px solid var(--border-color)';
+            document.getElementById('btn-weather-yellow').style.backgroundColor = 'var(--card-bg)';
+            document.getElementById('btn-weather-yellow').style.color = 'var(--text-main)';
+            
+            document.getElementById('btn-weather-red').style.border = '1px solid var(--border-color)';
+            document.getElementById('btn-weather-red').style.backgroundColor = 'var(--card-bg)';
+            document.getElementById('btn-weather-red').style.color = 'var(--text-main)';
+
+            if (weather === 'Green') {
+                btn.style.border = '2px solid #4CAF50';
+                btn.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+                btn.style.color = '#4CAF50';
+            } else if (weather === 'Yellow') {
+                btn.style.border = '2px solid #FFC107';
+                btn.style.backgroundColor = 'rgba(255, 193, 7, 0.1)';
+                btn.style.color = '#FFC107';
+            } else if (weather === 'Red') {
+                btn.style.border = '2px solid #E53935';
+                btn.style.backgroundColor = 'rgba(229, 57, 53, 0.1)';
+                btn.style.color = '#E53935';
+            }
+        }
+
+        function saveBaseStatus() {
+            const baseStatus = document.getElementById('base-status').value;
+            const baseAlert = document.getElementById('base-alert').value;
+            
+            localStorage.setItem('baseStatus', baseStatus);
+            localStorage.setItem('baseAlert', baseAlert);
+            localStorage.setItem('weatherStatus', selectedWeather);
+            
+            window.location.href = 'home.html';
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             const savedStatus = localStorage.getItem('baseStatus');
             const savedAlert = localStorage.getItem('baseAlert');
             const savedWeather = localStorage.getItem('weatherStatus');
             
             if (savedStatus) {
-                const statusText = document.getElementById('home-base-status-text');
-                const statusContainer = document.getElementById('home-base-status-container');
-                if(statusText && statusContainer) {
-                    statusText.innerText = "Status: " + savedStatus;
-                    if (savedStatus === 'Out of Service') {
-                        statusContainer.style.color = 'var(--accent-red)';
-                    } else {
-                        statusContainer.style.color = 'var(--accent-green)';
-                    }
-                }
+                document.getElementById('base-status').value = savedStatus;
             }
-            
             if (savedAlert !== null) {
-                const alertBanner = document.getElementById('home-base-alert');
-                if(alertBanner) {
-                    alertBanner.innerText = savedAlert;
-                }
+                document.getElementById('base-alert').value = savedAlert;
             }
-            
             if (savedWeather) {
-                const weatherText = document.getElementById('home-weather-status-text');
-                const weatherContainer = document.getElementById('home-weather-status-container');
-                if(weatherText && weatherContainer) {
-                    weatherText.innerText = "Weather: " + savedWeather;
-                    if (savedWeather === 'Green') {
-                        weatherContainer.style.color = 'var(--accent-green)';
-                    } else if (savedWeather === 'Yellow') {
-                        weatherContainer.style.color = '#F2994A'; // orange
-                    } else if (savedWeather === 'Red') {
-                        weatherContainer.style.color = 'var(--accent-red)';
-                    }
-                }
+                if(savedWeather === 'Green') selectWeather('Green', document.getElementById('btn-weather-green'));
+                if(savedWeather === 'Yellow') selectWeather('Yellow', document.getElementById('btn-weather-yellow'));
+                if(savedWeather === 'Red') selectWeather('Red', document.getElementById('btn-weather-red'));
+            } else {
+                selectWeather('Red', document.getElementById('btn-weather-red'));
             }
         });
     </script>
-</body>
 </html>

@@ -1432,7 +1432,7 @@
 
         function getMapLayerForTheme(theme) {
             if (['dark', 'hc-dark', 'neutral', 'mid'].includes(theme)) {
-                return L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 20 });
+                return L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=cb1_28w2_1_ba47a6ce5b12802de8cddc3b', { maxZoom: 20 });
             } else {
                 return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 20 });
             }

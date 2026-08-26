@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.6] - 2026-08-26
+### Fixed
+- Restored authentic Carto basemaps using generated API key.
+
+
 ## [0.5.5] - 2026-06-24
 ### Added
 - Added `edit-base.html` interface for updating the current base status, base alert, and weather status.
